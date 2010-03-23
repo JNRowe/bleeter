@@ -37,11 +37,13 @@ nothing more.
 """ % parseaddr(__author__)
 
 import atexit
+import errno
 import json
 import os
 import re
 import sys
 import time
+import urllib
 
 from xml.sax.saxutils import escape
 
@@ -76,6 +78,15 @@ def format_tweet(text):
         text = "<b>RT</b> " + text[3:]
     return text
 
+def get_icon(user):
+    cache_dir = "%s/litter" % glib.get_user_cache_dir()
+    if not os.path.isdir(cache_dir):
+        os.makedirs(cache_dir)
+    filename = "%s/%s" % (cache_dir, urllib.quote_plus(user.profile_image_url))
+    if not os.path.exists(filename):
+        urllib.urlretrieve(user.profile_image_url, filename)
+    return filename
+
 def update(api, seen):
     """Fetch updates and display notifications
 
@@ -89,10 +100,10 @@ def update(api, seen):
         if m.id in seen:
             continue
         else:
+            icon = get_icon(m.user)
             n = pynotify.Notification("From %s %s " % (m.user.name,
                                                        m.relative_created_at),
-                                      format_tweet(m.text),
-                                      "Twitter-48.png")
+                                      format_tweet(m.text), icon)
             if api._username in m.text:
                 n.set_urgency(pynotify.URGENCY_CRITICAL)
             if m.text.startswith("@%s" % api._username):

@@ -5,8 +5,8 @@ type: :feature
 component: litter
 release: 0.1.0
 reporter: James Rowe <jnrowe@gmail.com>
-status: :unstarted
-disposition: 
+status: :closed
+disposition: :fixed
 creation_time: 2010-03-23 10:43:33.967969 Z
 references: []
 
@@ -15,6 +15,14 @@ log_events:
 - - 2010-03-23 10:43:34.623841 Z
   - James Rowe <jnrowe@gmail.com>
   - created
+  - ""
+- - 2010-03-23 11:10:04.648018 Z
+  - James Rowe <jnrowe@gmail.com>
+  - changed status from unstarted to in_progress
+  - ""
+- - 2010-03-23 11:12:48.135868 Z
+  - James Rowe <jnrowe@gmail.com>
+  - closed with disposition fixed
   - ""
 claimer: 
 git_branch: 
