@@ -60,7 +60,6 @@ def update(api, seen):
         if m.id in seen:
             continue
         else:
-            seen.append(m.id)
             n = pynotify.Notification("From %s at %s " % (m.user.name, m.created_at),
                                       escape(m.text),
                                       "Twitter-48.png")
@@ -68,7 +67,9 @@ def update(api, seen):
                 n.set_urgency(pynotify.URGENCY_CRITICAL)
             if m.text.startswith("@%s" % api._username):
                 n.set_timeout(10)
-            n.show()
+            if not n.show():
+                raise OSError("Notification failed to display!")
+            seen.append(m.id)
             time.sleep(4)
 
 def main(argv):
