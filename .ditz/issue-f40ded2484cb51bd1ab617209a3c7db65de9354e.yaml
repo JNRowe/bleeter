@@ -7,8 +7,8 @@ type: :feature
 component: litter
 release: 0.1.0
 reporter: James Rowe <jnrowe@gmail.com>
-status: :unstarted
-disposition: 
+status: :closed
+disposition: :fixed
 creation_time: 2010-03-23 10:41:51.387948 Z
 references: []
 
@@ -22,5 +22,13 @@ log_events:
   - James Rowe <jnrowe@gmail.com>
   - commented
   - With the switch to glib, this change is much easier to make.
+- - 2010-03-23 11:48:23.283929 Z
+  - James Rowe <jnrowe@gmail.com>
+  - changed status from unstarted to in_progress
+  - ""
+- - 2010-03-23 12:05:29.839867 Z
+  - James Rowe <jnrowe@gmail.com>
+  - closed with disposition fixed
+  - ""
 claimer: 
 git_branch: 

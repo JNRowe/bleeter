@@ -47,6 +47,7 @@ import urllib
 
 from xml.sax.saxutils import escape
 
+import configobj
 import glib
 import pynotify
 import twitter
@@ -87,16 +88,15 @@ def get_icon(user):
         urllib.urlretrieve(user.profile_image_url, filename)
     return filename
 
-def update(api, seen):
-    """Fetch updates and display notifications
+def process_tweets(api, tweets, seen):
+    """Display notifications for unseen tweets
 
-    :type api: ``twitter.Api``
-    :param api: Authenticated ``twitter.Api`` object
+    :type tweets: ``list`` of ``twitter.Status``
+    :param api: Twitter status messages
     :type seen: ``list``
     :param seen: Already seen tweets
     """
-
-    for m in reversed(api.GetFriendsTimeline()):
+    for m in reversed(tweets):
         if m.id in seen:
             continue
         else:
@@ -107,12 +107,37 @@ def update(api, seen):
             if api._username in m.text:
                 n.set_urgency(pynotify.URGENCY_CRITICAL)
             if m.text.startswith("@%s" % api._username):
-                n.set_timeout(10)
+                n.set_timeout(pynotify.EXPIRES_NEVER)
             if not n.show():
                 raise OSError("Notification failed to display!")
             seen.append(m.id)
             time.sleep(4)
 
+def update(api, seen):
+    """Fetch updates and display notifications
+
+    :type api: ``twitter.Api``
+    :param api: Authenticated ``twitter.Api`` object
+    :type seen: ``list``
+    :param seen: Already seen tweets
+    """
+
+    process_tweets(api, api.GetFriendsTimeline(), seen)
+    return True
+
+def update_stealth(api, seen, users):
+    """Fetch updates and display notifications for stealth follows
+
+    :type api: ``twitter.Api``
+    :param api: Authenticated ``twitter.Api`` object
+    :type seen: ``list``
+    :param seen: Already seen tweets
+    :type users: ``list`` of ``str``
+    :param users: Stealth follow user list
+    """
+
+    for user in users:
+        process_tweets(api, api.GetUserTimeline(user), seen)
     return True
 
 def main(argv):
@@ -125,6 +150,12 @@ def main(argv):
     if not pynotify.init(argv[0]):
         print "Unable to initialise pynotify!"
         return 1
+
+    config_file = "%s/litter/config.ini" % glib.get_user_config_dir()
+    if os.path.exists(config_file):
+        conf = configobj.ConfigObj(config_file)
+        if conf.has_key("stealth"):
+            stealth_users = conf['stealth'].get("users")
 
     api = twitter.Api(os.getenv("TWEETUSERNAME"), os.getenv("TWEETPASSWORD"))
     api.SetUserAgent("litter/%s +http://github.com/JNRowe/litter/" % __version__)
@@ -143,6 +174,8 @@ def main(argv):
     atexit.register(save_state, seen)
 
     loop = glib.MainLoop()
+    if stealth_users:
+        glib.timeout_add_seconds(300, update_stealth, api, seen, stealth_users)
     glib.timeout_add_seconds(300, update, api, seen)
     loop.run()
 

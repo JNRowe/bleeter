@@ -15,7 +15,7 @@ Requirements
 ------------
 
 ``litter``'s only mandatory dependencies outside of the Python_ standard library
-are the python-twitter_, pygobject_ and notify-python_ packages.
+are the configuobj_, notify-python_, pygobject_ and python-twitter_ packages.
 
 It should run with Python 2.5 or newer.
 
@@ -25,6 +25,16 @@ Configuration
 Following the example from the python-twitter_ package we'll use
 the ``TWEETUSERNAME`` and ``TWEETPASSWORD`` environment variables to store
 authentication data.
+
+It is also possible to include tweets from users you are not directly following
+by adding them to the configuration file, which should be placed in
+``${XDG_CONFIG_HOME}/litter/config.ini``.  Its format should be::
+
+    [stealth]
+    users = NotThatInteresting,Boring
+
+Where the ``users`` value should be a comma separated list of twitter usernames
+or numeric identifiers.
 
 Hacking
 -------
@@ -74,6 +84,7 @@ reproduce the problem, or even better a patch!
 .. _python-twitter: http://code.google.com/p/python-twitter/
 .. _notify-python: http://www.galago-project.org/
 .. _pygobject: http://www.pygtk.org/
+.. _configobj: http://www.voidspace.org.uk/python/configobj.html
 
 ..
     :vim: set ft=rst ts=4 sw=4 et:
