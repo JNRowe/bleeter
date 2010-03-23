@@ -48,6 +48,14 @@ import pynotify
 import twitter
 
 def update(api, seen):
+    """Fetch updates and display notifications
+
+    :type api: ``twitter.Api``
+    :param api: Authenticated ``twitter.Api`` object
+    :type seen: ``list``
+    :param seen: Already seen tweets
+    """
+
     for m in reversed(api.GetFriendsTimeline()):
         if m.id in seen:
             continue
@@ -64,6 +72,12 @@ def update(api, seen):
             time.sleep(4)
 
 def main(argv):
+    """main handler
+
+    :type argv: ``list``
+    :param argv: Command line parameters
+    """
+
     pynotify.init(argv[0])
     api = twitter.Api(os.getenv("TWEETUSERNAME"), os.getenv("TWEETPASSWORD"))
     if os.path.exists("%s.dat" % argv[0]):
@@ -72,6 +86,11 @@ def main(argv):
         seen = []
 
     def save_state(seen):
+        """Seen tweets state saver
+
+        :type seen: ``list``
+        :param seen: Already seen tweets
+        """
         json.dump(seen, open("%s.dat" % argv[0], "w"), indent=4)
     atexit.register(save_state, seen)
 
