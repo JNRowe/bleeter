@@ -78,7 +78,10 @@ def main(argv):
     :param argv: Command line parameters
     """
 
-    pynotify.init(argv[0])
+    if not pynotify.init(argv[0]):
+        print "Unable to initialise pynotify!"
+        return 1
+
     api = twitter.Api(os.getenv("TWEETUSERNAME"), os.getenv("TWEETPASSWORD"))
     if os.path.exists("%s.dat" % argv[0]):
         seen = json.load(open("%s.dat" % argv[0]))
@@ -99,4 +102,5 @@ def main(argv):
         time.sleep(300)
 
 if __name__ == '__main__':
-    main(sys.argv[:])
+    sys.exit(main(sys.argv[:]))
+
