@@ -1,0 +1,20 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: Use user's image as notification icon.
+desc: ""
+type: :feature
+component: litter
+release: 0.1.0
+reporter: James Rowe <jnrowe@gmail.com>
+status: :unstarted
+disposition: 
+creation_time: 2010-03-23 10:43:33.967969 Z
+references: []
+
+id: eec8d956aa66d02e79d8c953d1cf5f26886404a3
+log_events: 
+- - 2010-03-23 10:43:34.623841 Z
+  - James Rowe <jnrowe@gmail.com>
+  - created
+  - ""
+claimer: 
+git_branch: 
