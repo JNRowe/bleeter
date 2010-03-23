@@ -1,0 +1,16 @@
+--- !ditz.rubyforge.org,2008-03-06/project 
+name: litter
+version: "0.5"
+components: 
+- !ditz.rubyforge.org,2008-03-06/component 
+  name: litter
+releases: 
+- !ditz.rubyforge.org,2008-03-06/release 
+  name: 0.1.0
+  status: :unreleased
+  release_time: 
+  log_events: 
+  - - 2010-03-23 06:19:43.271853 Z
+    - James Rowe <jnrowe@gmail.com>
+    - created
+    - ""
