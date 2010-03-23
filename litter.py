@@ -88,8 +88,8 @@ def update(api, seen):
         if m.id in seen:
             continue
         else:
-            n = pynotify.Notification("From %s at %s " % (m.user.name,
-                                                          m.created_at),
+            n = pynotify.Notification("From %s %s " % (m.user.name,
+                                                       m.relative_created_at),
                                       format_tweet(m.text),
                                       "Twitter-48.png")
             if api._username in m.text:
