@@ -1,0 +1,22 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: Support viewing non-followed users.
+desc: |-
+  There are definitely some users you do not wish to follow, but occasionally wish
+  to watch.
+type: :feature
+component: litter
+release: 0.1.0
+reporter: James Rowe <jnrowe@gmail.com>
+status: :unstarted
+disposition: 
+creation_time: 2010-03-23 10:41:51.387948 Z
+references: []
+
+id: f40ded2484cb51bd1ab617209a3c7db65de9354e
+log_events: 
+- - 2010-03-23 10:41:52.139842 Z
+  - James Rowe <jnrowe@gmail.com>
+  - created
+  - ""
+claimer: 
+git_branch: 
