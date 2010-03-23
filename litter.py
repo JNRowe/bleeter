@@ -45,6 +45,7 @@ import time
 
 from xml.sax.saxutils import escape
 
+import glib
 import pynotify
 import twitter
 
@@ -101,6 +102,8 @@ def update(api, seen):
             seen.append(m.id)
             time.sleep(4)
 
+    return True
+
 def main(argv):
     """main handler
 
@@ -127,9 +130,9 @@ def main(argv):
         json.dump(seen, open("%s.dat" % argv[0], "w"), indent=4)
     atexit.register(save_state, seen)
 
-    while True:
-        update(api, seen)
-        time.sleep(300)
+    loop = glib.MainLoop()
+    glib.timeout_add_seconds(300, update, api, seen)
+    loop.run()
 
 if __name__ == '__main__':
     sys.exit(main(sys.argv[:]))

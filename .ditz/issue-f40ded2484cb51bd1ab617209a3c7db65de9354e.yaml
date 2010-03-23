@@ -18,5 +18,9 @@ log_events:
   - James Rowe <jnrowe@gmail.com>
   - created
   - ""
+- - 2010-03-23 10:46:38.659623 Z
+  - James Rowe <jnrowe@gmail.com>
+  - commented
+  - With the switch to glib, this change is much easier to make.
 claimer: 
 git_branch: 

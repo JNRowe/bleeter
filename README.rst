@@ -15,7 +15,7 @@ Requirements
 ------------
 
 ``litter``'s only mandatory dependencies outside of the Python_ standard library
-are the python-twitter_ and notify-python_ packages.
+are the python-twitter_, pygobject_ and notify-python_ packages.
 
 It should run with Python 2.5 or newer.
 
@@ -73,6 +73,7 @@ reproduce the problem, or even better a patch!
 .. _Python: http://www.python.org/
 .. _python-twitter: http://code.google.com/p/python-twitter/
 .. _notify-python: http://www.galago-project.org/
+.. _pygobject: http://www.pygtk.org/
 
 ..
     :vim: set ft=rst ts=4 sw=4 et:
