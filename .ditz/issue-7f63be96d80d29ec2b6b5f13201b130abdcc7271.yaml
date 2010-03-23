@@ -1,0 +1,20 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: Add an open in browser button to the notifications.
+desc: ""
+type: :feature
+component: litter
+release: 0.2.0
+reporter: James Rowe <jnrowe@gmail.com>
+status: :unstarted
+disposition: 
+creation_time: 2010-03-23 11:17:03.791959 Z
+references: []
+
+id: 7f63be96d80d29ec2b6b5f13201b130abdcc7271
+log_events: 
+- - 2010-03-23 11:17:04.639840 Z
+  - James Rowe <jnrowe@gmail.com>
+  - created
+  - ""
+claimer: 
+git_branch: 
