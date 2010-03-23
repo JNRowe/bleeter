@@ -127,6 +127,7 @@ def main(argv):
         return 1
 
     api = twitter.Api(os.getenv("TWEETUSERNAME"), os.getenv("TWEETPASSWORD"))
+    api.SetUserAgent("litter/%s +http://github.com/JNRowe/litter/" % __version__)
     if os.path.exists("%s.dat" % argv[0]):
         seen = json.load(open("%s.dat" % argv[0]))
     else:
