@@ -15,7 +15,7 @@ Requirements
 ------------
 
 ``litter``'s only mandatory dependencies outside of the Python_ standard library
-are the configuobj_, notify-python_, pygobject_ and python-twitter_ packages.
+are the configobj_, notify-python_, pygobject_ and python-twitter_ packages.
 
 It should run with Python 2.5 or newer.
 
