@@ -39,6 +39,7 @@ nothing more.
 import atexit
 import json
 import os
+import re
 import sys
 import time
 
@@ -46,6 +47,33 @@ from xml.sax.saxutils import escape
 
 import pynotify
 import twitter
+
+def format_tweet(text):
+    """Format tweet for display
+
+    >>> format_tweet("Populate #sup contacts from #abook")
+    'Populate <i>#sup</i> contacts from <i>#abook</i>'
+    >>> format_tweet("RT @ewornj Populate #sup contacts from #abook")
+    '<b>RT</b> <u>@ewornj</u> Populate <i>#sup</i> contacts from <i>#abook</i>'
+    >>> format_tweet("@rachcholmes congrats. London marathon signup closed yet? ;)")
+    '<u>@rachcholmes</u> congrats. London marathon signup closed yet? ;)'
+    >>> format_tweet("Added terminal support to my vim colour scheme http://bit.ly/9WSw5q, see http://bit.ly/dunMgV")
+    'Added terminal support to my vim colour scheme <u>http://bit.ly/9WSw5q</u>, see <u>http://bit.ly/dunMgV</u>'
+
+    :type text: ``str``
+    :param api: Tweet content
+    :rtype: ``str``
+    :return: Tweet content with pretty formatting
+    """
+
+    text = escape(text)
+    text = re.sub(r'(@\w+)', r'<u>\1</u>', text)
+    text = re.sub(r'(#\w+)', r'<i>\1</i>', text)
+    text = re.sub(r'(http://[\w\./]+)', r'<u>\1</u>', text)
+
+    if text.startswith("RT "):
+        text = "<b>RT</b> " + text[3:]
+    return text
 
 def update(api, seen):
     """Fetch updates and display notifications
@@ -60,8 +88,9 @@ def update(api, seen):
         if m.id in seen:
             continue
         else:
-            n = pynotify.Notification("From %s at %s " % (m.user.name, m.created_at),
-                                      escape(m.text),
+            n = pynotify.Notification("From %s at %s " % (m.user.name,
+                                                          m.created_at),
+                                      format_tweet(m.text),
                                       "Twitter-48.png")
             if api._username in m.text:
                 n.set_urgency(pynotify.URGENCY_CRITICAL)
