@@ -151,6 +151,7 @@ def main(argv):
         print "Unable to initialise pynotify!"
         return 1
 
+    state_file = "%s/litter/state.db" % glib.get_user_config_dir()
     config_file = "%s/litter/config.ini" % glib.get_user_config_dir()
     if os.path.exists(config_file):
         conf = configobj.ConfigObj(config_file)
@@ -159,8 +160,8 @@ def main(argv):
 
     api = twitter.Api(os.getenv("TWEETUSERNAME"), os.getenv("TWEETPASSWORD"))
     api.SetUserAgent("litter/%s +http://github.com/JNRowe/litter/" % __version__)
-    if os.path.exists("%s.dat" % argv[0]):
-        seen = json.load(open("%s.dat" % argv[0]))
+    if os.path.exists(state_file):
+        seen = json.load(open(state_file))
     else:
         seen = []
 
@@ -170,7 +171,7 @@ def main(argv):
         :type seen: ``list``
         :param seen: Already seen tweets
         """
-        json.dump(seen, open("%s.dat" % argv[0], "w"), indent=4)
+        json.dump(seen, open(state_file, "w"), indent=4)
     atexit.register(save_state, seen)
 
     loop = glib.MainLoop()
