@@ -2,7 +2,7 @@
 title: Add a favourite button to the notifications.
 desc: ""
 type: :feature
-component: litter
+component: bleeter
 release: 0.2.0
 reporter: James Rowe <jnrowe@gmail.com>
 status: :unstarted

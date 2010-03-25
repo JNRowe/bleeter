@@ -1,10 +1,10 @@
-litter - Nasty little twitter client
-====================================
+bleeter - Nasty little twitter client
+=====================================
 
 Introduction
 ------------
 
-``litter`` is a nasty little client for twitter_, currently very much in a *Works
+``bleeter`` is a nasty little client for twitter_, currently very much in a *Works
 For Me* state.  It isn't intended to be used by others, but perhaps others will
 find it useful.
 
@@ -14,7 +14,7 @@ popups for new tweets.  Nothing more and nothing less.
 Requirements
 ------------
 
-``litter``'s only mandatory dependencies outside of the Python_ standard library
+``bleeter``'s only mandatory dependencies outside of the Python_ standard library
 are the configobj_, notify-python_, pygobject_ and python-twitter_ packages.
 
 It should run with Python 2.5 or newer.
@@ -28,7 +28,7 @@ authentication data.
 
 It is also possible to include tweets from users you are not directly following
 by adding them to the configuration file, which should be placed in
-``${XDG_CONFIG_HOME}/litter/config.ini``.  Its format should be::
+``${XDG_CONFIG_HOME}/bleeter/config.ini``.  Its format should be::
 
     [stealth]
     users = NotThatInteresting,Boring
@@ -77,7 +77,7 @@ reproduce the problem, or even better a patch!
 .. _PEP 8: http://www.python.org/dev/peps/pep-0008/
 .. _reStructuredText: http://docutils.sourceforge.net/rst.html
 .. _mail: jnrowe@gmail.com
-.. _issue: http://github.com/JNRowe/litter/issues
+.. _issue: http://github.com/JNRowe/bleeter/issues
 .. _ditz: http://ditz.rubyforge.org/
 .. _twitter: http://twitter.com/
 .. _Python: http://www.python.org/

@@ -4,7 +4,7 @@ desc: |-
   There are definitely some users you do not wish to follow, but occasionally wish
   to watch.
 type: :feature
-component: litter
+component: bleeter
 release: 0.1.0
 reporter: James Rowe <jnrowe@gmail.com>
 status: :closed

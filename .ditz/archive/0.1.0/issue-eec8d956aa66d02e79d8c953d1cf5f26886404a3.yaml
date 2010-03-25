@@ -2,7 +2,7 @@
 title: Use user's image as notification icon.
 desc: ""
 type: :feature
-component: litter
+component: bleeter
 release: 0.1.0
 reporter: James Rowe <jnrowe@gmail.com>
 status: :closed

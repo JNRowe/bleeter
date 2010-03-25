@@ -1,7 +1,7 @@
 #! /usr/bin/python -tt
 # vim: set sw=4 sts=4 et tw=80 fileencoding=utf-8:
 #
-"""litter - Nasty little twitter client"""
+"""bleeter - Nasty little twitter client"""
 # Copyright (C) 2010  James Rowe <jnrowe@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -80,7 +80,7 @@ def format_tweet(text):
     return text
 
 def get_icon(user):
-    cache_dir = "%s/litter" % glib.get_user_cache_dir()
+    cache_dir = "%s/bleeter" % glib.get_user_cache_dir()
     if not os.path.isdir(cache_dir):
         os.makedirs(cache_dir)
     filename = "%s/%s" % (cache_dir, urllib.quote_plus(user.profile_image_url))
@@ -151,15 +151,15 @@ def main(argv):
         print "Unable to initialise pynotify!"
         return 1
 
-    state_file = "%s/litter/state.db" % glib.get_user_config_dir()
-    config_file = "%s/litter/config.ini" % glib.get_user_config_dir()
+    state_file = "%s/bleeter/state.db" % glib.get_user_config_dir()
+    config_file = "%s/bleeter/config.ini" % glib.get_user_config_dir()
     if os.path.exists(config_file):
         conf = configobj.ConfigObj(config_file)
         if conf.has_key("stealth"):
             stealth_users = conf['stealth'].get("users")
 
     api = twitter.Api(os.getenv("TWEETUSERNAME"), os.getenv("TWEETPASSWORD"))
-    api.SetUserAgent("litter/%s +http://github.com/JNRowe/litter/" % __version__)
+    api.SetUserAgent("bleeter/%s +http://github.com/JNRowe/bleeter/" % __version__)
     if os.path.exists(state_file):
         seen = json.load(open(state_file))
     else:
