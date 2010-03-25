@@ -195,13 +195,19 @@ def main(argv):
 
     state_file = "%s/bleeter/state.db" % glib.get_user_config_dir()
     config_file = "%s/bleeter/config.ini" % glib.get_user_config_dir()
-    if os.path.exists(config_file):
-        conf = configobj.ConfigObj(config_file)
-        if conf.has_key("stealth"):
-            stealth_users = conf['stealth'].get("users")
+    conf = configobj.ConfigObj(config_file)
+    stealth_users = conf.get("stealth")
 
-    auth = tweepy.BasicAuthHandler(os.getenv("TWEETUSERNAME"),
-                                   os.getenv("TWEETPASSWORD"))
+    user = conf.get("user", os.getenv("TWEETUSERNAME"))
+    if not user:
+        print "No user set in %s and $TWEETUSERNAME not set" % config_file
+        return 1
+    password = conf.get("password", os.getenv("TWEETPASSWORD"))
+    if not password:
+        print "No password set in %s and $TWEETPASSWORD not set" % config_file
+        return 1
+
+    auth = tweepy.BasicAuthHandler(user, password)
     api = tweepy.API(auth)
     if os.path.exists(state_file):
         seen = json.load(open(state_file))

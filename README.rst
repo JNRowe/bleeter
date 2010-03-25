@@ -22,19 +22,22 @@ It should run with Python 2.5 or newer.
 Configuration
 -------------
 
-Following the example from the python-twitter_ package we'll use
-the ``TWEETUSERNAME`` and ``TWEETPASSWORD`` environment variables to store
-authentication data.
-
 It is also possible to include tweets from users you are not directly following
 by adding them to the configuration file, which should be placed in
 ``${XDG_CONFIG_HOME}/bleeter/config.ini``.  Its format should be::
 
-    [stealth]
-    users = NotThatInteresting,Boring
+    stealth = NotThatInteresting,Boring
 
-Where the ``users`` value should be a comma separated list of twitter usernames
-or numeric identifiers.
+Where the ``stealth`` value should be a comma separated list of twitter
+usernames or numeric identifiers.
+
+``bleeter`` reads the ``TWEETUSERNAME`` and ``TWEETPASSWORD`` environment
+variables to store authentication data.  It is also possible to store the
+username and password in the configuration file using the following format::
+
+    user = username
+    password = unguessable
+
 
 Hacking
 -------
