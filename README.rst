@@ -15,7 +15,7 @@ Requirements
 ------------
 
 ``bleeter``'s only mandatory dependencies outside of the Python_ standard library
-are the configobj_, notify-python_, pygobject_ and python-twitter_ packages.
+are the configobj_, notify-python_, pygobject_ and tweepy_ packages.
 
 It should run with Python 2.5 or newer.
 
@@ -81,7 +81,7 @@ reproduce the problem, or even better a patch!
 .. _ditz: http://ditz.rubyforge.org/
 .. _twitter: http://twitter.com/
 .. _Python: http://www.python.org/
-.. _python-twitter: http://code.google.com/p/python-twitter/
+.. _tweepy: http://pypi.python.org/pypi/tweepy/
 .. _notify-python: http://www.galago-project.org/
 .. _pygobject: http://www.pygtk.org/
 .. _configobj: http://www.voidspace.org.uk/python/configobj.html

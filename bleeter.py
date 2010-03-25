@@ -37,6 +37,7 @@ nothing more.
 """ % parseaddr(__author__)
 
 import atexit
+import datetime
 import errno
 import json
 import os
@@ -50,7 +51,47 @@ from xml.sax.saxutils import escape
 import configobj
 import glib
 import pynotify
-import twitter
+import tweepy
+
+def relative_time(dt):
+    """Format a relative time
+
+    >>> now = datetime.datetime.now()
+    >>> relative_time(now - datetime.timedelta(days=365))
+    'a year ago'
+    >>> relative_time(now - datetime.timedelta(days=70))
+    '2 months ago'
+    >>> relative_time(now - datetime.timedelta(days=21))
+    '3 weeks ago'
+    >>> relative_time(now - datetime.timedelta(days=4))
+    '4 days ago'
+    >>> relative_time(now - datetime.timedelta(hours=5))
+    '5 hours ago'
+    >>> relative_time(now - datetime.timedelta(minutes=6))
+    '6 minutes ago'
+    >>> relative_time(now - datetime.timedelta(seconds=7))
+    '7 seconds ago'
+
+    """
+
+    matches = [
+        (60*60*24*365, "year"),
+        (60*60*24*28, "month"),
+        (60*60*24*7, "week"),
+        (60*60*24, "day"),
+        (60*60, "hour"),
+        (60, "minute"),
+        (1, "second"),
+    ]
+
+    delta  = datetime.datetime.now() - dt
+    seconds = delta.days * 86400 + delta.seconds
+    for scale, name in matches:
+        i = seconds // scale
+        if i:
+            s = "%s %s%s" % (i if i > 1 else "a", name, "s" if i > 1 else "")
+            break
+    return "%s ago" % s
 
 def format_tweet(text):
     """Format tweet for display
@@ -91,7 +132,7 @@ def get_icon(user):
 def process_tweets(api, tweets, seen):
     """Display notifications for unseen tweets
 
-    :type tweets: ``list`` of ``twitter.Status``
+    :type tweets: ``list`` of ``tweepy.models.Status``
     :param api: Twitter status messages
     :type seen: ``list``
     :param seen: Already seen tweets
@@ -101,12 +142,13 @@ def process_tweets(api, tweets, seen):
             continue
         else:
             icon = get_icon(m.user)
-            n = pynotify.Notification("From %s %s " % (m.user.name,
-                                                       m.relative_created_at),
+            n = pynotify.Notification("From %s about %s"
+                                      % (m.user.name,
+                                         relative_time(m.created_at)),
                                       format_tweet(m.text), icon)
-            if api._username in m.text:
+            if api.auth.username in m.text:
                 n.set_urgency(pynotify.URGENCY_CRITICAL)
-            if m.text.startswith("@%s" % api._username):
+            if m.text.startswith("@%s" % api.auth.username):
                 n.set_timeout(pynotify.EXPIRES_NEVER)
             if not n.show():
                 raise OSError("Notification failed to display!")
@@ -117,19 +159,19 @@ def update(api, seen):
     """Fetch updates and display notifications
 
     :type api: ``twitter.Api``
-    :param api: Authenticated ``twitter.Api`` object
+    :param api: Authenticated ``tweepy.api.API`` object
     :type seen: ``list``
     :param seen: Already seen tweets
     """
 
-    process_tweets(api, api.GetFriendsTimeline(), seen)
+    process_tweets(api, api.friends_timeline(), seen)
     return True
 
 def update_stealth(api, seen, users):
     """Fetch updates and display notifications for stealth follows
 
-    :type api: ``twitter.Api``
-    :param api: Authenticated ``twitter.Api`` object
+    :type api: ``tweepy.api.API``
+    :param api: Authenticated ``tweepy.api.API`` object
     :type seen: ``list``
     :param seen: Already seen tweets
     :type users: ``list`` of ``str``
@@ -137,7 +179,7 @@ def update_stealth(api, seen, users):
     """
 
     for user in users:
-        process_tweets(api, api.GetUserTimeline(user), seen)
+        process_tweets(api, api.user_timeline(user), seen)
     return True
 
 def main(argv):
@@ -158,8 +200,9 @@ def main(argv):
         if conf.has_key("stealth"):
             stealth_users = conf['stealth'].get("users")
 
-    api = twitter.Api(os.getenv("TWEETUSERNAME"), os.getenv("TWEETPASSWORD"))
-    api.SetUserAgent("bleeter/%s +http://github.com/JNRowe/bleeter/" % __version__)
+    auth = tweepy.BasicAuthHandler(os.getenv("TWEETUSERNAME"),
+                                   os.getenv("TWEETPASSWORD"))
+    api = tweepy.API(auth)
     if os.path.exists(state_file):
         seen = json.load(open(state_file))
     else:
