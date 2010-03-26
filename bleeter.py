@@ -38,7 +38,6 @@ nothing more.
 
 import atexit
 import datetime
-import errno
 import json
 import os
 import re
@@ -53,7 +52,7 @@ import glib
 import pynotify
 import tweepy
 
-def relative_time(dt):
+def relative_time(timestamp):
     """Format a relative time
 
     >>> now = datetime.datetime.now()
@@ -75,23 +74,23 @@ def relative_time(dt):
     """
 
     matches = [
-        (60*60*24*365, "year"),
-        (60*60*24*28, "month"),
-        (60*60*24*7, "week"),
-        (60*60*24, "day"),
-        (60*60, "hour"),
+        (60 * 60 * 24 * 365, "year"),
+        (60 * 60 * 24 * 28, "month"),
+        (60 * 60 * 24 * 7, "week"),
+        (60 * 60 * 24, "day"),
+        (60 * 60, "hour"),
         (60, "minute"),
         (1, "second"),
     ]
 
-    delta  = datetime.datetime.now() - dt
+    delta = datetime.datetime.now() - timestamp
     seconds = delta.days * 86400 + delta.seconds
     for scale, name in matches:
         i = seconds // scale
         if i:
-            s = "%s %s%s" % (i if i > 1 else "a", name, "s" if i > 1 else "")
             break
-    return "%s ago" % s
+    return "%s %s%s ago" % (i if i > 1 else "a", name, "s" if i > 1 else "")
+
 
 def format_tweet(text):
     """Format tweet for display
@@ -101,10 +100,10 @@ def format_tweet(text):
     'Populate <i>#sup</i> contacts from <i>#abook</i>'
     >>> format_tweet("RT @ewornj Populate #sup contacts from #abook")
     '<b>RT</b> <u>@ewornj</u> Populate <i>#sup</i> contacts from <i>#abook</i>'
-    >>> format_tweet("@rachcholmes congrats. London marathon signup closed yet? ;)")
-    '<u>@rachcholmes</u> congrats. London marathon signup closed yet? ;)'
-    >>> format_tweet("Added terminal support to my vim colour scheme http://bit.ly/9WSw5q, see http://bit.ly/dunMgV")
-    'Added terminal support to my vim colour scheme <u>http://bit.ly/9WSw5q</u>, see <u>http://bit.ly/dunMgV</u>'
+    >>> format_tweet("@rachcholmes London marathon signup closed yet? ;)")
+    '<u>@rachcholmes</u> London marathon signup closed yet? ;)'
+    >>> format_tweet("Updated my vim colour scheme see http://bit.ly/dunMgV")
+    'Updated my vim colour scheme see <u>http://bit.ly/dunMgV</u>'
     >>> pynotify.get_server_caps = lambda: []
     >>> format_tweet("Populate #sup contacts from #abook")
     'Populate #sup contacts from #abook'
@@ -125,7 +124,16 @@ def format_tweet(text):
             text = "<b>RT</b> " + text[3:]
     return text
 
+
 def get_icon(user):
+    """Get icon location for user
+
+    :type user: ``tweepy.models.User``
+    :param user: Tweet user reference
+    :rtype: ``str``
+    :return: Location of the icon file
+    """
+
     cache_dir = "%s/bleeter" % glib.get_user_cache_dir()
     if not os.path.isdir(cache_dir):
         os.makedirs(cache_dir)
@@ -133,6 +141,7 @@ def get_icon(user):
     if not os.path.exists(filename):
         urllib.urlretrieve(user.profile_image_url, filename)
     return filename
+
 
 def process_tweets(api, tweets, seen):
     """Display notifications for unseen tweets
@@ -142,23 +151,24 @@ def process_tweets(api, tweets, seen):
     :type seen: ``list``
     :param seen: Already seen tweets
     """
-    for m in reversed(tweets):
-        if m.id in seen:
+    for tweet in reversed(tweets):
+        if tweet.id in seen:
             continue
         else:
-            icon = get_icon(m.user)
-            n = pynotify.Notification("From %s about %s"
-                                      % (m.user.name,
-                                         relative_time(m.created_at)),
-                                      format_tweet(m.text), icon)
-            if api.auth.username in m.text:
-                n.set_urgency(pynotify.URGENCY_CRITICAL)
-            if m.text.startswith("@%s" % api.auth.username):
-                n.set_timeout(pynotify.EXPIRES_NEVER)
-            if not n.show():
+            note = pynotify.Notification("From %s about %s"
+                                         % (tweet.user.name,
+                                            relative_time(tweet.created_at)),
+                                         format_tweet(tweet.text),
+                                         get_icon(tweet.user))
+            if api.auth.username in tweet.text:
+                note.set_urgency(pynotify.URGENCY_CRITICAL)
+            if tweet.text.startswith("@%s" % api.auth.username):
+                note.set_timeout(pynotify.EXPIRES_NEVER)
+            if not note.show():
                 raise OSError("Notification failed to display!")
-            seen.append(m.id)
+            seen.append(tweet.id)
             time.sleep(4)
+
 
 def update(api, seen):
     """Fetch updates and display notifications
@@ -171,6 +181,7 @@ def update(api, seen):
 
     process_tweets(api, api.friends_timeline(), seen)
     return True
+
 
 def update_stealth(api, seen, users):
     """Fetch updates and display notifications for stealth follows
@@ -186,6 +197,7 @@ def update_stealth(api, seen, users):
     for user in users:
         process_tweets(api, api.user_timeline(user), seen)
     return True
+
 
 def main(argv):
     """main handler
@@ -236,4 +248,3 @@ def main(argv):
 
 if __name__ == '__main__':
     sys.exit(main(sys.argv[:]))
-
