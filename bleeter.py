@@ -96,6 +96,7 @@ def relative_time(dt):
 def format_tweet(text):
     """Format tweet for display
 
+    >>> pynotify.get_server_caps = lambda: ["body-markup"]
     >>> format_tweet("Populate #sup contacts from #abook")
     'Populate <i>#sup</i> contacts from <i>#abook</i>'
     >>> format_tweet("RT @ewornj Populate #sup contacts from #abook")
@@ -104,6 +105,9 @@ def format_tweet(text):
     '<u>@rachcholmes</u> congrats. London marathon signup closed yet? ;)'
     >>> format_tweet("Added terminal support to my vim colour scheme http://bit.ly/9WSw5q, see http://bit.ly/dunMgV")
     'Added terminal support to my vim colour scheme <u>http://bit.ly/9WSw5q</u>, see <u>http://bit.ly/dunMgV</u>'
+    >>> pynotify.get_server_caps = lambda: []
+    >>> format_tweet("Populate #sup contacts from #abook")
+    'Populate #sup contacts from #abook'
 
     :type text: ``str``
     :param api: Tweet content
@@ -112,12 +116,13 @@ def format_tweet(text):
     """
 
     text = escape(text)
-    text = re.sub(r'(@\w+)', r'<u>\1</u>', text)
-    text = re.sub(r'(#\w+)', r'<i>\1</i>', text)
-    text = re.sub(r'(http://[\w\./]+)', r'<u>\1</u>', text)
+    if "body-markup" in pynotify.get_server_caps():
+        text = re.sub(r'(@\w+)', r'<u>\1</u>', text)
+        text = re.sub(r'(#\w+)', r'<i>\1</i>', text)
+        text = re.sub(r'(http://[\w\./]+)', r'<u>\1</u>', text)
 
-    if text.startswith("RT "):
-        text = "<b>RT</b> " + text[3:]
+        if text.startswith("RT "):
+            text = "<b>RT</b> " + text[3:]
     return text
 
 def get_icon(user):
