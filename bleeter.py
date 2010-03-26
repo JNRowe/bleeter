@@ -139,7 +139,11 @@ def get_icon(user):
         os.makedirs(cache_dir)
     filename = "%s/%s" % (cache_dir, urllib.quote_plus(user.profile_image_url))
     if not os.path.exists(filename):
-        urllib.urlretrieve(user.profile_image_url, filename)
+        try:
+            urllib.urlretrieve(user.profile_image_url, filename)
+        except IOError:
+            # Fallback to generic icon, if it exists
+            filename = "%s/bleeter.png" % cache_dir
     return filename
 
 
