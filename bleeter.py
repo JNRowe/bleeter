@@ -297,7 +297,8 @@ def update(api, seen, users, timeout, note=None):
     """
 
     headers = {"User-Agent": USER_AGENT}
-    tweets = api.friends_timeline(headers=headers)
+    tweets = api.home_timeline(headers=headers)
+    tweets.extend(api.mentions(headers=headers))
     for user in users:
         tweets.extend(api.user_timeline(user, headers=headers))
 
