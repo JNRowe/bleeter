@@ -144,7 +144,7 @@ def get_icon(user):
         except IOError:
             # Fallback to generic icon, if it exists
             filename = "%s/bleeter.png" % cache_dir
-    return filename
+    return "file://%s" % filename
 
 
 NOTIFICATIONS = {}
