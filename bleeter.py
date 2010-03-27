@@ -194,7 +194,10 @@ def update(api, seen, users):
                                         relative_time(tweet.created_at)),
                                      format_tweet(tweet.text),
                                      get_icon(tweet.user))
-        note.add_action("default", " ", open_tweet(tweet))
+        if "actions" in NOTIFY_SERVER_CAPS:
+            note.add_action("default", " ", open_tweet(tweet))
+            # Keep a reference for handling the action.
+            NOTIFICATIONS[tweet.id] = note
         note.set_timeout(pynotify.EXPIRES_DEFAULT)
         if api.auth.username in tweet.text:
             note.set_urgency(pynotify.URGENCY_CRITICAL)
@@ -203,11 +206,12 @@ def update(api, seen, users):
         if not note.show():
             raise OSError("Notification failed to display!")
         seen["latest"] = tweet.id
-        NOTIFICATIONS[tweet.id] = note
-    for note in NOTIFICATIONS:
-        if note <= old_seen:
-            NOTIFICATIONS[note].close()
-            del NOTIFICATIONS[note]
+    # We only need to reap references if we're handling actions.
+    if "actions" in NOTIFY_SERVER_CAPS:
+        for note in NOTIFICATIONS:
+            if note <= old_seen:
+                NOTIFICATIONS[note].close()
+                del NOTIFICATIONS[note]
     return True
 
 

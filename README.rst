@@ -8,8 +8,10 @@ Introduction
 For Me* state.  It isn't intended to be used by others, but perhaps others will
 find it useful.
 
-All it currently does is fetch your friends timeline and display notification
-popups for new tweets.  Nothing more and nothing less.
+All it does is fetch your friends timeline and display notification popups for
+new tweets.  If your system's notification daemon supports adding actions to the
+popups then you'll be able to make a number of choices by clicking the buttons
+on the popup.
 
 Requirements
 ------------
@@ -38,11 +40,11 @@ username and password in the configuration file using the following format::
     user = username
     password = unguessable
 
-Each notification includes an "Open" button that will open the tweet in your
-browser of choice, it uses the Python "webbrowser
-module":http://docs.python.org/library/webbrowser.html and as such can be
-configured by setting the ``BROWSER`` environment variable to an appropriate
-value.
+If you notification daemon supports it you can click on the popup to open the
+tweet in your browser of choice.  The Python webbrowser_ module is used to
+accomplish this and as such can be configured by setting the ``BROWSER``
+environment variable on most systems(refer to the webbrowser_ documentation for
+details).
 
 Hacking
 -------
@@ -93,6 +95,7 @@ reproduce the problem, or even better a patch!
 .. _notify-python: http://www.galago-project.org/
 .. _pygobject: http://www.pygtk.org/
 .. _configobj: http://www.voidspace.org.uk/python/configobj.html
+.. _webbrowser: http://docs.python.org/library/webbrowser.html
 
 ..
     :vim: set ft=rst ts=4 sw=4 et:
