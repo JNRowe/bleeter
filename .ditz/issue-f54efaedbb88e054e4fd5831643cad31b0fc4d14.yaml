@@ -1,0 +1,24 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: Use categories for notifications.
+desc: ""
+type: :feature
+component: bleeter
+release: 0.2.0
+reporter: James Rowe <jnrowe@gmail.com>
+status: :unstarted
+disposition: 
+creation_time: 2010-03-27 08:31:16.563960 Z
+references: []
+
+id: f54efaedbb88e054e4fd5831643cad31b0fc4d14
+log_events: 
+- - 2010-03-27 08:31:17.035837 Z
+  - James Rowe <jnrowe@gmail.com>
+  - created
+  - ""
+- - 2010-03-27 08:31:20.396032 Z
+  - James Rowe <jnrowe@gmail.com>
+  - issue claimed
+  - ""
+claimer: James Rowe <jnrowe@gmail.com>
+git_branch: 
