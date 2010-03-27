@@ -75,10 +75,14 @@ def process_command_line(config_file):
                                    version="%prog v" + __version__,
                                    description=USAGE)
 
-    parser.set_defaults(user=config.get("user", os.getenv("LOGNAME")),
+    parser.set_defaults(timeout=config["timeout"],
+                        user=config.get("user", os.getenv("LOGNAME")),
                         password=config.get("password"),
                         stealth=config.get("stealth"))
 
+    parser.add_option("-t", "--timeout", action="store", type="int",
+                      metavar=config.get("timeout", 5),
+                      help="Timeout for notification popups in seconds")
     parser.add_option("-u", "--user", action="store",
                       metavar=config.get("user", os.getenv("LOGNAME")),
                       help="Twitter user account name")
@@ -224,7 +228,7 @@ def open_tweet(tweet):
 
 
 NOTIFICATIONS = {}
-def update(api, seen, users):
+def update(api, seen, users, timeout):
     """Fetch updates and display notifications
 
     :type api: ``tweepy.api.API``
@@ -233,6 +237,9 @@ def update(api, seen, users):
     :param seen: Already seen tweets
     :type users: ``list`` of ``str``
     :param users: Stealth follow user list
+    :type timeout: ``tweepy.api.API``
+    :param timeout: Timeout for notifications in seconds
+
     """
 
     tweets = api.friends_timeline()
@@ -251,7 +258,7 @@ def update(api, seen, users):
             note.add_action("default", " ", open_tweet(tweet))
             # Keep a reference for handling the action.
             NOTIFICATIONS[tweet.id] = note
-        note.set_timeout(pynotify.EXPIRES_DEFAULT)
+        note.set_timeout(timeout * 1000)
         note.set_category("im.received")
         if api.auth.username in tweet.text:
             note.set_urgency(pynotify.URGENCY_CRITICAL)
@@ -312,12 +319,13 @@ def main(argv):
         json.dump(seen, open(state_file, "w"), indent=4)
     atexit.register(save_state, seen)
 
-    update(api, seen, options.stealth)
+    update(api, seen, options.stealth, options.timeout)
     if os.getenv("DEBUG_BLEETER"):
         sys.exit(1)
 
     loop = glib.MainLoop()
-    glib.timeout_add_seconds(60, update, api, seen, options.stealth)
+    glib.timeout_add_seconds(60, update, api, seen, options.stealth,
+                             options.timeout)
     loop.run()
 
 if __name__ == "__main__":
