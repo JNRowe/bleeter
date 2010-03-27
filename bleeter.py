@@ -252,8 +252,11 @@ def main(argv):
         json.dump(seen, open(state_file, "w"), indent=4)
     atexit.register(save_state, seen)
 
-    loop = glib.MainLoop()
     update(api, seen, stealth_users)
+    if os.getenv("DEBUG_BLEETER"):
+        sys.exit(1)
+
+    loop = glib.MainLoop()
     glib.timeout_add_seconds(60, update, api, seen, stealth_users)
     loop.run()
 
