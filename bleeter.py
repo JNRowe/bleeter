@@ -54,6 +54,22 @@ import pynotify
 import tweepy
 import validate
 
+try:
+    import termstyle
+except ImportError:
+    termstyle = None # pylint: disable-msg=C0103
+
+# Select colours if terminal is a tty
+if termstyle:
+    # pylint: disable-msg=C0103
+    termstyle.auto()
+    success = termstyle.green
+    fail = termstyle.red
+    warn = termstyle.yellow
+else:
+    # pylint: disable-msg=C0103
+    success = fail = warn = str
+
 
 NOTIFY_SERVER_CAPS = []
 
@@ -81,7 +97,7 @@ def process_command_line(config_file):
     results = config.validate(validate.Validator())
     if results is not True:
         for key in filter(lambda k: not results[k], results):
-            print "Config value for `%s' is invalid" % key
+            print fail("Config value for `{0}' is invalid".format(key))
         raise SyntaxError("Invalid configuration file")
 
     parser = optparse.OptionParser(usage="%prog [options...]",
@@ -297,7 +313,7 @@ def main(argv):
     """
 
     if not pynotify.init(argv[0]):
-        print "Unable to initialise pynotify!"
+        print fail("Unable to initialise pynotify!")
         return 1
     NOTIFY_SERVER_CAPS.extend(pynotify.get_server_caps())
 
@@ -310,10 +326,10 @@ def main(argv):
     state_file = "%s/bleeter/state.db" % glib.get_user_config_dir()
 
     if not options.user:
-        print "No user set in %s and $TWEETUSERNAME not set" % config_file
+        print fail("No user set in %s and $TWEETUSERNAME not set" % config_file)
         return 1
     if not options.password:
-        print "No password set in %s and $TWEETPASSWORD not set" % config_file
+        print fail("No password set in %s and $TWEETPASSWORD not set" % config_file)
         return 1
 
     auth = tweepy.BasicAuthHandler(options.user, options.password)
