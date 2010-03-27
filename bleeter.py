@@ -72,6 +72,7 @@ else:
     success = fail = warn = str
 
 
+USER_AGENT = "bleeter/%s +http://github.com/JNRowe/bleeter/" % __version__
 NOTIFY_SERVER_CAPS = []
 
 # Pull the first paragraph from the docstring
@@ -295,9 +296,10 @@ def update(api, seen, users, timeout, note=None):
     :return: Timers must return a ``True`` value for timer to continue
     """
 
-    tweets = api.friends_timeline()
+    headers = {"User-Agent": USER_AGENT}
+    tweets = api.friends_timeline(headers=headers)
     for user in users:
-        tweets.extend(api.user_timeline(user))
+        tweets.extend(api.user_timeline(user, headers=headers))
 
     old_seen = seen.get("latest", 0)
     tweets = filter(lambda x: x.id > old_seen, tweets)
