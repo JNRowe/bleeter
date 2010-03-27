@@ -199,6 +199,7 @@ def update(api, seen, users):
             # Keep a reference for handling the action.
             NOTIFICATIONS[tweet.id] = note
         note.set_timeout(pynotify.EXPIRES_DEFAULT)
+        note.set_category("im.received")
         if api.auth.username in tweet.text:
             note.set_urgency(pynotify.URGENCY_CRITICAL)
         if tweet.text.startswith("@%s" % api.auth.username):
