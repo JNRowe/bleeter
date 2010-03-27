@@ -46,8 +46,6 @@ import sys
 import time
 import urllib
 
-from xml.sax.saxutils import escape
-
 import configobj
 import glib
 import pynotify
@@ -116,7 +114,7 @@ def format_tweet(text):
     :return: Tweet content with pretty formatting
     """
 
-    text = escape(text)
+    text = glib.markup_escape_text(text)
     if "body-markup" in pynotify.get_server_caps():
         text = re.sub(r'(@\w+)', r'<u>\1</u>', text)
         text = re.sub(r'(#\w+)', r'<i>\1</i>', text)
