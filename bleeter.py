@@ -233,5 +233,8 @@ def main(argv):
     glib.timeout_add_seconds(60, update, api, seen, stealth_users)
     loop.run()
 
-if __name__ == '__main__':
-    sys.exit(main(sys.argv[:]))
+if __name__ == "__main__":
+    try:
+        sys.exit(main(sys.argv[:]))
+    except KeyboardInterrupt:
+        pass
