@@ -40,6 +40,7 @@ import atexit
 import datetime
 import json
 import operator
+import optparse
 import os
 import re
 import sys
@@ -53,6 +54,52 @@ import pynotify
 import tweepy
 
 NOTIFY_SERVER_CAPS = []
+
+# Pull the first paragraph from the docstring
+USAGE = __doc__[:__doc__.find('\n\n', 100)].splitlines()[2:]
+# Replace script name with optparse's substitution var, and rebuild string
+USAGE = "\n".join(USAGE).replace("bleeter", "%prog")
+
+def process_command_line(config_file):
+    """Main command line interface
+
+    :type config_file: ``str``
+    :param config_file: Location of the configuration file
+    :rtype: ``tuple`` of ``optparse`` and ``list``
+    :return: Parsed options and arguments
+    """
+
+    config = configobj.ConfigObj(config_file)
+
+    parser = optparse.OptionParser(usage="%prog [options...]",
+                                   version="%prog v" + __version__,
+                                   description=USAGE)
+
+    parser.set_defaults(user=config.get("user", os.getenv("LOGNAME")),
+                        password=config.get("password"),
+                        stealth=config.get("stealth"))
+
+    parser.add_option("-u", "--user", action="store",
+                      metavar=config.get("user", os.getenv("LOGNAME")),
+                      help="Twitter user account name")
+    parser.add_option("-p", "--password", action="store",
+                      metavar="<set from config>" if config.has_key("password") else "",
+                      help="Twitter user account password")
+    parser.add_option("-s", "--stealth", action="store",
+                      metavar=",".join(config.get("stealth")),
+                      help="Users to watch without following(comma separated)")
+    parser.add_option("-v", "--verbose", action="store_true",
+                      dest="verbose", help="Produce verbose output")
+    parser.add_option("-q", "--quiet", action="store_false",
+                      dest="verbose",
+                      help="Output only matches and errors")
+
+    options, args = parser.parse_args()
+    if isinstance(options.stealth, basestring):
+        options.stealth = options.stealth.split(",")
+
+    return options, args
+
 
 def relative_time(timestamp):
     """Format a relative time
@@ -234,21 +281,22 @@ def main(argv):
         return 1
     NOTIFY_SERVER_CAPS.extend(pynotify.get_server_caps())
 
-    state_file = "%s/bleeter/state.db" % glib.get_user_config_dir()
     config_file = "%s/bleeter/config.ini" % glib.get_user_config_dir()
-    conf = configobj.ConfigObj(config_file)
-    stealth_users = conf.get("stealth")
+    try:
+        options, args = process_command_line(config_file) # pylint: disable-msg=W0612
+    except SyntaxError:
+        sys.exit(1)
 
-    user = conf.get("user", os.getenv("TWEETUSERNAME"))
-    if not user:
+    state_file = "%s/bleeter/state.db" % glib.get_user_config_dir()
+
+    if not options.user:
         print "No user set in %s and $TWEETUSERNAME not set" % config_file
         return 1
-    password = conf.get("password", os.getenv("TWEETPASSWORD"))
-    if not password:
+    if not options.password:
         print "No password set in %s and $TWEETPASSWORD not set" % config_file
         return 1
 
-    auth = tweepy.BasicAuthHandler(user, password)
+    auth = tweepy.BasicAuthHandler(options.user, options.password)
     api = tweepy.API(auth)
     if os.path.exists(state_file):
         seen = json.load(open(state_file))
@@ -264,12 +312,12 @@ def main(argv):
         json.dump(seen, open(state_file, "w"), indent=4)
     atexit.register(save_state, seen)
 
-    update(api, seen, stealth_users)
+    update(api, seen, options.stealth)
     if os.getenv("DEBUG_BLEETER"):
         sys.exit(1)
 
     loop = glib.MainLoop()
-    glib.timeout_add_seconds(60, update, api, seen, stealth_users)
+    glib.timeout_add_seconds(60, update, api, seen, options.stealth)
     loop.run()
 
 if __name__ == "__main__":
