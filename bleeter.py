@@ -266,7 +266,7 @@ def open_tweet(tweet):
 
 
 NOTIFICATIONS = {}
-def update(api, seen, users, timeout):
+def update(api, seen, users, timeout, note=None):
     """Fetch updates and display notifications
 
     :type api: ``tweepy.api.API``
@@ -277,6 +277,8 @@ def update(api, seen, users, timeout):
     :param users: Stealth follow user list
     :type timeout: ``tweepy.api.API``
     :param timeout: Timeout for notifications in seconds
+    :type note: ``pynotify.Notification``
+    :param note: Note to close once new tweets are fetched
 
     """
 
@@ -286,6 +288,10 @@ def update(api, seen, users, timeout):
 
     old_seen = seen.get("latest", 0)
     tweets = filter(lambda x: x.id > old_seen, tweets)
+
+    if note and tweets:
+        note.close()
+
     for tweet in sorted(tweets, key=operator.attrgetter("id")):
         note = pynotify.Notification("From %s about %s"
                                      % (tweet.user.name,
@@ -357,7 +363,18 @@ def main(argv):
         json.dump(seen, open(state_file, "w"), indent=4)
     atexit.register(save_state, seen)
 
-    update(api, seen, options.stealth, options.timeout)
+    if options.verbose:
+        # Show a "hello" message, as it can take some time the first real
+        # notification
+        note = pynotify.Notification("bleeter v%s" % (__version__), "Started",
+                                     "%s/bleeter/bleeter.png" % glib.get_user_cache_dir())
+        note.set_timeout(options.timeout * 1000)
+        if not note.show():
+            raise OSError("Notification failed to display!")
+    else:
+        note = None
+
+    update(api, seen, options.stealth, options.timeout, note)
     if os.getenv("DEBUG_BLEETER"):
         sys.exit(1)
 
