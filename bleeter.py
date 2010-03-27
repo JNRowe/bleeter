@@ -52,6 +52,8 @@ import configobj
 import glib
 import pynotify
 import tweepy
+import validate
+
 
 NOTIFY_SERVER_CAPS = []
 
@@ -69,22 +71,33 @@ def process_command_line(config_file):
     :return: Parsed options and arguments
     """
 
-    config = configobj.ConfigObj(config_file)
+    config_spec = [
+        "timeout = integer(default=5)",
+        "user = string(default=os.getenv('LOGNAME'))",
+        "password = string",
+        "stealth = list",
+    ]
+    config = configobj.ConfigObj(config_file, configspec=config_spec)
+    results = config.validate(validate.Validator())
+    if results is not True:
+        for key in filter(lambda k: not results[k], results):
+            print "Config value for `%s' is invalid" % key
+        raise SyntaxError("Invalid configuration file")
 
     parser = optparse.OptionParser(usage="%prog [options...]",
                                    version="%prog v" + __version__,
                                    description=USAGE)
 
     parser.set_defaults(timeout=config["timeout"],
-                        user=config.get("user", os.getenv("LOGNAME")),
+                        user=config["user"],
                         password=config.get("password"),
                         stealth=config.get("stealth"))
 
     parser.add_option("-t", "--timeout", action="store", type="int",
-                      metavar=config.get("timeout", 5),
+                      metavar=config["timeout"],
                       help="Timeout for notification popups in seconds")
     parser.add_option("-u", "--user", action="store",
-                      metavar=config.get("user", os.getenv("LOGNAME")),
+                      metavar=config["user"],
                       help="Twitter user account name")
     parser.add_option("-p", "--password", action="store",
                       metavar="<set from config>" if config.has_key("password") else "",
