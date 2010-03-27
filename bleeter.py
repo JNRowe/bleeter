@@ -196,6 +196,7 @@ def update(api, seen, users):
                                      get_icon(tweet.user))
         note.add_action("default", " ", open_tweet(tweet))
         note.set_timeout(pynotify.EXPIRES_DEFAULT)
+        note.set_category("im.received")
         if api.auth.username in tweet.text:
             note.set_urgency(pynotify.URGENCY_CRITICAL)
         if tweet.text.startswith("@%s" % api.auth.username):
