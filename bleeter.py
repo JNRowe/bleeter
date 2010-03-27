@@ -38,6 +38,7 @@ nothing more.
 
 import atexit
 import datetime
+import errno
 import json
 import operator
 import optparse
@@ -329,7 +330,7 @@ def main(argv):
 
     if not pynotify.init(argv[0]):
         print fail("Unable to initialise pynotify!")
-        return 1
+        return errno.EIO
     NOTIFY_SERVER_CAPS.extend(pynotify.get_server_caps())
 
     config_file = "%s/bleeter/config.ini" % glib.get_user_config_dir()
@@ -342,10 +343,10 @@ def main(argv):
 
     if not options.user:
         print fail("No user set in %s and $TWEETUSERNAME not set" % config_file)
-        return 1
+        return errno.EPERM
     if not options.password:
         print fail("No password set in %s and $TWEETPASSWORD not set" % config_file)
-        return 1
+        return errno.EPERM
 
     auth = tweepy.BasicAuthHandler(options.user, options.password)
     api = tweepy.API(auth)
