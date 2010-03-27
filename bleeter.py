@@ -58,7 +58,7 @@ import validate
 try:
     import termstyle
 except ImportError:
-    termstyle = None # pylint: disable-msg=C0103
+    termstyle = None  # pylint: disable-msg=C0103
 
 # Select colours if terminal is a tty
 if termstyle:
@@ -79,6 +79,7 @@ USAGE = __doc__[:__doc__.find('\n\n', 100)].splitlines()[2:]
 # Replace script name with optparse's substitution var, and rebuild string
 USAGE = "\n".join(USAGE).replace("bleeter", "%prog")
 
+
 def process_command_line(config_file):
     """Main command line interface
 
@@ -87,6 +88,12 @@ def process_command_line(config_file):
     :rtype: ``tuple`` of ``optparse`` and ``list``
     :return: Parsed options and arguments
     """
+
+    def check_frequency(option, opt_str, value, parser):
+        """Check frequency value is within bounds"""
+
+        if value < 60:
+            raise optparse.OptionValueError("%s must be at least 60" % opt_str)
 
     config_spec = [
         "timeout = integer(default=5)",
@@ -115,9 +122,6 @@ def process_command_line(config_file):
     parser.add_option("-t", "--timeout", action="store", type="int",
                       metavar=config["timeout"],
                       help="Timeout for notification popups in seconds")
-    def check_frequency(option, opt_str, value, parser):
-        if value < 60:
-            raise optparse.OptionValueError("%s must be at least 60" % opt_str)
     parser.add_option("-f", "--frequency", action="callback", type="int",
                       metavar=config["frequency"],
                       callback=check_frequency,
@@ -126,7 +130,7 @@ def process_command_line(config_file):
                       metavar=config["user"],
                       help="Twitter user account name")
     parser.add_option("-p", "--password", action="store",
-                      metavar="<set from config>" if config.has_key("password") else "",
+                      metavar="<from config>" if config.get("password") else "",
                       help="Twitter user account password")
     parser.add_option("-s", "--stealth", action="store",
                       metavar=",".join(config.get("stealth")),
@@ -257,14 +261,15 @@ def open_tweet(tweet):
     :return: Wrapper to open tweet in browser
     """
 
-    def show(notification, action): # pylint: disable-msg=W0613
-        """Open tweet in webbrowser
+    def show(notification, action):  # pylint: disable-msg=W0613
+        """Open tweet in browser
 
         :type notification: ``pynotify.Notification``
         :param notification: Calling notification instance
         :type action: ``str``
         :param action: Calling action name
         """
+
         # TODO: Perhaps make the new tab, new window, etc configurable?
         webbrowser.open("http://twitter.com/%s/status/%s"
                         % (tweet.user.screen_name, tweet.id),
@@ -344,7 +349,7 @@ def main(argv):
 
     config_file = "%s/bleeter/config.ini" % glib.get_user_config_dir()
     try:
-        options, args = process_command_line(config_file) # pylint: disable-msg=W0612
+        options, args = process_command_line(config_file)  # pylint: disable-msg=W0612
     except SyntaxError:
         sys.exit(1)
 
@@ -354,7 +359,8 @@ def main(argv):
         print fail("No user set in %s and $TWEETUSERNAME not set" % config_file)
         return errno.EPERM
     if not options.password:
-        print fail("No password set in %s and $TWEETPASSWORD not set" % config_file)
+        print fail("No password set in %s and $TWEETPASSWORD not set"
+                   % config_file)
         return errno.EPERM
 
     auth = tweepy.BasicAuthHandler(options.user, options.password)
