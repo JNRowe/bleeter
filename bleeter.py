@@ -52,6 +52,7 @@ import glib
 import pynotify
 import tweepy
 
+NOTIFY_SERVER_CAPS = []
 
 def relative_time(timestamp):
     """Format a relative time
@@ -96,7 +97,9 @@ def relative_time(timestamp):
 def format_tweet(text):
     """Format tweet for display
 
-    >>> pynotify.get_server_caps = lambda: ["body-markup"]
+    >>> format_tweet("Populate #sup contacts from #abook")
+    'Populate #sup contacts from #abook'
+    >>> NOTIFY_SERVER_CAPS.append("body-markup")
     >>> format_tweet("Populate #sup contacts from #abook")
     'Populate <i>#sup</i> contacts from <i>#abook</i>'
     >>> format_tweet("RT @ewornj Populate #sup contacts from #abook")
@@ -105,9 +108,6 @@ def format_tweet(text):
     '<u>@rachcholmes</u> London marathon signup closed yet? ;)'
     >>> format_tweet("Updated my vim colour scheme see http://bit.ly/dunMgV")
     'Updated my vim colour scheme see <u>http://bit.ly/dunMgV</u>'
-    >>> pynotify.get_server_caps = lambda: []
-    >>> format_tweet("Populate #sup contacts from #abook")
-    'Populate #sup contacts from #abook'
 
     :type text: ``str``
     :param api: Tweet content
@@ -116,7 +116,7 @@ def format_tweet(text):
     """
 
     text = glib.markup_escape_text(text)
-    if "body-markup" in pynotify.get_server_caps():
+    if "body-markup" in NOTIFY_SERVER_CAPS:
         text = re.sub(r'(@\w+)', r'<u>\1</u>', text)
         text = re.sub(r'(#\w+)', r'<i>\1</i>', text)
         text = re.sub(r'(http://[\w\./]+)', r'<u>\1</u>', text)
@@ -221,6 +221,7 @@ def main(argv):
     if not pynotify.init(argv[0]):
         print "Unable to initialise pynotify!"
         return 1
+    NOTIFY_SERVER_CAPS.extend(pynotify.get_server_caps())
 
     state_file = "%s/bleeter/state.db" % glib.get_user_config_dir()
     config_file = "%s/bleeter/config.ini" % glib.get_user_config_dir()
