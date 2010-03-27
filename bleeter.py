@@ -39,6 +39,7 @@ nothing more.
 import atexit
 import datetime
 import json
+import operator
 import os
 import re
 import sys
@@ -51,6 +52,7 @@ import configobj
 import glib
 import pynotify
 import tweepy
+
 
 def relative_time(timestamp):
     """Format a relative time
@@ -147,48 +149,9 @@ def get_icon(user):
     return filename
 
 
-def process_tweets(api, tweets, seen):
-    """Display notifications for unseen tweets
-
-    :type tweets: ``list`` of ``tweepy.models.Status``
-    :param api: Twitter status messages
-    :type seen: ``list``
-    :param seen: Already seen tweets
-    """
-    for tweet in reversed(tweets):
-        if tweet.id in seen:
-            continue
-        else:
-            note = pynotify.Notification("From %s about %s"
-                                         % (tweet.user.name,
-                                            relative_time(tweet.created_at)),
-                                         format_tweet(tweet.text),
-                                         get_icon(tweet.user))
-            if api.auth.username in tweet.text:
-                note.set_urgency(pynotify.URGENCY_CRITICAL)
-            if tweet.text.startswith("@%s" % api.auth.username):
-                note.set_timeout(pynotify.EXPIRES_NEVER)
-            if not note.show():
-                raise OSError("Notification failed to display!")
-            seen.append(tweet.id)
-            time.sleep(4)
-
-
-def update(api, seen):
+NOTIFICATIONS = {}
+def update(api, seen, users):
     """Fetch updates and display notifications
-
-    :type api: ``twitter.Api``
-    :param api: Authenticated ``tweepy.api.API`` object
-    :type seen: ``list``
-    :param seen: Already seen tweets
-    """
-
-    process_tweets(api, api.friends_timeline(), seen)
-    return True
-
-
-def update_stealth(api, seen, users):
-    """Fetch updates and display notifications for stealth follows
 
     :type api: ``tweepy.api.API``
     :param api: Authenticated ``tweepy.api.API`` object
@@ -198,13 +161,36 @@ def update_stealth(api, seen, users):
     :param users: Stealth follow user list
     """
 
+    tweets = api.friends_timeline()
     for user in users:
-        process_tweets(api, api.user_timeline(user), seen)
+        tweets.extend(api.user_timeline(user))
+
+    old_seen = seen.get("latest", 0)
+    tweets = filter(lambda x: x.id > old_seen, tweets)
+    for tweet in sorted(tweets, key=operator.attrgetter("id")):
+        note = pynotify.Notification("From %s about %s"
+                                     % (tweet.user.name,
+                                        relative_time(tweet.created_at)),
+                                     format_tweet(tweet.text),
+                                     get_icon(tweet.user))
+        note.set_timeout(pynotify.EXPIRES_DEFAULT)
+        if api.auth.username in tweet.text:
+            note.set_urgency(pynotify.URGENCY_CRITICAL)
+        if tweet.text.startswith("@%s" % api.auth.username):
+            note.set_timeout(pynotify.EXPIRES_NEVER)
+        if not note.show():
+            raise OSError("Notification failed to display!")
+        seen["latest"] = tweet.id
+        NOTIFICATIONS[tweet.id] = note
+    for note in NOTIFICATIONS:
+        if note <= old_seen:
+            NOTIFICATIONS[note].close()
+            del NOTIFICATIONS[note]
     return True
 
 
 def main(argv):
-    """main handler
+    """Main handler
 
     :type argv: ``list``
     :param argv: Command line parameters
@@ -233,7 +219,7 @@ def main(argv):
     if os.path.exists(state_file):
         seen = json.load(open(state_file))
     else:
-        seen = []
+        seen = {}
 
     def save_state(seen):
         """Seen tweets state saver
@@ -245,9 +231,8 @@ def main(argv):
     atexit.register(save_state, seen)
 
     loop = glib.MainLoop()
-    if stealth_users:
-        glib.timeout_add_seconds(300, update_stealth, api, seen, stealth_users)
-    glib.timeout_add_seconds(300, update, api, seen)
+    update(api, seen, stealth_users)
+    glib.timeout_add_seconds(60, update, api, seen, stealth_users)
     loop.run()
 
 if __name__ == '__main__':
