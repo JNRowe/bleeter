@@ -163,6 +163,10 @@ def relative_time(timestamp):
     >>> relative_time(now - datetime.timedelta(seconds=7))
     '7 seconds ago'
 
+    :type timestamp: ``datetime.datetime``
+    :param timestamp: Event to generate relative timestamp against
+    :rtype: ``str``
+    :return: Human readable date and time offset
     """
 
     matches = [
@@ -249,6 +253,8 @@ def open_tweet(tweet):
 
     :type tweet: ``tweepy.models.Status``
     :param tweet: Twitter status message to open
+    :rtype: ``FunctionType``
+    :return: Wrapper to open tweet in browser
     """
 
     def show(notification, action): # pylint: disable-msg=W0613
@@ -280,7 +286,8 @@ def update(api, seen, users, timeout, note=None):
     :param timeout: Timeout for notifications in seconds
     :type note: ``pynotify.Notification``
     :param note: Note to close once new tweets are fetched
-
+    :rtype: ``True``
+    :return: Timers must return a ``True`` value for timer to continue
     """
 
     tweets = api.friends_timeline()
@@ -326,6 +333,8 @@ def main(argv):
 
     :type argv: ``list``
     :param argv: Command line parameters
+    :rtype: ``int``
+    :return: Shell return value
     """
 
     if not pynotify.init(argv[0]):
