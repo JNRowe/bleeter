@@ -47,6 +47,7 @@ import re
 import sys
 import time
 import urllib
+import warnings
 import webbrowser
 
 import configobj
@@ -297,11 +298,30 @@ def update(api, seen, users, timeout, note=None):
     """
 
     headers = {"User-Agent": USER_AGENT}
-    tweets = api.home_timeline(headers=headers)
-    tweets.extend(api.mentions(headers=headers))
-    for user in users:
-        tweets.extend(api.user_timeline(user, headers=headers))
+    try:
+        tweets = api.home_timeline(headers=headers)
+        tweets.extend(api.mentions(headers=headers))
+    except tweepy.TweepError as e:
+        error = pynotify.Notification("Fetching user data failed", "",
+                                      "error")
+        if not error.show():
+            raise OSError("Notification failed to display!")
+        warnings.warn("User data fetch failed: %s" % e.reason)
+        # Still return True, so we re-enter the loop
+        return True
 
+    for user in users:
+        try:
+            tweets.extend(api.user_timeline(user, headers=headers))
+        except tweepy.TweepError as e:
+            error = pynotify.Notification("Fetching user data failed",
+                                          "Data for `%s' not available" % user,
+                                          "error")
+            if not error.show():
+                raise OSError("Notification failed to display!")
+            warnings.warn("User data fetch failed: %s" % e.reason)
+            # Still return True, so we re-enter the loop
+            return True
     old_seen = seen.get("latest", 0)
     tweets = filter(lambda x: x.id > old_seen, tweets)
 
@@ -325,6 +345,7 @@ def update(api, seen, users, timeout, note=None):
         if tweet.text.startswith("@%s" % api.auth.username):
             note.set_timeout(pynotify.EXPIRES_NEVER)
         if not note.show():
+            # Fail hard at this point, recovery has little value.
             raise OSError("Notification failed to display!")
         seen["latest"] = tweet.id
     # We only need to reap references if we're handling actions.
