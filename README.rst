@@ -38,6 +38,11 @@ username and password in the configuration file using the following format::
     user = username
     password = unguessable
 
+Each notification includes an "Open" button that will open the tweet in your
+browser of choice, it uses the Python "webbrowser
+module":http://docs.python.org/library/webbrowser.html and as such can be
+configured by setting the ``BROWSER`` environment variable to an appropriate
+value.
 
 Hacking
 -------

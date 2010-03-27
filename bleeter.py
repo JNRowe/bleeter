@@ -45,6 +45,7 @@ import re
 import sys
 import time
 import urllib
+import webbrowser
 
 import configobj
 import glib
@@ -147,6 +148,28 @@ def get_icon(user):
     return "file://%s" % filename
 
 
+def open_tweet(tweet):
+    """"Create tweet opening function
+
+    :type tweet: ``tweepy.models.Status``
+    :param tweet: Twitter status message to open
+    """
+
+    def show(notification, action): # pylint: disable-msg=W0613
+        """Open tweet in webbrowser
+
+        :type notification: ``pynotify.Notification``
+        :param notification: Calling notification instance
+        :type action: ``str``
+        :param action: Calling action name
+        """
+        # TODO: Perhaps make the new tab, new window, etc configurable?
+        webbrowser.open("http://twitter.com/%s/status/%s"
+                        % (tweet.user.screen_name, tweet.id),
+                        new=2)
+    return show
+
+
 NOTIFICATIONS = {}
 def update(api, seen, users):
     """Fetch updates and display notifications
@@ -171,6 +194,7 @@ def update(api, seen, users):
                                         relative_time(tweet.created_at)),
                                      format_tweet(tweet.text),
                                      get_icon(tweet.user))
+        note.add_action("default", " ", open_tweet(tweet))
         note.set_timeout(pynotify.EXPIRES_DEFAULT)
         if api.auth.username in tweet.text:
             note.set_urgency(pynotify.URGENCY_CRITICAL)
