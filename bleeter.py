@@ -89,6 +89,7 @@ def process_command_line(config_file):
 
     config_spec = [
         "timeout = integer(default=5)",
+        "frequency = integer(min=60, default=60)",
         "user = string(default=os.getenv('LOGNAME'))",
         "password = string",
         "stealth = list",
@@ -105,6 +106,7 @@ def process_command_line(config_file):
                                    description=USAGE)
 
     parser.set_defaults(timeout=config["timeout"],
+                        frequency=config["frequency"],
                         user=config["user"],
                         password=config.get("password"),
                         stealth=config.get("stealth"))
@@ -112,6 +114,13 @@ def process_command_line(config_file):
     parser.add_option("-t", "--timeout", action="store", type="int",
                       metavar=config["timeout"],
                       help="Timeout for notification popups in seconds")
+    def check_frequency(option, opt_str, value, parser):
+        if value < 60:
+            raise optparse.OptionValueError("%s must be at least 60" % opt_str)
+    parser.add_option("-f", "--frequency", action="callback", type="int",
+                      metavar=config["frequency"],
+                      callback=check_frequency,
+                      help="Update frequency in in seconds")
     parser.add_option("-u", "--user", action="store",
                       metavar=config["user"],
                       help="Twitter user account name")
@@ -353,8 +362,8 @@ def main(argv):
         sys.exit(1)
 
     loop = glib.MainLoop()
-    glib.timeout_add_seconds(60, update, api, seen, options.stealth,
-                             options.timeout)
+    glib.timeout_add_seconds(options.frequency, update, api, seen,
+                             options.stealth, options.timeout)
     loop.run()
 
 if __name__ == "__main__":
