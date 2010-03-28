@@ -17,7 +17,7 @@ Requirements
 ------------
 
 ``bleeter``'s only mandatory dependencies outside of the Python_ standard library
-are the configobj_, notify-python_, pygobject_ and tweepy_ packages.
+are the configobj_, notify-python_, PIL_, pygobject_ and tweepy_ packages.
 
 It should run with Python 2.5 or newer.
 
@@ -96,6 +96,7 @@ reproduce the problem, or even better a patch!
 .. _pygobject: http://www.pygtk.org/
 .. _configobj: http://www.voidspace.org.uk/python/configobj.html
 .. _webbrowser: http://docs.python.org/library/webbrowser.html
+.. _PIL: http://www.pythonware.com/products/pil/index.htm
 
 ..
     :vim: set ft=rst ts=4 sw=4 et:
