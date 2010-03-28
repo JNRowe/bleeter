@@ -20,8 +20,9 @@ Requirements
 ------------
 
 ``bleeter``'s only mandatory dependencies outside of the Python_ standard
-library are the configobj_, notify-python_, pygobject_ and tweepy_ packages.  If
-you're still using Python 2.5 you'll also need the simplejson_ library.
+library are the configobj_, notify-python_, PIL_, pygobject_ and tweepy_
+packages.  If you're still using Python 2.5 you'll also need the simplejson_
+library.
 
 ``bleeter`` should run with Python 2.5 or any newer release from the 2.x branch.
 No effort has been put in to making it work with Python 3, as a few of the
@@ -100,6 +101,7 @@ the problem, or even better a patch!
 .. _xfce4-notifyd: http://spuriousinterrupt.org/projects/xfce4-notifyd
 .. _notification-daemon: http://www.galago-project.org/
 .. _simplejson: http://undefined.org/python/#simplejson
+.. _PIL: http://www.pythonware.com/products/pil/index.htm
 
 ..
     :vim: set ft=rst ts=4 sw=4 et:

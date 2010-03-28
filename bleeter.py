@@ -54,6 +54,7 @@ try:
 except ImportError:
     import simplejson as json
 
+import Image
 import configobj
 import glib
 import pynotify
@@ -252,6 +253,11 @@ def get_icon(user):
     if not os.path.exists(filename):
         try:
             urllib.urlretrieve(user.profile_image_url, filename)
+            # If GTK becomes a dependency this would be better handled with
+            # a gtk.gdk.Pixbuf object, until that day PIL is much lighter.
+            icon = Image.open(filename)
+            if not icon.size == (48, 48):
+                icon.resize((48, 48), Image.ANTIALIAS).save(filename)
         except IOError:
             # Fallback to generic icon, if it exists
             filename = "%s/bleeter.png" % cache_dir
