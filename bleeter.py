@@ -329,9 +329,11 @@ def update(api, seen, users, timeout, note=None):
     """
 
     headers = {"User-Agent": USER_AGENT}
+
+    old_seen = seen.get("latest", 0)
     try:
-        tweets = api.home_timeline(headers=headers)
-        tweets.extend(api.mentions(headers=headers))
+        tweets = api.home_timeline(since_id=old_seen, headers=headers)
+        tweets.extend(api.mentions(since_id=old_seen, headers=headers))
     except tweepy.TweepError, e:
         error = pynotify.Notification("Fetching user data failed", "",
                                       "error")
@@ -343,7 +345,8 @@ def update(api, seen, users, timeout, note=None):
 
     for user in users:
         try:
-            tweets.extend(api.user_timeline(user, headers=headers))
+            tweets.extend(api.user_timeline(user, since_id=old_seen,
+                                            headers=headers))
         except tweepy.TweepError, e:
             error = pynotify.Notification("Fetching user data failed",
                                           "Data for `%s' not available" % user,
@@ -353,8 +356,6 @@ def update(api, seen, users, timeout, note=None):
             warnings.warn("User data fetch failed: %s" % e.reason)
             # Still return True, so we re-enter the loop
             return True
-    old_seen = seen.get("latest", 0)
-    tweets = filter(lambda x: x.id > old_seen, tweets)
 
     if note and tweets:
         note.close()
