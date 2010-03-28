@@ -104,7 +104,7 @@ def process_command_line(config_file):
 
     config_spec = [
         "timeout = integer(default=5)",
-        "frequency = integer(min=60, default=60)",
+        "frequency = integer(min=60, default=300)",
         "user = string(default=os.getenv('LOGNAME'))",
         "password = string",
         "stealth = list",
