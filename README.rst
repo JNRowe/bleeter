@@ -9,9 +9,12 @@ For Me* state.  It isn't intended to be used by others, but perhaps others will
 find it useful.
 
 All it does is fetch your friends timeline and display notification popups for
-new tweets.  If your system's notification daemon supports adding actions to the
-popups then you'll be able to make a number of choices by clicking the buttons
-on the popup.
+new tweets.  If your system's notification daemon supports adding actions [#]_
+to the popups then you'll be able to make a number of choices by clicking the
+buttons on the popup.
+
+.. [#] Most common notification daemons support actions, including
+       xfce4-notifyd_ and Galago's notification-daemon_.
 
 Requirements
 ------------
@@ -96,6 +99,8 @@ reproduce the problem, or even better a patch!
 .. _pygobject: http://www.pygtk.org/
 .. _configobj: http://www.voidspace.org.uk/python/configobj.html
 .. _webbrowser: http://docs.python.org/library/webbrowser.html
+.. _xfce4-notifyd: http://spuriousinterrupt.org/projects/xfce4-notifyd
+.. _notification-daemon: http://www.galago-project.org/
 
 ..
     :vim: set ft=rst ts=4 sw=4 et:
