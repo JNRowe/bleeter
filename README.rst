@@ -19,10 +19,13 @@ buttons on the popup.
 Requirements
 ------------
 
-``bleeter``'s only mandatory dependencies outside of the Python_ standard library
-are the configobj_, notify-python_, pygobject_ and tweepy_ packages.
+``bleeter``'s only mandatory dependencies outside of the Python_ standard
+library are the configobj_, notify-python_, pygobject_ and tweepy_ packages.  If
+you're still using Python 2.5 you'll also need the simplejson_ library.
 
-It should run with Python 2.5 or newer.
+``bleeter`` should run with Python 2.5 or any newer release from the 2.x branch.
+No effort has been put in to making it work with Python 3, as a few of the
+dependencies aren't ported yet.
 
 Configuration
 -------------
@@ -101,6 +104,7 @@ reproduce the problem, or even better a patch!
 .. _webbrowser: http://docs.python.org/library/webbrowser.html
 .. _xfce4-notifyd: http://spuriousinterrupt.org/projects/xfce4-notifyd
 .. _notification-daemon: http://www.galago-project.org/
+.. _simplejson: http://undefined.org/python/#simplejson
 
 ..
     :vim: set ft=rst ts=4 sw=4 et:

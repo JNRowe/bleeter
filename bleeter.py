@@ -39,7 +39,6 @@ nothing more.
 import atexit
 import datetime
 import errno
-import json
 import operator
 import optparse
 import os
@@ -49,6 +48,11 @@ import time
 import urllib
 import warnings
 import webbrowser
+
+try:
+    import json
+except ImportError:
+    import simplejson as json
 
 import configobj
 import glib
@@ -322,7 +326,7 @@ def update(api, seen, users, timeout, note=None):
     try:
         tweets = api.home_timeline(headers=headers)
         tweets.extend(api.mentions(headers=headers))
-    except tweepy.TweepError as e:
+    except tweepy.TweepError, e:
         error = pynotify.Notification("Fetching user data failed", "",
                                       "error")
         if not error.show():
@@ -334,7 +338,7 @@ def update(api, seen, users, timeout, note=None):
     for user in users:
         try:
             tweets.extend(api.user_timeline(user, headers=headers))
-        except tweepy.TweepError as e:
+        except tweepy.TweepError, e:
             error = pynotify.Notification("Fetching user data failed",
                                           "Data for `%s' not available" % user,
                                           "error")
