@@ -278,6 +278,27 @@ def open_tweet(tweet):
                         new=2)
     return show
 
+def fave_tweet(tweet):
+    """"Create favouriting function
+
+    :type tweet: ``tweepy.models.Status``
+    :param tweet: Twitter status message to favourite
+    :rtype: ``FunctionType``
+    :return: Wrapper to favourite tweet
+    """
+
+    def fave(notification, action):  # pylint: disable-msg=W0613
+        """Mark tweet as favourite
+
+        :type notification: ``pynotify.Notification``
+        :param notification: Calling notification instance
+        :type action: ``str``
+        :param action: Calling action name
+        """
+
+        tweet.favorite()
+    return fave
+
 
 NOTIFICATIONS = {}
 def update(api, seen, users, timeout, note=None):
@@ -336,6 +357,11 @@ def update(api, seen, users, timeout, note=None):
                                      get_icon(tweet.user))
         if "actions" in NOTIFY_SERVER_CAPS:
             note.add_action("default", " ", open_tweet(tweet))
+
+            # In case this has been seen in another client
+            if not tweet.favorited:
+                note.add_action("bookmark", "Fave", fave_tweet(tweet))
+
             # Keep a reference for handling the action.
             NOTIFICATIONS[tweet.id] = note
         note.set_timeout(timeout * 1000)
