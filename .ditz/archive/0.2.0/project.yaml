@@ -20,23 +20,10 @@ releases:
     - ""
 - !ditz.rubyforge.org,2008-03-06/release 
   name: 0.2.0
-  status: :released
-  release_time: 2010-03-28 14:55:33.630487 Z
-  log_events: 
-  - - 2010-03-23 11:15:48.111855 Z
-    - James Rowe <jnrowe@gmail.com>
-    - created
-    - ""
-  - - 2010-03-28 14:55:33.630511 Z
-    - James Rowe <jnrowe@gmail.com>
-    - released
-    - ""
-- !ditz.rubyforge.org,2008-03-06/release 
-  name: 0.3.0
   status: :unreleased
   release_time: 
   log_events: 
-  - - 2010-03-28 15:05:03.026468 Z
+  - - 2010-03-23 11:15:48.111855 Z
     - James Rowe <jnrowe@gmail.com>
     - created
     - ""
