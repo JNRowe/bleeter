@@ -370,7 +370,7 @@ def update(api, seen, users, timeout, note=None):
                                      get_icon(tweet.user))
         if "actions" in NOTIFY_SERVER_CAPS:
             note.add_action("default", " ", open_tweet(tweet))
-            note.add_action("forward", "retweet",
+            note.add_action("mail-forward", "retweet",
                             method_tweet(tweet, "retweet"))
             # In case this has been seen in another client
             if not tweet.favorited:
