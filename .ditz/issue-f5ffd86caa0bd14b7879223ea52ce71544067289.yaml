@@ -12,8 +12,8 @@ type: :bugfix
 component: bleeter
 release: 
 reporter: Leon Bird
-status: :unstarted
-disposition: 
+status: :closed
+disposition: :fixed
 creation_time: 2010-03-29 09:01:28.384408 Z
 references: []
 
@@ -23,5 +23,27 @@ log_events:
   - Leon Bird
   - created
   - ""
-claimer: 
+- - 2010-03-29 12:09:03.868380 Z
+  - James Rowe <jnrowe@gmail.com>
+  - issue claimed
+  - ""
+- - 2010-03-29 12:09:07.040388 Z
+  - James Rowe <jnrowe@gmail.com>
+  - changed status from unstarted to in_progress
+  - ""
+- - 2010-03-29 12:14:11.241014 Z
+  - James Rowe <jnrowe@gmail.com>
+  - commented
+  - |-
+    I use a notify-python compatible module that it designed for use with EFL and
+    doesn't require GTK+ to be installed, as my main use for bleeter is on my ZipIt
+    which has no GTK+.
+    
+    What I'm going to do though is create a fallback using GDK image manipulation,
+    for people like yourself who don't have/want PIL.
+- - 2010-03-29 12:18:48.164313 Z
+  - James Rowe <jnrowe@gmail.com>
+  - closed with disposition fixed
+  - ""
+claimer: James Rowe <jnrowe@gmail.com>
 git_branch: 
