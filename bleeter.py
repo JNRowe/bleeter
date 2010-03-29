@@ -107,7 +107,7 @@ def process_command_line(config_file):
         "frequency = integer(min=60, default=300)",
         "user = string(default=os.getenv('LOGNAME'))",
         "password = string",
-        "stealth = list",
+        "stealth = list(default=list('ewornj'))",
     ]
     config = configobj.ConfigObj(config_file, configspec=config_spec)
     results = config.validate(validate.Validator())
