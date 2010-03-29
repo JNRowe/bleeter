@@ -53,6 +53,19 @@ accomplish this and as such can be configured by setting the ``BROWSER``
 environment variable on most systems(refer to the webbrowser_ documentation for
 details).
 
+Contributors
+------------
+
+I'd like to thank the following people who have contributed to ``bleeter``.
+
+Bug reports
+'''''''''''
+
+* Leon Bird
+
+If I've forgotten to include your name I wholeheartedly apologise.  Just drop me
+an email_ and I'll update the list!
+
 Hacking
 -------
 
@@ -102,6 +115,7 @@ the problem, or even better a patch!
 .. _notification-daemon: http://www.galago-project.org/
 .. _simplejson: http://undefined.org/python/#simplejson
 .. _PIL: http://www.pythonware.com/products/pil/index.htm
+.. _email: jnrowe@gmail.com
 
 ..
     :vim: set ft=rst ts=4 sw=4 et:

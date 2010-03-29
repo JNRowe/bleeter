@@ -54,12 +54,19 @@ try:
 except ImportError:
     import simplejson as json
 
-import Image
 import configobj
 import glib
 import pynotify
 import tweepy
 import validate
+
+try:
+    import Image
+except ImportError:
+    Image = False
+    import pygtk
+    pygtk.require('2.0')
+    import gtk
 
 try:
     import termstyle
@@ -253,14 +260,20 @@ def get_icon(user):
     if not os.path.exists(filename):
         try:
             urllib.urlretrieve(user.profile_image_url, filename)
-            # If GTK becomes a dependency this would be better handled with
-            # a gtk.gdk.Pixbuf object, until that day PIL is much lighter.
-            icon = Image.open(filename)
-            if not icon.size == (48, 48):
-                icon.resize((48, 48), Image.ANTIALIAS).save(filename)
         except IOError:
             # Fallback to generic icon, if it exists
             filename = "%s/bleeter.png" % cache_dir
+        if Image:
+            icon = Image.open(filename)
+            if not icon.size == (48, 48):
+                icon = icon.resize((48, 48), Image.ANTIALIAS)
+                icon.save(filename)
+        else:
+            icon = gtk.gdk.pixbuf_new_from_file(filename)
+            if not (im.get_width(), im.get_height()) == (48, 48):
+                icon = icon.scale_simple(48, 48, gtk.gdk.INTERP_BILINEAR)
+                icon.save(filename)
+
     return "file://%s" % filename
 
 
