@@ -310,6 +310,28 @@ def fave_tweet(tweet):
     return fave
 
 
+def retweet_tweet(tweet):
+    """"Create retweeting function
+
+    :type tweet: ``tweepy.models.Status``
+    :param tweet: Twitter status message to retweet
+    :rtype: ``FunctionType``
+    :return: Wrapper to retweet tweet
+    """
+
+    def retweet(notification, action):  # pylint: disable-msg=W0613
+        """Retweet tweet
+
+        :type notification: ``pynotify.Notification``
+        :param notification: Calling notification instance
+        :type action: ``str``
+        :param action: Calling action name
+        """
+
+        tweet.retweet()
+    return retweet
+
+
 NOTIFICATIONS = {}
 def update(api, seen, users, timeout, note=None):
     """Fetch updates and display notifications
@@ -368,7 +390,7 @@ def update(api, seen, users, timeout, note=None):
                                      get_icon(tweet.user))
         if "actions" in NOTIFY_SERVER_CAPS:
             note.add_action("default", " ", open_tweet(tweet))
-
+            note.add_action("forward", "retweet", retweet_tweet(tweet))
             # In case this has been seen in another client
             if not tweet.favorited:
                 note.add_action("bookmark", "Fave", fave_tweet(tweet))
