@@ -84,7 +84,9 @@ else:
     # pylint: disable-msg=C0103
     success = fail = warn = str
 
-
+# OAuth design FTL!
+OAUTH_KEY = "WJ3RGn3aMN98b41b3pJQ"
+OAUTH_SECRET = "PU0b7yrBOcdpbSrD1pcQq1kfA9ZVmPQoD0fqtg1bQBQ"
 USER_AGENT = "bleeter/%s +http://github.com/JNRowe/bleeter/" % __version__
 NOTIFY_SERVER_CAPS = []
 
@@ -112,8 +114,7 @@ def process_command_line(config_file):
     config_spec = [
         "timeout = integer(default=5)",
         "frequency = integer(min=60, default=300)",
-        "user = string(default=os.getenv('LOGNAME'))",
-        "password = string",
+        "token = list(default=list('', ''))",
         "stealth = list(default=list('ewornj'))",
     ]
     config = configobj.ConfigObj(config_file, configspec=config_spec)
@@ -129,8 +130,7 @@ def process_command_line(config_file):
 
     parser.set_defaults(timeout=config["timeout"],
                         frequency=config["frequency"],
-                        user=config["user"],
-                        password=config.get("password"),
+                        token=config.get("token"),
                         stealth=config.get("stealth"))
 
     parser.add_option("-t", "--timeout", action="store", type="int",
@@ -140,12 +140,11 @@ def process_command_line(config_file):
                       metavar=config["frequency"],
                       callback=check_frequency,
                       help="Update frequency in in seconds")
-    parser.add_option("-u", "--user", action="store",
-                      metavar=config["user"],
-                      help="Twitter user account name")
-    parser.add_option("-p", "--password", action="store",
-                      metavar="<from config>" if config.get("password") else "",
-                      help="Twitter user account password")
+    parser.add_option("-r", "--token", action="store",
+                      metavar="<key>,<secret>",
+                      help="OAuth token for twitter")
+    parser.add_option("-g", "--get-token", action="store_true",
+                      help="Generate a new OAuth token for twitter")
     parser.add_option("-s", "--stealth", action="store",
                       metavar=",".join(config.get("stealth")),
                       help="Users to watch without following(comma separated)")
@@ -425,23 +424,48 @@ def main(argv):
     NOTIFY_SERVER_CAPS.extend(pynotify.get_server_caps())
 
     config_file = "%s/bleeter/config.ini" % glib.get_user_config_dir()
-    try:
-        options, args = process_command_line(config_file)  # pylint: disable-msg=W0612
-    except SyntaxError:
-        sys.exit(1)
+    options, args = process_command_line(config_file)  # pylint: disable-msg=W0612
+
+    auth = tweepy.OAuthHandler(OAUTH_KEY, OAUTH_SECRET)
+    if options.get_token:
+        try:
+            print "Visit `%s' to fetch the new OAuth token" \
+                % auth.get_authorization_url()
+        except tweepy.TweepError:
+            print fail("Talking to twitter failed.  "
+                       "Is twitter or your network down?")
+            return errno.EIO
+        while True:
+            verifier = raw_input("Input verifier? ")
+            if verifier:
+                break
+            print fail("You must supply a verifier")
+        try:
+            token = auth.get_access_token(verifier)
+        except tweepy.TweepError:
+            print fail("Fetching token failed")
+            return errno.EIO
+        conf = configobj.ConfigObj(config_file)
+        conf['token'] = [token.key, token.secret]
+        conf.write()
+        print success("Token set!")
+        return 0
+
+    if not options.token or not all(options.token):
+        message = "Use `%s --get-token' from the command line to set it" \
+            % sys.argv[0]
+        print fail(message)
+        error = pynotify.Notification("No OAuth token for bleeter", message,
+                                      "error")
+        error.set_timeout(options.timeout * 1000)
+        if not error.show():
+            raise OSError("Notification failed to display!")
+        return errno.EPERM
+
+    auth.set_access_token(*options.token)
+    api = tweepy.API(auth)
 
     state_file = "%s/bleeter/state.db" % glib.get_user_config_dir()
-
-    if not options.user:
-        print fail("No user set in %s and $TWEETUSERNAME not set" % config_file)
-        return errno.EPERM
-    if not options.password:
-        print fail("No password set in %s and $TWEETPASSWORD not set"
-                   % config_file)
-        return errno.EPERM
-
-    auth = tweepy.BasicAuthHandler(options.user, options.password)
-    api = tweepy.API(auth)
     if os.path.exists(state_file):
         seen = json.load(open(state_file))
     else:
