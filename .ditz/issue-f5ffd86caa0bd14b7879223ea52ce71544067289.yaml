@@ -1,0 +1,27 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: Switch to Pixbufs for icons.
+desc: |-
+  In get_icon() you wrote:
+  
+    # If GTK becomes a dependency this would be better handled with
+    # a gtk.gdk.Pixbuf object, until that day PIL is much lighter.
+  
+  There is already an indirect dependency on pygtk because of the notify-python
+  usage.  If you switch to Pixbuf now I won't need to install PIL :)
+type: :bugfix
+component: bleeter
+release: 
+reporter: Leon Bird
+status: :unstarted
+disposition: 
+creation_time: 2010-03-29 09:01:28.384408 Z
+references: []
+
+id: f5ffd86caa0bd14b7879223ea52ce71544067289
+log_events: 
+- - 2010-03-29 09:01:39.535054 Z
+  - Leon Bird
+  - created
+  - ""
+claimer: 
+git_branch: 
