@@ -288,16 +288,18 @@ def open_tweet(tweet):
                         new=2)
     return show
 
-def fave_tweet(tweet):
-    """"Create favouriting function
+def method_tweet(tweet, method):
+    """"Create Status method wrapper function
 
     :type tweet: ``tweepy.models.Status``
     :param tweet: Twitter status message to favourite
+    :type method: ``str``
+    :param method: Method to wrap
     :rtype: ``FunctionType``
-    :return: Wrapper to favourite tweet
+    :return: Wrapper to tweet method
     """
 
-    def fave(notification, action):  # pylint: disable-msg=W0613
+    def wrapper(notification, action):  # pylint: disable-msg=W0613
         """Mark tweet as favourite
 
         :type notification: ``pynotify.Notification``
@@ -306,30 +308,8 @@ def fave_tweet(tweet):
         :param action: Calling action name
         """
 
-        tweet.favorite()
-    return fave
-
-
-def retweet_tweet(tweet):
-    """"Create retweeting function
-
-    :type tweet: ``tweepy.models.Status``
-    :param tweet: Twitter status message to retweet
-    :rtype: ``FunctionType``
-    :return: Wrapper to retweet tweet
-    """
-
-    def retweet(notification, action):  # pylint: disable-msg=W0613
-        """Retweet tweet
-
-        :type notification: ``pynotify.Notification``
-        :param notification: Calling notification instance
-        :type action: ``str``
-        :param action: Calling action name
-        """
-
-        tweet.retweet()
-    return retweet
+        getattr(tweet, method)()
+    return wrapper
 
 
 NOTIFICATIONS = {}
@@ -390,11 +370,12 @@ def update(api, seen, users, timeout, note=None):
                                      get_icon(tweet.user))
         if "actions" in NOTIFY_SERVER_CAPS:
             note.add_action("default", " ", open_tweet(tweet))
-            note.add_action("forward", "retweet", retweet_tweet(tweet))
+            note.add_action("forward", "retweet",
+                            method_tweet(tweet, "retweet"))
             # In case this has been seen in another client
             if not tweet.favorited:
-                note.add_action("bookmark", "Fave", fave_tweet(tweet))
-
+                note.add_action("bookmark", "Fave",
+                                method_tweet(tweet, "favorite"))
             # Keep a reference for handling the action.
             NOTIFICATIONS[tweet.id] = note
         note.set_timeout(timeout * 1000)
