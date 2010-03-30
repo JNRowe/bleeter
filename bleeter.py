@@ -426,6 +426,16 @@ def main(argv):
     config_file = "%s/bleeter/config.ini" % glib.get_user_config_dir()
     options, args = process_command_line(config_file)  # pylint: disable-msg=W0612
 
+    state_file = "%s/bleeter/state.db" % glib.get_user_config_dir()
+    lock_file = "%s.lock" % state_file
+
+    if os.path.exists(lock_file):
+        print fail("Another instance is running, or `%s' is stale" % lock_file)
+        return errno.EBUSY
+    lock = open(lock_file, "w")
+    lock.write("locked")
+    atexit.register(os.unlink, lock_file)
+
     auth = tweepy.OAuthHandler(OAUTH_KEY, OAUTH_SECRET)
     if options.get_token:
         try:
@@ -465,7 +475,6 @@ def main(argv):
     auth.set_access_token(*options.token)
     api = tweepy.API(auth)
 
-    state_file = "%s/bleeter/state.db" % glib.get_user_config_dir()
     if os.path.exists(state_file):
         seen = json.load(open(state_file))
     else:
