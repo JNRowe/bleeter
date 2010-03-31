@@ -37,6 +37,7 @@ nothing more.
 """ % parseaddr(__author__)
 
 import atexit
+import collections
 import datetime
 import errno
 import operator
@@ -325,30 +326,27 @@ def method_tweet(tweet, method):
     return wrapper
 
 
-NOTIFICATIONS = {}
-def update(api, seen, users, timeout, note=None):
-    """Fetch updates and display notifications
+def update(tweets, api, seen, users):
+    """Fetch new tweets
 
+    :type tweets: ``collections.deque``
+    :param tweets: Tweets awaiting display
     :type api: ``tweepy.api.API``
     :param api: Authenticated ``tweepy.api.API`` object
     :type seen: ``list``
     :param seen: Already seen tweets
     :type users: ``list`` of ``str``
     :param users: Stealth follow user list
-    :type timeout: ``tweepy.api.API``
-    :param timeout: Timeout for notifications in seconds
-    :type note: ``pynotify.Notification``
-    :param note: Note to close once new tweets are fetched
     :rtype: ``True``
     :return: Timers must return a ``True`` value for timer to continue
     """
 
     headers = {"User-Agent": USER_AGENT}
 
-    old_seen = seen.get("latest", 0)
+    old_seen = seen["fetched"]
     try:
-        tweets = api.home_timeline(since_id=old_seen, headers=headers)
-        tweets.extend(api.mentions(since_id=old_seen, headers=headers))
+        new_tweets = api.home_timeline(since_id=old_seen, headers=headers)
+        new_tweets.extend(api.mentions(since_id=old_seen, headers=headers))
     except tweepy.TweepError, e:
         error = pynotify.Notification("Fetching user data failed", "",
                                       "error")
@@ -360,53 +358,74 @@ def update(api, seen, users, timeout, note=None):
 
     for user in users:
         try:
-            tweets.extend(api.user_timeline(user, since_id=old_seen,
-                                            headers=headers))
+            new_tweets.extend(api.user_timeline(user, since_id=old_seen,
+                                                headers=headers))
         except tweepy.TweepError, e:
             error = pynotify.Notification("Fetching user data failed",
                                           "Data for `%s' not available" % user,
                                           "error")
             if not error.show():
                 raise OSError("Notification failed to display!")
-            warnings.warn("User data fetch failed: %s" % e.reason)
+            warnings.warn("Stealth data fetch failed: %s" % e.reason)
             # Still return True, so we re-enter the loop
             return True
+
+    new_tweets = sorted(new_tweets, key=operator.attrgetter("id"))
+
+    tweets.extend(new_tweets)
+    seen["fetched"] = new_tweets[-1].id
+    return True
+
+NOTIFICATIONS = {}
+def display(tweets, seen, timeout, note=None):
+    """Display notifications for new tweets
+
+    :type tweets: ``collections.deque``
+    :param tweets: Tweets awaiting display
+    :type seen: ``list``
+    :param seen: Already seen tweets
+    :type timeout: ``tweepy.api.API``
+    :param timeout: Timeout for notifications in seconds
+    :type note: ``pynotify.Notification``
+    :param note: Note to close once new tweets are fetched
+    :rtype: ``True``
+    :return: Timers must return a ``True`` value for timer to continue
+    """
 
     if note and tweets:
         note.close()
 
-    for tweet in sorted(tweets, key=operator.attrgetter("id")):
-        note = pynotify.Notification("From %s about %s"
-                                     % (tweet.user.name,
-                                        relative_time(tweet.created_at)),
-                                     format_tweet(tweet.text),
-                                     get_icon(tweet.user))
-        if "actions" in NOTIFY_SERVER_CAPS:
-            note.add_action("default", " ", open_tweet(tweet))
-            note.add_action("mail-forward", "retweet",
-                            method_tweet(tweet, "retweet"))
-            # In case this has been seen in another client
-            if not tweet.favorited:
-                note.add_action("bookmark", "Fave",
-                                method_tweet(tweet, "favorite"))
-            # Keep a reference for handling the action.
-            NOTIFICATIONS[tweet.id] = note
-        note.set_timeout(timeout * 1000)
-        note.set_category("im.received")
-        if api.auth.username in tweet.text:
-            note.set_urgency(pynotify.URGENCY_CRITICAL)
-        if tweet.text.startswith("@%s" % api.auth.username):
-            note.set_timeout(pynotify.EXPIRES_NEVER)
-        if not note.show():
-            # Fail hard at this point, recovery has little value.
-            raise OSError("Notification failed to display!")
-        seen["latest"] = tweet.id
-    # We only need to reap references if we're handling actions.
+    try:
+        tweet = tweets.popleft()
+    except IndexError:
+        # No tweets awaiting display
+        return True
+
+    note = pynotify.Notification("From %s about %s"
+                                 % (tweet.user.name,
+                                    relative_time(tweet.created_at)),
+                                 format_tweet(tweet.text), get_icon(tweet.user))
     if "actions" in NOTIFY_SERVER_CAPS:
-        for note in NOTIFICATIONS:
-            if note <= old_seen:
-                NOTIFICATIONS[note].close()
-                del NOTIFICATIONS[note]
+        note.add_action("default", " ", open_tweet(tweet))
+        note.add_action("mail-forward", "retweet", method_tweet(tweet,
+                                                                "retweet"))
+        # In case this has been seen in another client
+        if not tweet.favorited:
+            note.add_action("bookmark", "Fave",
+                            method_tweet(tweet, "favorite"))
+        # Keep a reference for handling the action.
+        NOTIFICATIONS[hash(note)] = note
+        note.connect_object("closed", NOTIFICATIONS.pop, hash(note))
+    note.set_timeout(timeout * 1000)
+    note.set_category("im.received")
+    if tweet.user.name in tweet.text:
+        note.set_urgency(pynotify.URGENCY_CRITICAL)
+    if tweet.text.startswith("@%s" % tweet.user.name):
+        note.set_timeout(pynotify.EXPIRES_NEVER)
+    if not note.show():
+        # Fail hard at this point, recovery has little value.
+        raise OSError("Notification failed to display!")
+    seen["displayed"] = tweet.id
     return True
 
 
@@ -479,8 +498,10 @@ def main(argv):
 
     if os.path.exists(state_file):
         seen = json.load(open(state_file))
+        # Reset displayed, so we don't miss pending tweets from a previous run
+        seen['fetched'] = seen["displayed"]
     else:
-        seen = {}
+        seen = {"displayed": 0, "fetched": 0}
 
     def save_state(seen):
         """Seen tweets state saver
@@ -502,13 +523,17 @@ def main(argv):
     else:
         note = None
 
-    update(api, seen, options.stealth, options.timeout, note)
+    tweets = collections.deque()
+    update(tweets, api, seen, options.stealth)
+    display(tweets, seen, options.timeout, note)
     if os.getenv("DEBUG_BLEETER"):
         sys.exit(1)
 
     loop = glib.MainLoop()
-    glib.timeout_add_seconds(options.frequency, update, api, seen,
-                             options.stealth, options.timeout)
+    glib.timeout_add_seconds(options.frequency, update, tweets, update, api,
+                             seen, options.stealth)
+    glib.timeout_add_seconds(options.timeout + 1, display, tweets, seen,
+                             options.timeout)
     loop.run()
 
 if __name__ == "__main__":
