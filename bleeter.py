@@ -270,7 +270,7 @@ def get_icon(user):
                 icon.save(filename)
         else:
             icon = gtk.gdk.pixbuf_new_from_file(filename)
-            if not (im.get_width(), im.get_height()) == (48, 48):
+            if not (icon.get_width(), icon.get_height()) == (48, 48):
                 icon = icon.scale_simple(48, 48, gtk.gdk.INTERP_BILINEAR)
                 icon.save(filename)
 
