@@ -166,7 +166,7 @@ def process_command_line(config_file):
 def relative_time(timestamp):
     """Format a relative time
 
-    >>> now = datetime.datetime.now()
+    >>> now = datetime.datetime.utcnow()
     >>> relative_time(now - datetime.timedelta(days=365))
     'a year ago'
     >>> relative_time(now - datetime.timedelta(days=70))
@@ -198,7 +198,7 @@ def relative_time(timestamp):
         (1, "second"),
     ]
 
-    delta = datetime.datetime.now() - timestamp
+    delta = datetime.datetime.utcnow() - timestamp
     seconds = delta.days * 86400 + delta.seconds
     for scale, name in matches:
         i = seconds // scale
