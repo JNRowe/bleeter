@@ -44,7 +44,6 @@ import optparse
 import os
 import re
 import sys
-import time
 import urllib
 import warnings
 import webbrowser
@@ -63,7 +62,7 @@ import validate
 try:
     import Image
 except ImportError:
-    Image = False
+    Image = False  # pylint: disable-msg=C0103
     import pygtk
     pygtk.require('2.0')
     import gtk
@@ -107,6 +106,8 @@ def process_command_line(config_file):
 
     def check_frequency(option, opt_str, value, parser):
         """Check frequency value is within bounds"""
+
+        # pylint: disable-msg=W0613
 
         if value < 60:
             raise optparse.OptionValueError("%s must be at least 60" % opt_str)
@@ -154,11 +155,11 @@ def process_command_line(config_file):
                       dest="verbose",
                       help="Output only matches and errors")
 
-    options, args = parser.parse_args()
+    options = parser.parse_args()[0]
     if isinstance(options.stealth, basestring):
         options.stealth = options.stealth.split(",")
 
-    return options, args
+    return options
 
 
 def relative_time(timestamp):
@@ -424,7 +425,7 @@ def main(argv):
     NOTIFY_SERVER_CAPS.extend(pynotify.get_server_caps())
 
     config_file = "%s/bleeter/config.ini" % glib.get_user_config_dir()
-    options, args = process_command_line(config_file)  # pylint: disable-msg=W0612
+    options = process_command_line(config_file)
 
     state_file = "%s/bleeter/state.db" % glib.get_user_config_dir()
     lock_file = "%s.lock" % state_file
@@ -434,6 +435,7 @@ def main(argv):
         return errno.EBUSY
     lock = open(lock_file, "w")
     lock.write("locked")
+
     atexit.register(os.unlink, lock_file)
 
     auth = tweepy.OAuthHandler(OAUTH_KEY, OAUTH_SECRET)
@@ -493,7 +495,7 @@ def main(argv):
         # Show a "hello" message, as it can take some time the first real
         # notification
         note = pynotify.Notification("bleeter v%s" % (__version__), "Started",
-                                     "%s/bleeter/bleeter.png" % glib.get_user_cache_dir())
+                                     "info")
         note.set_timeout(options.timeout * 1000)
         if not note.show():
             raise OSError("Notification failed to display!")
