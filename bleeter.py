@@ -370,10 +370,12 @@ def update(tweets, api, seen, users):
             # Still return True, so we re-enter the loop
             return True
 
-    new_tweets = sorted(new_tweets, key=operator.attrgetter("id"))
+    if new_tweets:
+        new_tweets = sorted(new_tweets, key=operator.attrgetter("id"))
 
-    tweets.extend(new_tweets)
-    seen["fetched"] = new_tweets[-1].id
+        tweets.extend(new_tweets)
+        seen["fetched"] = new_tweets[-1].id
+
     return True
 
 NOTIFICATIONS = {}
@@ -530,8 +532,8 @@ def main(argv):
         sys.exit(1)
 
     loop = glib.MainLoop()
-    glib.timeout_add_seconds(options.frequency, update, tweets, update, api,
-                             seen, options.stealth)
+    glib.timeout_add_seconds(options.frequency, update, tweets, api, seen,
+                             options.stealth)
     glib.timeout_add_seconds(options.timeout + 1, display, tweets, seen,
                              options.timeout)
     loop.run()
