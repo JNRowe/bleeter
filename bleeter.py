@@ -114,7 +114,7 @@ def process_command_line(config_file):
             raise optparse.OptionValueError("%s must be at least 60" % opt_str)
 
     config_spec = [
-        "timeout = integer(default=5)",
+        "timeout = integer(default=10)",
         "frequency = integer(min=60, default=300)",
         "token = list(default=list('', ''))",
         "stealth = list(default=list('ewornj'))",
