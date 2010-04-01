@@ -105,16 +105,22 @@ def process_command_line(config_file):
     :return: Parsed options and arguments
     """
 
-    def check_frequency(option, opt_str, value, parser):
+    def check_value(option, opt_str, value, parser):
         """Check frequency value is within bounds"""
 
         # pylint: disable-msg=W0613
 
-        if value < 60:
-            raise optparse.OptionValueError("%s must be at least 60" % opt_str)
+        if "--frequency" in opt_str:
+            if value < 60:
+                raise optparse.OptionValueError("%s must be at least 60" % opt_str)
+        elif "--timeout" in opt_str:
+            if value < 1:
+                raise optparse.OptionValueError("%s must be at least 60" % opt_str)
+        else:
+            raise optparse.BadOptionError("%s unknown option to check" % opt_str)
 
     config_spec = [
-        "timeout = integer(default=10)",
+        "timeout = integer(min=1, default=10)",
         "frequency = integer(min=60, default=300)",
         "token = list(default=list('', ''))",
         "stealth = list(default=list('ewornj'))",
@@ -135,12 +141,13 @@ def process_command_line(config_file):
                         token=config.get("token"),
                         stealth=config.get("stealth"))
 
-    parser.add_option("-t", "--timeout", action="store", type="int",
+    parser.add_option("-t", "--timeout", action="callback", type="int",
                       metavar=config["timeout"],
+                      callback=check_value,
                       help="Timeout for notification popups in seconds")
     parser.add_option("-f", "--frequency", action="callback", type="int",
                       metavar=config["frequency"],
-                      callback=check_frequency,
+                      callback=check_value,
                       help="Update frequency in in seconds")
     parser.add_option("-r", "--token", action="store",
                       metavar="<key>,<secret>",
