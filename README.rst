@@ -40,12 +40,8 @@ by adding them to the configuration file, which should be placed in
 Where the ``stealth`` value should be a comma separated list of twitter
 usernames or numeric identifiers.
 
-``bleeter`` reads the ``TWEETUSERNAME`` and ``TWEETPASSWORD`` environment
-variables to store authentication data.  It is also possible to store the
-username and password in the configuration file using the following format::
-
-    user = username
-    password = unguessable
+The first time you run ``bleeter`` you should use the ``--get-token`` option to
+setup OAuth_ access.
 
 If you notification daemon supports it you can click on the popup to open the
 tweet in your browser of choice.  The Python webbrowser_ module is used to
@@ -117,6 +113,7 @@ the problem, or even better a patch!
 .. _simplejson: http://undefined.org/python/#simplejson
 .. _PIL: http://www.pythonware.com/products/pil/index.htm
 .. _email: jnrowe@gmail.com
+.. _OAuth: http://oauth.net/
 
 ..
     :vim: set ft=rst ts=4 sw=4 et:
