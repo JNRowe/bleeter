@@ -42,6 +42,24 @@ cd bleeter
 install -m755 bleeter.py /usr/bin/
 {% endhighlight %}
 
+h2. Usage
+
+The first time you run @bleeter@ you should generate an "OAuth":http://oauth.net/ token using the @bleeter.py --get-token@ command.  Once you've generated an OAuth token running @bleeter@ will fetch your timeline and display new tweets in notification bubbles.  An example from my timeline could look like this:
+
+!images/guardian-tweet.png(bleeter showing a notification)!
+
+If your notification daemon supports actions you'll have buttons that you can click as in the above screenshot.  The actions you can perform are:
+
+* Clicking the notification bubble will open the tweet in your chosen browser[1]
+* Clicking retweet will retweet the entry
+* Clicking favourite will mark the tweet as a favourite[2]
+
+If there are actions you often perform with tweets that aren't covered already, and that aren't too interactive, drop me a "mail":jnrowe@gmail.com or "file a bug":http://github.com/JNRowe/bleeter/issues.  The "too interactive" definition isn't set, so convince me!
+
+fn1. You can change which browser is called by following the method described in the "@webbrowser@ documentation":http://docs.python.org/library/webbrowser.html.  Currently, the tweets are always opened in a new tab if your browser supports it but this may become configurable in the future.
+
+fn2. This button is only available if the tweet hasn't already been marked as
+a favourite in another client.
 
 h2. Licence
 
