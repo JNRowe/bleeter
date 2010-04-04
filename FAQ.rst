@@ -22,6 +22,30 @@ take long, does exactly what I want and works where I want it to work.
 
 .. _gwibber: https://launchpad.net/gwibber
 
+I can't click on the tweets!
+----------------------------
+
+If you're using Ubuntu that is a "feature" of their new notify-osd_ default
+notification system.  Find another client, install another notification daemon
+or just read the tweets.
+
+The specific feature required is ``actions``.  It is possible to use
+``notify-osd`` with actions by just ignoring the servers stated capabilities,
+and then ``notify-osd`` opens a alert box for each message which is even less
+useful than just being a passive reader.  Patches for integration with the
+Ubuntu notification and indicator system probably won't be accepted unless other
+distributions decide to switch.
+
+You can check what features your notification daemon has by running the
+following in a Python interpreter::
+
+    >>> impory pynotify
+    >>> pynotify.init("test")
+    >>> pynotify.get_server_caps()
+    ['actions', 'body', 'body-hyperlinks', 'body-markup', 'icon-static']
+
+.. _notify-osd: https://launchpad.net/notify-osd
+
 ..
     :vim: set ft=rst ts=4 sw=4 et:
 
