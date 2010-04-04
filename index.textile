@@ -7,6 +7,9 @@ description: Nasty little twitter viewer
 categories: [bleeter, index, jnrowe, twitter]
 ---
 
+
+!>images/bleeter.png(bleeter logo)!
+
 h2. Introduction
 
 @bleeter@ is a nasty little client for "twitter":http://twitter.com, currently very much in a *Works For Me* state.  It isn't intended to be used by others, but perhaps others will find it useful.
