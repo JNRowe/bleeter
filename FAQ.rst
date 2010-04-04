@@ -46,6 +46,19 @@ following in a Python interpreter::
 
 .. _notify-osd: https://launchpad.net/notify-osd
 
+The icons are cut in half in tweets!
+------------------------------------
+
+If you're using e17_ with its `notification module`_ then there isn't a great
+deal I can do about this, it is just a bug with that module.
+
+If you're not using e17_ please `file a bug`_ or send me a mail_!!
+
+.. _e17: http://enlightenment.org/
+.. _notification module: http://trac.enlightenment.org/e/browser/trunk/E-MODULES-EXTRA/notification/
+.. _file a bug: http://github.com/JNRowe/bleeter/issues
+.. _mail: jnrowe@gmail.com
+
 ..
     :vim: set ft=rst ts=4 sw=4 et:
 
