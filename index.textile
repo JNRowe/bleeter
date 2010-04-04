@@ -1,0 +1,57 @@
+---
+layout: default
+title: bleeter
+no-disqus: true
+main_header: bleeter
+description: Nasty little twitter viewer
+categories: [bleeter, index, jnrowe, twitter]
+---
+
+h2. Introduction
+
+@bleeter@ is a nasty little client for "twitter":http://twitter.com, currently very much in a *Works For Me* state.  It isn't intended to be used by others, but perhaps others will find it useful.
+
+All it does is fetch your friends timeline and display notification popups for new tweets.  If your system's notification daemon supports adding actions to the popups then you'll be able to make a number of choices by clicking the buttons on the popup.
+
+Most common notification daemons support actions, including "xfce4-notifyd":http://spuriousinterrupt.org/projects/xfce4-notifyd and Galago's "notification-daemon":http://www.galago-project.org/.
+
+
+h2. Installation
+
+@bleeter@ requires "Python":http://www.python.org/ and the following Python modules:
+
+* "libnotify Python bindings":http://www.galago-project.org/downloads.php
+* "configobj":http://code.google.com/p/configobj/
+* "tweepy":http://pypi.python.org/pypi/tweepy/
+
+The following optional packages will be used if available:
+
+* "PIL":http://www.pythonware.com/products/pil/index.htm for thumbnail handling
+* "termstyle":http://github.com/gfxmonk/termstyle for coloured output in the terminal
+
+If you're using "Gentoo":http://www.gentoo.org all these packages are available from either the main tree or "my overlay":http://github.com/JNRowe/misc-overlay.
+
+@bleeter@ doesn't require installation to work as it is only a single "Python":http://www.python.org/ script.  If you wish to install it however, doing so it simple:
+
+{% highlight text %}
+git clone git://github.com/JNRowe/bleeter.git
+cd bleeter
+install -m755 bleeter.py /usr/bin/
+{% endhighlight %}
+
+
+h2. Licence
+
+@bleeter@ is licensed under the "GNU General Public License v3":http://www.gnu.org/licenses/gpl-3.0.html.
+
+h2. Contact
+
+"James Rowe":jnrowe@gmail.com
+
+h2. Download
+
+You can download this repository as a "tarball":http://github.com/JNRowe/bleeter/tarball/master.  Or, you can also clone the project with "Git":http://git-scm.com by running:
+
+{% highlight text %}
+$ git clone git://github.com/JNRowe/bleeter.git
+{% endhighlight %}
