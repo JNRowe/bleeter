@@ -58,8 +58,7 @@ If there are actions you often perform with tweets that aren't covered already, 
 
 fn1. You can change which browser is called by following the method described in the "@webbrowser@ documentation":http://docs.python.org/library/webbrowser.html.  Currently, the tweets are always opened in a new tab if your browser supports it but this may become configurable in the future.
 
-fn2. This button is only available if the tweet hasn't already been marked as
-a favourite in another client.
+fn2. This button is only available if the tweet hasn't already been marked as a favourite in another client.
 
 h2. Licence
 
