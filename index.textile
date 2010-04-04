@@ -18,7 +18,6 @@ All it does is fetch your friends timeline and display notification popups for n
 
 Most common notification daemons support actions, including "xfce4-notifyd":http://spuriousinterrupt.org/projects/xfce4-notifyd and Galago's "notification-daemon":http://www.galago-project.org/.
 
-
 h2. Installation
 
 @bleeter@ requires "Python":http://www.python.org/ and the following Python modules:
@@ -55,6 +54,8 @@ If your notification daemon supports actions you'll have buttons that you can cl
 * Clicking favourite will mark the tweet as a favourite[2]
 
 If there are actions you often perform with tweets that aren't covered already, and that aren't too interactive, drop me a "mail":jnrowe@gmail.com or "file a bug":http://github.com/JNRowe/bleeter/issues.  The "too interactive" definition isn't set, so convince me!
+
+Check the "FAQ":http://github.com/JNRowe/bleeter/blob/master/FAQ.rst#readme for answers to some comment questions, especially if you use Ubuntu or "e17":http://enlightenment.org.
 
 fn1. You can change which browser is called by following the method described in the "@webbrowser@ documentation":http://docs.python.org/library/webbrowser.html.  Currently, the tweets are always opened in a new tab if your browser supports it but this may become configurable in the future.
 
