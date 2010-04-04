@@ -481,7 +481,7 @@ def main(argv):
                 break
             print fail("You must supply a verifier")
         try:
-            token = auth.get_access_token(verifier)
+            token = auth.get_access_token(verifier.strip())
         except tweepy.TweepError:
             print fail("Fetching token failed")
             return errno.EIO
