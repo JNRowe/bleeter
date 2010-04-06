@@ -36,6 +36,8 @@ useful than just being a passive reader.  Patches for integration with the
 Ubuntu notification and indicator system probably won't be accepted unless other
 distributions decide to switch.
 
+.. _capabilities testing:
+
 You can check what features your notification daemon has by running the
 following in a Python interpreter::
 
@@ -58,6 +60,12 @@ If you're not using e17_ please `file a bug`_ or send me a mail_!!
 .. _notification module: http://trac.enlightenment.org/e/browser/trunk/E-MODULES-EXTRA/notification/
 .. _file a bug: http://github.com/JNRowe/bleeter/issues
 .. _mail: jnrowe@gmail.com
+
+There are no buttons on the tweets!
+-----------------------------------
+
+If you're using Ubuntu or e17_ this is expected behaviour.  See `capabilities
+testing`_ for possible workarounds.
 
 ..
     :vim: set ft=rst ts=4 sw=4 et:
