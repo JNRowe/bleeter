@@ -510,7 +510,7 @@ def main(argv):
         # Reset displayed, so we don't miss pending tweets from a previous run
         seen['fetched'] = seen["displayed"]
     else:
-        seen = {"displayed": 0, "fetched": 0}
+        seen = {"displayed": 1, "fetched": 1}
 
     def save_state(seen):
         """Seen tweets state saver
