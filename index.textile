@@ -20,6 +20,8 @@ Most common notification daemons support actions, including "xfce4-notifyd":http
 
 h2. Installation
 
+You can download releases from the "downloads page":http://github.com/JNRowe/bleeter/downloads.
+
 @bleeter@ requires "Python":http://www.python.org/ and the following Python modules:
 
 * "libnotify Python bindings":http://www.galago-project.org/downloads.php
@@ -31,15 +33,9 @@ The following optional packages will be used if available:
 
 * "termstyle":http://github.com/gfxmonk/termstyle for coloured output in the terminal
 
-If you're using "Gentoo":http://www.gentoo.org all these packages are available from either the main tree or "my overlay":http://github.com/JNRowe/misc-overlay.
+If you're using "Gentoo":http://www.gentoo.org all the dependencies are available from either the main tree or "my overlay":http://github.com/JNRowe/misc-overlay.
 
-@bleeter@ doesn't require installation to work as it is only a single "Python":http://www.python.org/ script.  If you wish to install it however, doing so it simple:
-
-{% highlight text %}
-git clone git://github.com/JNRowe/bleeter.git
-cd bleeter
-install -m755 bleeter.py /usr/bin/
-{% endhighlight %}
+@bleeter@ doesn't require installation to work as it is only a single "Python":http://www.python.org/ script.
 
 h2. Usage
 
@@ -69,7 +65,7 @@ h2. Contact
 
 "James Rowe":jnrowe@gmail.com
 
-h2. Download
+h3. Hacking
 
 You can download this repository as a "tarball":http://github.com/JNRowe/bleeter/tarball/master.  Or, you can also clone the project with "Git":http://git-scm.com by running:
 
