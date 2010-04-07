@@ -44,6 +44,7 @@ import operator
 import optparse
 import os
 import re
+import shutil
 import sys
 import urllib
 import warnings
@@ -60,13 +61,9 @@ import pynotify
 import tweepy
 import validate
 
-try:
-    import Image
-except ImportError:
-    Image = False  # pylint: disable-msg=C0103
-    import pygtk
-    pygtk.require('2.0')
-    import gtk
+import pygtk
+pygtk.require('2.0')
+import gtk
 
 try:
     import termstyle
@@ -269,18 +266,14 @@ def get_icon(user):
         try:
             urllib.urlretrieve(user.profile_image_url, filename)
         except IOError:
-            # Fallback to generic icon, if it exists
+            # Fallback to application icon
+            if not os.path.exists("%s/bleeter.png" % cache_dir):
+                shutil.cp("%s/bleeter.png" % sys.path[0], cache_dir)
             filename = "%s/bleeter.png" % cache_dir
-        if Image:
-            icon = Image.open(filename)
-            if not icon.size == (48, 48):
-                icon = icon.resize((48, 48), Image.ANTIALIAS)
-                icon.save(filename)
-        else:
-            icon = gtk.gdk.pixbuf_new_from_file(filename)
-            if not (icon.get_width(), icon.get_height()) == (48, 48):
-                icon = icon.scale_simple(48, 48, gtk.gdk.INTERP_BILINEAR)
-                icon.save(filename)
+        icon = gtk.gdk.pixbuf_new_from_file(filename)
+        if not (icon.get_width(), icon.get_height()) == (48, 48):
+            icon = icon.scale_simple(48, 48, gtk.gdk.INTERP_BILINEAR)
+            icon.save(filename)
 
     return "file://%s" % filename
 
@@ -386,7 +379,7 @@ def update(tweets, api, seen, users):
     return True
 
 NOTIFICATIONS = {}
-def display(tweets, seen, timeout, note=None):
+def display(tweets, seen, timeout):
     """Display notifications for new tweets
 
     :type tweets: ``collections.deque``
@@ -395,14 +388,9 @@ def display(tweets, seen, timeout, note=None):
     :param seen: Already seen tweets
     :type timeout: ``tweepy.api.API``
     :param timeout: Timeout for notifications in seconds
-    :type note: ``pynotify.Notification``
-    :param note: Note to close once new tweets are fetched
     :rtype: ``True``
     :return: Timers must return a ``True`` value for timer to continue
     """
-
-    if note and tweets:
-        note.close()
 
     try:
         tweet = tweets.popleft()
@@ -435,6 +423,19 @@ def display(tweets, seen, timeout, note=None):
         # Fail hard at this point, recovery has little value.
         raise OSError("Notification failed to display!")
     seen["displayed"] = tweet.id
+    return True
+
+
+def tooltip(icon, tweets):
+    """Update statusicon tooltip
+
+    :type icon: ``gtk.StatusIcon``
+    :param icon: Status icon to update
+    :type tweets: ``collections.deque``
+    :param tweets: Tweets pending display
+    """
+
+    icon.set_tooltip("%i tweets awaiting display" % len(tweets))
     return True
 
 
@@ -525,24 +526,29 @@ def main(argv):
         # Show a "hello" message, as it can take some time the first real
         # notification
         note = pynotify.Notification("bleeter v%s" % (__version__), "Started",
-                                     "info")
+                                     "%s/bleeter.png" % sys.path[0])
         note.set_timeout(options.timeout * 1000)
+        note.set_urgency(pynotify.URGENCY_LOW)
         if not note.show():
             raise OSError("Notification failed to display!")
-    else:
-        note = None
 
-    tweets = collections.deque()
-    update(tweets, api, seen, options.stealth)
-    display(tweets, seen, options.timeout, note)
-    if os.getenv("DEBUG_BLEETER"):
-        sys.exit(1)
+    tweets = collections.deque(maxlen=options.frequency / (options.timeout+1))
 
     loop = glib.MainLoop()
+    icon = gtk.status_icon_new_from_file("%s/bleeter.png" % sys.path[0])
+    icon.set_tooltip("Initial update in progress")
+
+    # Make sure icon is set up, before entering update()
+    ctx = loop.get_context()
+    while ctx.pending():
+        ctx.iteration()
+
+    update(tweets, api, seen, options.stealth)
     glib.timeout_add_seconds(options.frequency, update, tweets, api, seen,
                              options.stealth)
     glib.timeout_add_seconds(options.timeout + 1, display, tweets, seen,
                              options.timeout)
+    glib.timeout_add_seconds(options.timeout // 2, tooltip, icon, tweets)
     loop.run()
 
 if __name__ == "__main__":
