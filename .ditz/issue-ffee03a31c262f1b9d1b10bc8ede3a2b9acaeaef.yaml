@@ -1,0 +1,26 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: Add option to disable tray icon.
+desc: ""
+type: :feature
+component: bleeter
+release: 0.4.0
+reporter: James Rowe <jnrowe@gmail.com>
+status: :unstarted
+disposition: 
+creation_time: 2010-04-07 07:31:45.403942 Z
+references: []
+
+id: ffee03a31c262f1b9d1b10bc8ede3a2b9acaeaef
+log_events: 
+- - 2010-04-07 07:31:46.059825 Z
+  - James Rowe <jnrowe@gmail.com>
+  - created
+  - ""
+- - 2010-04-07 07:32:35.863642 Z
+  - James Rowe <jnrowe@gmail.com>
+  - commented
+  - |-
+    This will also, once again, make gtk optional for people using our pynotify
+    implementation.
+claimer: 
+git_branch: 
