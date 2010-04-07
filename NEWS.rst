@@ -6,6 +6,16 @@ User-visible changes
 
 .. contents::
 
+0.3.0 - 2010-04-07
+------------------
+
+    * Switched to OAuth_
+    * User images are now resized to a reasonable size
+    * Added a button to retweet from within the notifications
+    * Added status icon showing number of pending tweets
+
+.. _oauth: http://oauth.net/
+
 0.2.0 - 2010-02-28
 ------------------
 
