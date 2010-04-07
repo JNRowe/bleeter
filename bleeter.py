@@ -268,7 +268,7 @@ def get_icon(user):
         except IOError:
             # Fallback to application icon
             if not os.path.exists("%s/bleeter.png" % cache_dir):
-                shutil.cp("%s/bleeter.png" % sys.path[0], cache_dir)
+                shutil.copy("%s/bleeter.png" % sys.path[0], cache_dir)
             filename = "%s/bleeter.png" % cache_dir
         icon = gtk.gdk.pixbuf_new_from_file(filename)
         if not (icon.get_width(), icon.get_height()) == (48, 48):
