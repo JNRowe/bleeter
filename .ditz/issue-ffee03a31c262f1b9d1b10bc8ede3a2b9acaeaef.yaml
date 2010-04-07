@@ -22,5 +22,9 @@ log_events:
   - |-
     This will also, once again, make gtk optional for people using our pynotify
     implementation.
+- - 2010-04-07 07:40:08.747881 Z
+  - James Rowe <jnrowe@gmail.com>
+  - commented
+  - See f5f for explanation.
 claimer: 
 git_branch: 
