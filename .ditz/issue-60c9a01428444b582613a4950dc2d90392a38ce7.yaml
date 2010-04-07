@@ -1,0 +1,20 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: Use friendlier date/time strings.
+desc: "\"Yesterday\", \"last week\", etc"
+type: :feature
+component: bleeter
+release: 0.4.0
+reporter: James Rowe <jnrowe@gmail.com>
+status: :unstarted
+disposition: 
+creation_time: 2010-04-07 07:38:28.751941 Z
+references: []
+
+id: 60c9a01428444b582613a4950dc2d90392a38ce7
+log_events: 
+- - 2010-04-07 07:38:29.207825 Z
+  - James Rowe <jnrowe@gmail.com>
+  - created
+  - ""
+claimer: 
+git_branch: 
