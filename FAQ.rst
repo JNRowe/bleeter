@@ -81,6 +81,22 @@ wish to interact.
 See `capabilities testing`_ for a method to check your notification systems
 support.
 
+The tweets don't have the same formatting as the screenshots!
+-------------------------------------------------------------
+
+If you're using Ubuntu or e17_ this is expected behaviour.
+
+.. figure:: http://jnrowe.github.com/images/ubuntu-notify3.png
+
+    Example tweet being displayed with Ubuntu's notification system
+
+It is likely the feature you're missing is either ``body-markup`` or
+``body-hyperlinks``, see `capabilities testing`_ for a method you can use to
+check your notification systems supported capabilities.
+
+If you're not using either Ubuntu or e17_ then you're encouraged to post
+a screenshot online somewhere and either link to it when you `file a bug`_ or
+send me a mail_ with a link explaining the problem.
 
 ..
     :vim: set ft=rst ts=4 sw=4 et:
