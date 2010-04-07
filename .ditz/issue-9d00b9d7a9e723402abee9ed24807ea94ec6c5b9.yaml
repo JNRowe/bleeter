@@ -1,0 +1,20 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: Show a button to open location if geo data exists.
+desc: ""
+type: :feature
+component: bleeter
+release: 0.4.0
+reporter: James Rowe <jnrowe@gmail.com>
+status: :unstarted
+disposition: 
+creation_time: 2010-04-07 07:43:49.555938 Z
+references: []
+
+id: 9d00b9d7a9e723402abee9ed24807ea94ec6c5b9
+log_events: 
+- - 2010-04-07 07:43:50.179834 Z
+  - James Rowe <jnrowe@gmail.com>
+  - created
+  - ""
+claimer: 
+git_branch: 
