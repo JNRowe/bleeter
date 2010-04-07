@@ -24,11 +24,11 @@ h2. Installation
 
 * "libnotify Python bindings":http://www.galago-project.org/downloads.php
 * "configobj":http://code.google.com/p/configobj/
+* "pygtk":http://www.pygtk.org/
 * "tweepy":http://pypi.python.org/pypi/tweepy/
 
 The following optional packages will be used if available:
 
-* "PIL":http://www.pythonware.com/products/pil/index.htm for thumbnail handling
 * "termstyle":http://github.com/gfxmonk/termstyle for coloured output in the terminal
 
 If you're using "Gentoo":http://www.gentoo.org all these packages are available from either the main tree or "my overlay":http://github.com/JNRowe/misc-overlay.
