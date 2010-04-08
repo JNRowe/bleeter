@@ -22,6 +22,16 @@ take long, does exactly what I want and works where I want it to work.
 
 .. _gwibber: https://launchpad.net/gwibber
 
+Why is the logo so crap?
+------------------------
+
+.. image:: http://jnrowe.github.com/bleeter/images/bleeter.png
+
+Because *I* made it with my complete lack of design skills, if you can do better
+please do so.  Send me a mail_ if you come up with something better.
+
+.. _mail: jnrowe@gmail.com
+
 I can't click on the tweets!
 ----------------------------
 
