@@ -239,7 +239,6 @@ def format_tweet(text):
     :return: Tweet content with pretty formatting
     """
 
-    text = glib.markup_escape_text(text)
     if "body-markup" in NOTIFY_SERVER_CAPS:
         text = re.sub(r'(@\w+)', r'<u>\1</u>', text)
         text = re.sub(r'(#\w+)', r'<i>\1</i>', text)
