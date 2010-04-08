@@ -379,9 +379,11 @@ def update(tweets, api, seen, users):
     return True
 
 NOTIFICATIONS = {}
-def display(tweets, seen, timeout):
+def display(me, tweets, seen, timeout):
     """Display notifications for new tweets
 
+    :type me: ``tweepy.models.User``
+    :param me: Authenticated user object
     :type tweets: ``collections.deque``
     :param tweets: Tweets awaiting display
     :type seen: ``list``
@@ -415,9 +417,9 @@ def display(tweets, seen, timeout):
         note.connect_object("closed", NOTIFICATIONS.pop, hash(note))
     note.set_timeout(timeout * 1000)
     note.set_category("im.received")
-    if tweet.user.name in tweet.text:
+    if me.username in tweet.text:
         note.set_urgency(pynotify.URGENCY_CRITICAL)
-    if tweet.text.startswith("@%s" % tweet.user.name):
+    if tweet.text.startswith("@%s" % me.username):
         note.set_timeout(pynotify.EXPIRES_NEVER)
     if not note.show():
         # Fail hard at this point, recovery has little value.
@@ -505,6 +507,7 @@ def main(argv):
 
     auth.set_access_token(*options.token)
     api = tweepy.API(auth)
+    me = api.me()
 
     if os.path.exists(state_file):
         seen = json.load(open(state_file))
@@ -546,7 +549,7 @@ def main(argv):
     update(tweets, api, seen, options.stealth)
     glib.timeout_add_seconds(options.frequency, update, tweets, api, seen,
                              options.stealth)
-    glib.timeout_add_seconds(options.timeout + 1, display, tweets, seen,
+    glib.timeout_add_seconds(options.timeout + 1, display, me, tweets, seen,
                              options.timeout)
     glib.timeout_add_seconds(options.timeout // 2, tooltip, icon, tweets)
     loop.run()
