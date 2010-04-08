@@ -1,0 +1,20 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: Tweets are XML escaped when displayed.
+desc: Tweepy escapes tweet text, so the previous escaping mechanism isn't needed.
+type: :bugfix
+component: bleeter
+release: 0.4.0
+reporter: James Rowe <jnrowe@gmail.com>
+status: :unstarted
+disposition: 
+creation_time: 2010-04-08 08:15:25.375912 Z
+references: []
+
+id: 4c49d87c6ffc2c204bf70c7fdea238b2f19a2c24
+log_events: 
+- - 2010-04-08 08:15:26.015789 Z
+  - James Rowe <jnrowe@gmail.com>
+  - created
+  - ""
+claimer: 
+git_branch: 
