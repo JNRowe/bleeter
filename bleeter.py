@@ -87,6 +87,7 @@ OAUTH_SECRET = "PU0b7yrBOcdpbSrD1pcQq1kfA9ZVmPQoD0fqtg1bQBQ"
 USER_AGENT = "bleeter/%s +http://github.com/JNRowe/bleeter/" % __version__
 NOTIFY_SERVER_CAPS = []
 
+
 # Pull the first paragraph from the docstring
 USAGE = __doc__[:__doc__.find('\n\n', 100)].splitlines()[2:]
 # Replace script name with optparse's substitution var, and rebuild string
@@ -109,12 +110,15 @@ def process_command_line(config_file):
 
         if "--frequency" in opt_str:
             if value < 60:
-                raise optparse.OptionValueError("%s must be at least 60" % opt_str)
+                raise optparse.OptionValueError("%s must be at least 60"
+                                                % opt_str)
         elif "--timeout" in opt_str:
             if value < 1:
-                raise optparse.OptionValueError("%s must be at least 60" % opt_str)
+                raise optparse.OptionValueError("%s must be at least 60"
+                                                % opt_str)
         else:
-            raise optparse.BadOptionError("%s unknown option to check" % opt_str)
+            raise optparse.BadOptionError("%s unknown option to check"
+                                          % opt_str)
 
     config_spec = [
         "timeout = integer(min=1, default=10)",
@@ -302,6 +306,7 @@ def open_tweet(tweet):
                         new=2)
     return show
 
+
 def method_tweet(tweet, method):
     """"Create Status method wrapper function
 
@@ -378,6 +383,7 @@ def update(tweets, api, seen, users):
 
     return True
 
+
 NOTIFICATIONS = {}
 def display(tweets, seen, timeout):
     """Display notifications for new tweets
@@ -401,11 +407,12 @@ def display(tweets, seen, timeout):
     note = pynotify.Notification("From %s about %s"
                                  % (tweet.user.name,
                                     relative_time(tweet.created_at)),
-                                 format_tweet(tweet.text), get_icon(tweet.user))
+                                 format_tweet(tweet.text),
+                                 get_icon(tweet.user))
     if "actions" in NOTIFY_SERVER_CAPS:
         note.add_action("default", " ", open_tweet(tweet))
-        note.add_action("mail-forward", "retweet", method_tweet(tweet,
-                                                                "retweet"))
+        note.add_action("mail-forward", "retweet",
+                        method_tweet(tweet, "retweet"))
         # In case this has been seen in another client
         if not tweet.favorited:
             note.add_action("bookmark", "Fave",
@@ -532,7 +539,7 @@ def main(argv):
         if not note.show():
             raise OSError("Notification failed to display!")
 
-    tweets = collections.deque(maxlen=options.frequency / (options.timeout+1))
+    tweets = collections.deque(maxlen=options.frequency / (options.timeout + 1))
 
     loop = glib.MainLoop()
     icon = gtk.status_icon_new_from_file("%s/bleeter.png" % sys.path[0])
