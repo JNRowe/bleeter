@@ -337,8 +337,8 @@ def update(tweets, api, seen, users):
     :param tweets: Tweets awaiting display
     :type api: ``tweepy.api.API``
     :param api: Authenticated ``tweepy.api.API`` object
-    :type seen: ``list``
-    :param seen: Already seen tweets
+    :type seen: ``dict``
+    :param seen: Last seen status
     :type users: ``list`` of ``str``
     :param users: Stealth follow user list
     :rtype: ``True``
@@ -391,8 +391,8 @@ def display(me, tweets, seen, timeout):
     :param me: Authenticated user object
     :type tweets: ``collections.deque``
     :param tweets: Tweets awaiting display
-    :type seen: ``list``
-    :param seen: Already seen tweets
+    :type seen: ``dict``
+    :param seen: Last seen status
     :type timeout: ``tweepy.api.API``
     :param timeout: Timeout for notifications in seconds
     :rtype: ``True``
