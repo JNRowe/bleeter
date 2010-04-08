@@ -423,9 +423,9 @@ def display(me, tweets, seen, timeout):
         note.connect_object("closed", NOTIFICATIONS.pop, hash(note))
     note.set_timeout(timeout * 1000)
     note.set_category("im.received")
-    if me.username in tweet.text:
+    if me.name in tweet.text:
         note.set_urgency(pynotify.URGENCY_CRITICAL)
-    if tweet.text.startswith("@%s" % me.username):
+    if tweet.text.startswith("@%s" % me.name):
         note.set_timeout(pynotify.EXPIRES_NEVER)
     if not note.show():
         # Fail hard at this point, recovery has little value.
