@@ -6,6 +6,13 @@ User-visible changes
 
 .. contents::
 
+VCS only
+--------
+
+    * Systray icon is now optional
+    * Tweets with geotags have a button to open the location in Google Maps
+
+
 0.3.0 - 2010-04-07
 ------------------
 
