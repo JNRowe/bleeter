@@ -122,7 +122,7 @@ def process_command_line(config_file):
                                                 % opt_str)
         elif "--timeout" in opt_str:
             if value < 1:
-                raise optparse.OptionValueError("%s must be at least 60"
+                raise optparse.OptionValueError("%s must be at least 1"
                                                 % opt_str)
         else:
             raise optparse.BadOptionError("%s unknown option to check"
