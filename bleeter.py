@@ -61,9 +61,17 @@ import pynotify
 import tweepy
 import validate
 
-import pygtk
-pygtk.require('2.0')
-import gtk
+try:
+    import Image
+except ImportError:
+    pass
+
+try:
+    import pygtk
+    pygtk.require('2.0')
+    import gtk
+except ImportError:
+    gtk = False  # pylint: disable-msg=C0103
 
 try:
     import termstyle
@@ -125,6 +133,7 @@ def process_command_line(config_file):
         "frequency = integer(min=60, default=300)",
         "token = list(default=list('', ''))",
         "stealth = list(default=list('ewornj'))",
+        "tray = boolean(default=True)",
     ]
     config = configobj.ConfigObj(config_file, configspec=config_spec)
     results = config.validate(validate.Validator())
@@ -140,7 +149,8 @@ def process_command_line(config_file):
     parser.set_defaults(timeout=config["timeout"],
                         frequency=config["frequency"],
                         token=config.get("token"),
-                        stealth=config.get("stealth"))
+                        stealth=config.get("stealth"),
+                        tray=config.get("tray"))
 
     parser.add_option("-t", "--timeout", action="callback", type="int",
                       metavar=config["timeout"],
@@ -158,6 +168,8 @@ def process_command_line(config_file):
     parser.add_option("-s", "--stealth", action="store",
                       metavar=",".join(config.get("stealth")),
                       help="Users to watch without following(comma separated)")
+    parser.add_option("--no-tray", action="store_false",
+                      dest="tray", help="Disable systray icon")
     parser.add_option("-v", "--verbose", action="store_true",
                       dest="verbose", help="Produce verbose output")
     parser.add_option("-q", "--quiet", action="store_false",
@@ -292,10 +304,16 @@ def get_icon(user):
             if not os.path.exists("%s/bleeter.png" % cache_dir):
                 shutil.copy("%s/bleeter.png" % sys.path[0], cache_dir)
             filename = "%s/bleeter.png" % cache_dir
-        icon = gtk.gdk.pixbuf_new_from_file(filename)
-        if not (icon.get_width(), icon.get_height()) == (48, 48):
-            icon = icon.scale_simple(48, 48, gtk.gdk.INTERP_BILINEAR)
-            icon.save(filename)
+        if gtk:
+            icon = gtk.gdk.pixbuf_new_from_file(filename)
+            if not (icon.get_width(), icon.get_height()) == (48, 48):
+                icon = icon.scale_simple(48, 48, gtk.gdk.INTERP_BILINEAR)
+                icon.save(filename)
+        else:
+            icon = Image.open(filename)
+            if not icon.size == (48, 48):
+                icon = icon.resize((48, 48), Image.ANTIALIAS)
+                icon.save(filename)
 
     return "file://%s" % filename
 
@@ -579,7 +597,7 @@ def main(argv):
         json.dump(seen, open(state_file, "w"), indent=4)
     atexit.register(save_state, seen)
 
-    if options.verbose:
+    if options.verbose or not options.tray:
         # Show a "hello" message, as it can take some time the first real
         # notification
         note = pynotify.Notification("bleeter v%s" % (__version__), "Started",
@@ -592,20 +610,32 @@ def main(argv):
     tweets = collections.deque(maxlen=options.frequency / (options.timeout + 1))
 
     loop = glib.MainLoop()
-    icon = gtk.status_icon_new_from_file("%s/bleeter.png" % sys.path[0])
-    icon.set_tooltip("Initial update in progress")
+    if options.tray:
+        if not gtk:
+            message = "`pygtk' is required for systray support"
+            print fail(message)
+            error = pynotify.Notification("Missing pygtk", message,
+                                          "error")
+            error.set_timeout(options.timeout * 1000)
+            if not error.show():
+                raise OSError("Notification failed to display!")
+            return errno.EPERM
 
-    # Make sure icon is set up, before entering update()
-    ctx = loop.get_context()
-    while ctx.pending():
-        ctx.iteration()
+        icon = gtk.status_icon_new_from_file("%s/bleeter.png" % sys.path[0])
+        icon.set_tooltip("Initial update in progress")
+
+        # Make sure icon is set up, before entering update()
+        ctx = loop.get_context()
+        while ctx.pending():
+            ctx.iteration()
 
     update(tweets, api, seen, options.stealth)
     glib.timeout_add_seconds(options.frequency, update, tweets, api, seen,
                              options.stealth)
     glib.timeout_add_seconds(options.timeout + 1, display, me, tweets, seen,
                              options.timeout)
-    glib.timeout_add_seconds(options.timeout // 2, tooltip, icon, tweets)
+    if options.tray:
+        glib.timeout_add_seconds(options.timeout // 2, tooltip, icon, tweets)
     loop.run()
 
 if __name__ == "__main__":
