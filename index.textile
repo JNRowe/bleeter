@@ -57,6 +57,10 @@ fn1. You can change which browser is called by following the method described in
 
 fn2. This button is only available if the tweet hasn't already been marked as a favourite in another client.
 
+h3. Other resources
+
+The "Sphinx":http://sphinx.pocoo.org/ generated documentation can be read at "online":sphinx/.
+
 h2. Licence
 
 @bleeter@ is licensed under the "GNU General Public License v3":http://www.gnu.org/licenses/gpl-3.0.html.

@@ -1,0 +1,164 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Configuration &mdash; bleeter v0.3.0 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '#',
+        VERSION:     '0.3.0',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="bleeter v0.3.0 documentation" href="index.html" />
+    <link rel="next" title="Usage" href="usage.html" />
+    <link rel="prev" title="Background" href="background.html" />
+    <style type="text/css">
+    /*<![CDATA[*/
+        pre {
+            overflow: auto;
+        }
+    /*]]>*/
+    </style>
+
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
+        <li class="right" >
+          <a href="usage.html" title="Usage"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="background.html" title="Background"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">bleeter v0.3.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="configuration">
+<h1>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h1>
+<p><strong>bleeter</strong> stores its configuration in
+<tt class="docutils literal"><span class="pre">$</span><em><span class="pre">XDG_CONFIG_HOME</span></em><span class="pre">/bleeter/config.ini</span></tt> <a class="footnote-reference" href="#id2" id="id1">[1]</a>.</p>
+<p>The configuration file is a simple <tt class="docutils literal"><span class="pre">INI</span></tt> format file,   The file is processed
+with the <a class="reference external" href="http://www.voidspace.org.uk/python/configobj.html">configobj</a> module, the documentation for which will describe some of
+the advanced features available within the configuration file.</p>
+<p>An example configuration file is below:</p>
+<div class="highlight-ini"><div class="highlight"><pre><span class="na">frequency</span> <span class="o">=</span> <span class="s">600</span>
+<span class="na">timeout</span> <span class="o">=</span> <span class="s">10</span>
+<span class="na">stealth</span> <span class="o">=</span> <span class="s">unfolloweduser,stalkeduser</span>
+</pre></div>
+</div>
+<div class="section" id="frequency-option">
+<h2><tt class="docutils literal"><span class="pre">frequency</span></tt> option<a class="headerlink" href="#frequency-option" title="Permalink to this headline">¶</a></h2>
+<p>The <tt class="docutils literal"><span class="pre">frequency</span></tt> option allows you to set the update frequency for checking for
+new tweets.  Its value is specified in seconds, and <em>must</em> be higher than 60.</p>
+</div>
+<div class="section" id="timeout-option">
+<h2><tt class="docutils literal"><span class="pre">timeout</span></tt> option<a class="headerlink" href="#timeout-option" title="Permalink to this headline">¶</a></h2>
+<p>The <tt class="docutils literal"><span class="pre">timeout</span></tt> option allows you to specify the default notification timeout,
+Its value is specified in seconds.  Not all notification daemons support setting
+this value, and some daemons may simply ignore it.</p>
+</div>
+<div class="section" id="stealth-option">
+<h2><tt class="docutils literal"><span class="pre">stealth</span></tt> option<a class="headerlink" href="#stealth-option" title="Permalink to this headline">¶</a></h2>
+<p>The <tt class="docutils literal"><span class="pre">stealth</span></tt> option allows you to specify a list of users you wish to receive
+tweets from without following, its main purpose is to follow people for limited
+periods of time without needing to follow and unfollow them.</p>
+<p>Consider the use case of attending a conference and wanting to follow your
+fellow attendees without having to explicitly unfollow them once the conference
+is over.</p>
+<table class="docutils footnote" frame="void" id="id2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>The default value for <tt class="docutils literal"><span class="pre">${XDG_CONFIG_HOME}</span></tt> is system dependent, but
+likely to be <tt class="docutils literal"><span class="pre">~/.config</span></tt> if you haven&#8217;t set it.  For more information
+see <a class="reference external" href="http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html">XDG base directory specification</a></td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3><a href="index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="#">Configuration</a><ul>
+<li><a class="reference external" href="#frequency-option"><tt class="docutils literal"><span class="pre">frequency</span></tt> option</a></li>
+<li><a class="reference external" href="#timeout-option"><tt class="docutils literal"><span class="pre">timeout</span></tt> option</a></li>
+<li><a class="reference external" href="#stealth-option"><tt class="docutils literal"><span class="pre">stealth</span></tt> option</a></li>
+</ul>
+</li>
+</ul>
+
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="background.html"
+                                  title="previous chapter">Background</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="usage.html"
+                                  title="next chapter">Usage</a></p>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="modindex.html" title="Global Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="usage.html" title="Usage"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="background.html" title="Background"
+             >previous</a> |</li>
+        <li><a href="index.html">bleeter v0.3.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2010, James Rowe.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.4.
+    </div>
+  </body>
+</html>

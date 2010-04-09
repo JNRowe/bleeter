@@ -1,0 +1,240 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>bleeter.py &mdash; bleeter v0.3.0 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '#',
+        VERSION:     '0.3.0',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="bleeter v0.3.0 documentation" href="index.html" />
+    <link rel="prev" title="Usage" href="usage.html" />
+    <style type="text/css">
+    /*<![CDATA[*/
+        pre {
+            overflow: auto;
+        }
+    /*]]>*/
+    </style>
+
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
+        <li class="right" >
+          <a href="usage.html" title="Usage"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">bleeter v0.3.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="bleeter-py">
+<h1>bleeter.py<a class="headerlink" href="#bleeter-py" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="a-nasty-little-twitter-viewer">
+<h2>A nasty little twitter viewer<a class="headerlink" href="#a-nasty-little-twitter-viewer" title="Permalink to this headline">¶</a></h2>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Author:</th><td class="field-body">James Rowe &lt;<a class="reference external" href="mailto:jnrowe&#37;&#52;&#48;gmail&#46;com">jnrowe<span>&#64;</span>gmail<span>&#46;</span>com</a>&gt;</td>
+</tr>
+<tr class="field"><th class="field-name">Date:</th><td class="field-body">2010-04-09</td>
+</tr>
+<tr class="field"><th class="field-name">Copyright:</th><td class="field-body">GPL v3</td>
+</tr>
+<tr class="field"><th class="field-name">Manual section:</th><td class="field-body">1</td>
+</tr>
+<tr class="field"><th class="field-name">Manual group:</th><td class="field-body">Instant Messaging</td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="synopsis">
+<h3>SYNOPSIS<a class="headerlink" href="#synopsis" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+bleeter.py [option]...</blockquote>
+</div>
+<div class="section" id="description">
+<h3>DESCRIPTION<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h3>
+<p>Fetches your twitter friends timeline and displays notification popups for new
+tweets.  If your system&#8217;s notification daemon supports adding actions to the
+popups then you&#8217;ll be able to make a number of choices by clicking the buttons
+on the popup.</p>
+</div>
+<div class="section" id="options">
+<h3>OPTIONS<a class="headerlink" href="#options" title="Permalink to this headline">¶</a></h3>
+<table class="docutils option-list" frame="void" rules="none">
+<col class="option" />
+<col class="description" />
+<tbody valign="top">
+<tr><td class="option-group">
+<kbd><span class="option">--version</span></kbd></td>
+<td>show program&#8217;s version number and exit</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">-h</span>, <span class="option">--help</span></kbd></td>
+<td>show this help message and exit</td></tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt>-t, &#8211;timeout <strong>n</strong></dt>
+<dd>timeout for notification popups in seconds</dd>
+<dt>-f, &#8211;frequency <strong>n</strong></dt>
+<dd>update frequency in in seconds</dd>
+<dt>-r, &#8211;token <strong>key</strong>,**secret**</dt>
+<dd>OAuth token for twitter(mostly used for testing)</dd>
+</dl>
+<table class="docutils option-list" frame="void" rules="none">
+<col class="option" />
+<col class="description" />
+<tbody valign="top">
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">-g</span>, <span class="option">--get-token</span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>generate a new OAuth token for twitter</td></tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt>-s, &#8211;stealth <strong>user</strong></dt>
+<dd>users to watch without following(comma separated)</dd>
+</dl>
+<table class="docutils option-list" frame="void" rules="none">
+<col class="option" />
+<col class="description" />
+<tbody valign="top">
+<tr><td class="option-group">
+<kbd><span class="option">--no-tray</span></kbd></td>
+<td>disable the system tray icon</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">-v</span>, <span class="option">--verbose</span></kbd></td>
+<td>produce verbose output</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">-q</span>, <span class="option">--quiet</span></kbd></td>
+<td>output only results and errors</td></tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="configuration-file">
+<h3>CONFIGURATION FILE<a class="headerlink" href="#configuration-file" title="Permalink to this headline">¶</a></h3>
+<p>The configuration file, <strong>${XDG_CONFIG_HOME:-~/.config}/bleeter/config.ini</strong>, is
+a simple <strong>INI</strong> format file for storing the command line options.  For
+example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">frequency</span> <span class="o">=</span> <span class="mi">600</span>
+<span class="n">timeout</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">stealth</span> <span class="o">=</span> <span class="n">unfolloweduser</span>
+</pre></div>
+</div>
+<p>With the above configuration file twitter will be checked every ten minutes for
+updates,.new tweets will be shown for 10 seconds and <strong>unfolloweduser</strong> will be
+watched for updates.</p>
+</div>
+<div class="section" id="bugs">
+<h3>BUGS<a class="headerlink" href="#bugs" title="Permalink to this headline">¶</a></h3>
+<p>None known.</p>
+</div>
+<div class="section" id="author">
+<h3>AUTHOR<a class="headerlink" href="#author" title="Permalink to this headline">¶</a></h3>
+<p>Written by <a class="reference external" href="mailto:jnrowe&#37;&#52;&#48;gmail&#46;com">James Rowe</a></p>
+</div>
+<div class="section" id="resources">
+<h3>RESOURCES<a class="headerlink" href="#resources" title="Permalink to this headline">¶</a></h3>
+<p>Home page: <a class="reference external" href="http://github.com/JNRowe/bleeter">http://github.com/JNRowe/bleeter</a></p>
+</div>
+<div class="section" id="copying">
+<h3>COPYING<a class="headerlink" href="#copying" title="Permalink to this headline">¶</a></h3>
+<p>Copyright © 2010  James Rowe.</p>
+<p>This program is free software: you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation, either version 3 of the License, or (at your
+option) any later version.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3><a href="index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="#">bleeter.py</a><ul>
+<li><a class="reference external" href="#a-nasty-little-twitter-viewer">A nasty little twitter viewer</a><ul>
+<li><a class="reference external" href="#synopsis">SYNOPSIS</a></li>
+<li><a class="reference external" href="#description">DESCRIPTION</a></li>
+<li><a class="reference external" href="#options">OPTIONS</a></li>
+<li><a class="reference external" href="#configuration-file">CONFIGURATION FILE</a></li>
+<li><a class="reference external" href="#bugs">BUGS</a></li>
+<li><a class="reference external" href="#author">AUTHOR</a></li>
+<li><a class="reference external" href="#resources">RESOURCES</a></li>
+<li><a class="reference external" href="#copying">COPYING</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="usage.html"
+                                  title="previous chapter">Usage</a></p>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="modindex.html" title="Global Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="usage.html" title="Usage"
+             >previous</a> |</li>
+        <li><a href="index.html">bleeter v0.3.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2010, James Rowe.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.4.
+    </div>
+  </body>
+</html>

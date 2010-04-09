@@ -1,0 +1,182 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Usage &mdash; bleeter v0.3.0 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '#',
+        VERSION:     '0.3.0',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="bleeter v0.3.0 documentation" href="index.html" />
+    <link rel="next" title="bleeter.py" href="bleeter.1.html" />
+    <link rel="prev" title="Configuration" href="configuration.html" />
+    <style type="text/css">
+    /*<![CDATA[*/
+        pre {
+            overflow: auto;
+        }
+    /*]]>*/
+    </style>
+
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
+        <li class="right" >
+          <a href="bleeter.1.html" title="bleeter.py"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="configuration.html" title="Configuration"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">bleeter v0.3.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="usage">
+<h1>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h1>
+<p><strong>bleeter.py</strong> must initially be run from the command line to fetch the
+user&#8217;s authentication data:</p>
+<div class="highlight-python"><pre>$ bleeter.py --get-token</pre>
+</div>
+<p>Once you&#8217;ve set up the authentication following runs of <strong>bleeter.py</strong>
+can be run from either the command prompt or your session&#8217;s startup files.</p>
+<div class="section" id="options">
+<h2>Options<a class="headerlink" href="#options" title="Permalink to this headline">¶</a></h2>
+<dl class="cmdoption">
+<dt id="cmdoption-bleeter.py--version">
+<tt class="descname">--version</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-bleeter.py--version" title="Permalink to this definition">¶</a></dt>
+<dd>show program&#8217;s version number and exit</dd></dl>
+
+<dl class="cmdoption">
+<dt id="cmdoption-bleeter.py-h">
+<tt class="descname">-h</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--help</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-bleeter.py-h" title="Permalink to this definition">¶</a></dt>
+<dd>show this help message and exit</dd></dl>
+
+<dl class="cmdoption">
+<dt id="cmdoption-bleeter.py-t">
+<tt class="descname">-t</tt><tt class="descclassname"> &lt;n&gt;</tt><tt class="descclassname">, </tt><tt class="descname">--timeout</tt><tt class="descclassname">=&lt;n&gt;</tt><a class="headerlink" href="#cmdoption-bleeter.py-t" title="Permalink to this definition">¶</a></dt>
+<dd>timeout for notification popups in seconds</dd></dl>
+
+<dl class="cmdoption">
+<dt id="cmdoption-bleeter.py-f">
+<tt class="descname">-f</tt><tt class="descclassname"> &lt;n&gt;</tt><tt class="descclassname">, </tt><tt class="descname">--frequency</tt><tt class="descclassname">=&lt;n&gt;</tt><a class="headerlink" href="#cmdoption-bleeter.py-f" title="Permalink to this definition">¶</a></dt>
+<dd>update frequency in in seconds</dd></dl>
+
+<dl class="cmdoption">
+<dt id="cmdoption-bleeter.py-r">
+<tt class="descname">-r</tt><tt class="descclassname"> &lt;key&gt;,&lt;secret&gt;</tt><tt class="descclassname">, </tt><tt class="descname">--token</tt><tt class="descclassname">=&lt;key&gt;,&lt;secret&gt;</tt><a class="headerlink" href="#cmdoption-bleeter.py-r" title="Permalink to this definition">¶</a></dt>
+<dd>OAuth token for twitter(mostly used for testing)</dd></dl>
+
+<dl class="cmdoption">
+<dt id="cmdoption-bleeter.py-g">
+<tt class="descname">-g</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--get-token</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-bleeter.py-g" title="Permalink to this definition">¶</a></dt>
+<dd>generate a new OAuth token for twitter</dd></dl>
+
+<dl class="cmdoption">
+<dt id="cmdoption-bleeter.py-s">
+<tt class="descname">-s</tt><tt class="descclassname"> ewornj</tt><tt class="descclassname">, </tt><tt class="descname">--stealth</tt><tt class="descclassname">=ewornj</tt><a class="headerlink" href="#cmdoption-bleeter.py-s" title="Permalink to this definition">¶</a></dt>
+<dd>users to watch without following(comma separated)</dd></dl>
+
+<dl class="cmdoption">
+<dt id="cmdoption-bleeter.py--no-tray">
+<tt class="descname">--no-tray</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-bleeter.py--no-tray" title="Permalink to this definition">¶</a></dt>
+<dd>disable the system tray icon</dd></dl>
+
+<dl class="cmdoption">
+<dt id="cmdoption-bleeter.py-v">
+<tt class="descname">-v</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--verbose</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-bleeter.py-v" title="Permalink to this definition">¶</a></dt>
+<dd>produce verbose output</dd></dl>
+
+<dl class="cmdoption">
+<dt id="cmdoption-bleeter.py-q">
+<tt class="descname">-q</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--quiet</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-bleeter.py-q" title="Permalink to this definition">¶</a></dt>
+<dd>output only results and errors</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3><a href="index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="#">Usage</a><ul>
+<li><a class="reference external" href="#options">Options</a></li>
+</ul>
+</li>
+</ul>
+
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="configuration.html"
+                                  title="previous chapter">Configuration</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="bleeter.1.html"
+                                  title="next chapter">bleeter.py</a></p>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="modindex.html" title="Global Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="bleeter.1.html" title="bleeter.py"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="configuration.html" title="Configuration"
+             >previous</a> |</li>
+        <li><a href="index.html">bleeter v0.3.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2010, James Rowe.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.4.
+    </div>
+  </body>
+</html>
