@@ -308,6 +308,33 @@ def open_tweet(tweet):
     return show
 
 
+def open_geo(tweet):
+    """"Create tweet opening function for location
+
+    :type tweet: ``tweepy.models.Status``
+    :param tweet: Twitter status message to open
+    :rtype: ``FunctionType``
+    :return: Wrapper to open tweet location in browser
+    """
+
+    def show(notification, action):  # pylint: disable-msg=W0613
+        """Open tweet location in browser
+
+        :type notification: ``pynotify.Notification``
+        :param notification: Calling notification instance
+        :type action: ``str``
+        :param action: Calling action name
+        """
+
+        latlon = ",".join(map(str, tweet.geo['coordinates']))
+
+        # TODO: Perhaps make the new tab, new window, etc configurable?
+        webbrowser.open("http://maps.google.com/maps?q=%s@%s&sll=%s&z=16"
+                        % (tweet.user.screen_name, latlon, latlon),
+                        new=2)
+    return show
+
+
 def method_tweet(tweet, method):
     """"Create Status method wrapper function
 
@@ -420,6 +447,8 @@ def display(me, tweets, seen, timeout):
         if not tweet.favorited:
             note.add_action("bookmark", "Fave",
                             method_tweet(tweet, "favorite"))
+        if tweet.geo:
+            note.add_action("find", "Geo", open_geo(tweet))
         # Keep a reference for handling the action.
         NOTIFICATIONS[hash(note)] = note
         note.connect_object("closed", NOTIFICATIONS.pop, hash(note))
