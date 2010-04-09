@@ -232,6 +232,8 @@ def format_tweet(text):
     >>> NOTIFY_SERVER_CAPS.append("body-hyperlinks")
     >>> format_tweet("See http://bit.ly/dunMgV")
     'See <a href="http://bit.ly/dunMgV">http://bit.ly/dunMgV</a>'
+    >>> format_tweet("See http://example.com/url-hyphen")
+    'See <a href="http://example.com/url-hyphen">http://example.com/url-hyphen</a>'
 
     :type text: ``str``
     :param api: Tweet content
@@ -243,9 +245,9 @@ def format_tweet(text):
         text = re.sub(r'(@\w+)', r'<u>\1</u>', text)
         text = re.sub(r'(#\w+)', r'<i>\1</i>', text)
         if "body-hyperlinks" in NOTIFY_SERVER_CAPS:
-            text = re.sub(r'(http://[\w\./]+)', r'<a href="\1">\1</a>', text)
+            text = re.sub(r'(http://[\w\./_-]+)', r'<a href="\1">\1</a>', text)
         else:
-            text = re.sub(r'(http://[\w\./]+)', r'<u>\1</u>', text)
+            text = re.sub(r'(http://[\w\./_-]+)', r'<u>\1</u>', text)
 
         if text.startswith("RT "):
             text = "<b>RT</b> " + text[3:]
