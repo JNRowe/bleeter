@@ -5,8 +5,8 @@ type: :feature
 component: bleeter
 release: 0.4.0
 reporter: James Rowe <jnrowe@gmail.com>
-status: :unstarted
-disposition: 
+status: :closed
+disposition: :fixed
 creation_time: 2010-04-07 07:38:28.751941 Z
 references: []
 
@@ -15,6 +15,14 @@ log_events:
 - - 2010-04-07 07:38:29.207825 Z
   - James Rowe <jnrowe@gmail.com>
   - created
+  - ""
+- - 2010-04-09 06:49:57.995624 Z
+  - James Rowe <jnrowe@gmail.com>
+  - changed status from unstarted to in_progress
+  - ""
+- - 2010-04-09 06:52:11.107593 Z
+  - James Rowe <jnrowe@gmail.com>
+  - closed with disposition fixed
   - ""
 claimer: 
 git_branch: 

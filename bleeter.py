@@ -176,25 +176,33 @@ def relative_time(timestamp):
 
     >>> now = datetime.datetime.utcnow()
     >>> relative_time(now - datetime.timedelta(days=365))
-    'a year ago'
+    'last year'
     >>> relative_time(now - datetime.timedelta(days=70))
-    '2 months ago'
+    'two months ago'
+    >>> relative_time(now - datetime.timedelta(days=30))
+    'last month'
     >>> relative_time(now - datetime.timedelta(days=21))
-    '3 weeks ago'
+    'three weeks ago'
     >>> relative_time(now - datetime.timedelta(days=4))
-    '4 days ago'
+    'four days ago'
+    >>> relative_time(now - datetime.timedelta(days=1))
+    'yesterday'
     >>> relative_time(now - datetime.timedelta(hours=5))
-    '5 hours ago'
+    'five hours ago'
+    >>> relative_time(now - datetime.timedelta(hours=1))
+    'an hour ago'
     >>> relative_time(now - datetime.timedelta(minutes=6))
-    '6 minutes ago'
-    >>> relative_time(now - datetime.timedelta(seconds=7))
-    '7 seconds ago'
+    'six minutes ago'
+    >>> relative_time(now - datetime.timedelta(seconds=12))
+    '12 seconds ago'
 
     :type timestamp: ``datetime.datetime``
     :param timestamp: Event to generate relative timestamp against
     :rtype: ``str``
     :return: Human readable date and time offset
     """
+
+    numstr = ". a two three four five six seven eight nine ten".split()
 
     matches = [
         (60 * 60 * 24 * 365, "year"),
@@ -212,7 +220,16 @@ def relative_time(timestamp):
         i = seconds // scale
         if i:
             break
-    return "%s %s%s ago" % (i if i > 1 else "a", name, "s" if i > 1 else "")
+    if i == 1 and name in ("year", "month", "week"):
+        result = "last %s" % name
+    elif i == 1 and name == "day":
+        result = "yesterday"
+    elif i == 1 and name == "hour":
+        result = "an hour ago"
+    else:
+        result = "%s %s%s ago" % (i if i > 10 else numstr[i], name,
+                                  "s" if i > 1 else "")
+    return result
 
 
 def format_tweet(text):
