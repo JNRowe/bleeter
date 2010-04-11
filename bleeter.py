@@ -135,6 +135,7 @@ def process_command_line(config_file):
         "frequency = integer(min=60, default=300)",
         "token = list(default=list('', ''))",
         "stealth = list(default=list('ewornj'))",
+        "ignore = list(default=list('#nowplaying'))",
         "tray = boolean(default=True)",
     ]
     config = configobj.ConfigObj(config_file, configspec=config_spec)
@@ -152,6 +153,7 @@ def process_command_line(config_file):
                         frequency=config["frequency"],
                         token=config.get("token"),
                         stealth=config.get("stealth"),
+                        ignore=config.get("ignore"),
                         tray=config.get("tray"))
 
     parser.add_option("-t", "--timeout", action="callback", type="int",
@@ -170,6 +172,9 @@ def process_command_line(config_file):
     parser.add_option("-s", "--stealth", action="store",
                       metavar=",".join(config.get("stealth")),
                       help="Users to watch without following(comma separated)")
+    parser.add_option("-i", "--ignore", action="store",
+                      metavar=",".join(config.get("ignore")),
+                      help="Keywords to ignore in tweets(comma separated)")
     parser.add_option("--no-tray", action="store_false",
                       dest="tray", help="Disable systray icon")
     parser.add_option("-v", "--verbose", action="store_true",
@@ -181,6 +186,8 @@ def process_command_line(config_file):
     options = parser.parse_args()[0]
     if isinstance(options.stealth, basestring):
         options.stealth = options.stealth.split(",")
+    if isinstance(options.ignore, basestring):
+        options.ignore = options.ignore.split(",")
 
     return options
 
@@ -403,7 +410,45 @@ def method_tweet(tweet, method):
     return wrapper
 
 
-def update(tweets, api, seen, users):
+def skip_check(ignore):
+    """"Create tweet skip testing wrapper function
+
+    >>> filt = skip_check(["#nowplaying", "@boring"])
+    >>> tweet = tweepy.models.Status()
+    >>> tweet.text = "This is a test"
+    >>> filt(tweet)
+    True
+    >>> tweet.text = "This is a test #nowplaying"
+    >>> filt(tweet)
+    False
+    >>> tweet.text = "Reply to @boring"
+    >>> filt(tweet)
+    False
+
+    :type ignore: ``list`` of ``str``
+    :param ignore: List of words to trigger tweet skipping
+    :rtype: ``FunctionType``
+    :return: Wrapper to scan tweets
+    """
+
+    def wrapper(tweet):
+        """Filter tweets containing user selected words
+
+        :type tweet: ``tweepy.models.Status``
+        :param tweet: Twitter status message to scan for selected words
+        :rtype: ``bool``
+        :return: True if tweet is clean
+        """
+
+        # Not just \W, because of the special case of # and @ in tweets
+        word_match = re.compile("[^a-zA-Z0-9_#@]")
+
+        return not any(map(ignore.__contains__, re.split(word_match,
+                                                         tweet.text)))
+    return wrapper
+
+
+def update(tweets, api, seen, users, ignore):
     """Fetch new tweets
 
     :type tweets: ``collections.deque``
@@ -414,6 +459,8 @@ def update(tweets, api, seen, users):
     :param seen: Last seen status
     :type users: ``list`` of ``str``
     :param users: Stealth follow user list
+    :type ignore: ``list`` of ``str``
+    :param ignore: List of words to trigger tweet skipping
     :rtype: ``True``
     :return: Timers must return a ``True`` value for timer to continue
     """
@@ -449,9 +496,8 @@ def update(tweets, api, seen, users):
 
     if new_tweets:
         new_tweets = sorted(new_tweets, key=operator.attrgetter("id"))
-
-        tweets.extend(new_tweets)
         seen["fetched"] = new_tweets[-1].id
+        tweets.extend(filter(skip_check(ignore), new_tweets))
 
     return True
 
@@ -638,9 +684,9 @@ def main(argv):
         while ctx.pending():
             ctx.iteration()
 
-    update(tweets, api, seen, options.stealth)
+    update(tweets, api, seen, options.stealth, options.ignore)
     glib.timeout_add_seconds(options.frequency, update, tweets, api, seen,
-                             options.stealth)
+                             options.stealth, options.ignore)
     glib.timeout_add_seconds(options.timeout + 1, display, me, tweets, seen,
                              options.timeout)
     if options.tray:

@@ -47,6 +47,9 @@ OPTIONS
 -s, --stealth **user**
     users to watch without following(comma separated)
 
+-i, --ignore **word**
+    keywords to ignore in tweets(comma separated)
+
 --no-tray
     disable the system tray icon
 

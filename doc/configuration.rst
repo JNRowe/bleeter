@@ -15,6 +15,7 @@ An example configuration file is below:
     frequency = 600
     timeout = 10
     stealth = unfolloweduser,stalkeduser
+    ignore = "#nowplaying"
 
 ``frequency`` option
 ''''''''''''''''''''
@@ -39,6 +40,19 @@ periods of time without needing to follow and unfollow them.
 Consider the use case of attending a conference and wanting to follow your
 fellow attendees without having to explicitly unfollow them once the conference
 is over.
+
+``ignore`` option
+'''''''''''''''''
+
+The ``ignore`` option allows you to specify a list of keywords you wish to
+use as ignore filters for tweets you receive.  Keywords can be normal words,
+``@user`` usernames, ``#tag`` hashtags or any other word type.
+
+The default is "#nowplaying" to
+ignore all the audio player spam that some people like to produce.
+
+The entries should be comma separated, and must be quoted if they contain '#'
+to match hashtags.
 
 .. [#] The default value for ``${XDG_CONFIG_HOME}`` is system dependent, but
        likely to be ``~/.config`` if you haven't set it.  For more information

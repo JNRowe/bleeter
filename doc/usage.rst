@@ -42,6 +42,10 @@ Options
 
    users to watch without following(comma separated)
 
+.. cmdoption:: -i "#nowplaying", --ignore "#nowplaying"
+
+   keywords to ignore in tweets(comma separated)
+
 .. cmdoption:: --no-tray
 
    disable the system tray icon
