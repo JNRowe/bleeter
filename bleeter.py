@@ -50,6 +50,8 @@ import urllib
 import warnings
 import webbrowser
 
+from xml.sax import saxutils
+
 try:
     import json
 except ImportError:
@@ -263,12 +265,19 @@ def format_tweet(text):
     'See <a href="http://bit.ly/dunMgV">http://bit.ly/dunMgV</a>'
     >>> format_tweet("See http://example.com/url-hyphen")
     'See <a href="http://example.com/url-hyphen">http://example.com/url-hyphen</a>'
+    >>> format_tweet("Handle ampersands & win")
+    'Handle ampersands &amp; win'
+    >>> format_tweet("entity test, & \\" ' < >")
+    'entity test, &amp; &quot; &apos; &lt; &gt;'
 
     :type text: ``str``
     :param api: Tweet content
     :rtype: ``str``
     :return: Tweet content with pretty formatting
     """
+
+    # Sanitize entity escaping for input
+    text = glib.markup_escape_text(saxutils.unescape(text))
 
     if "body-markup" in NOTIFY_SERVER_CAPS:
         text = re.sub(r'(@\w+)', r'<u>\1</u>', text)
