@@ -67,6 +67,7 @@ the advanced features available within the configuration file.</p>
 <div class="highlight-ini"><div class="highlight"><pre><span class="na">frequency</span> <span class="o">=</span> <span class="s">600</span>
 <span class="na">timeout</span> <span class="o">=</span> <span class="s">10</span>
 <span class="na">stealth</span> <span class="o">=</span> <span class="s">unfolloweduser,stalkeduser</span>
+<span class="na">ignore</span> <span class="o">=</span> <span class="s">&quot;#nowplaying&quot;</span>
 </pre></div>
 </div>
 <div class="section" id="frequency-option">
@@ -88,6 +89,16 @@ periods of time without needing to follow and unfollow them.</p>
 <p>Consider the use case of attending a conference and wanting to follow your
 fellow attendees without having to explicitly unfollow them once the conference
 is over.</p>
+</div>
+<div class="section" id="ignore-option">
+<h2><tt class="docutils literal"><span class="pre">ignore</span></tt> option<a class="headerlink" href="#ignore-option" title="Permalink to this headline">¶</a></h2>
+<p>The <tt class="docutils literal"><span class="pre">ignore</span></tt> option allows you to specify a list of keywords you wish to
+use as ignore filters for tweets you receive.  Keywords can be normal words,
+<tt class="docutils literal"><span class="pre">&#64;user</span></tt> usernames, <tt class="docutils literal"><span class="pre">#tag</span></tt> hashtags or any other word type.</p>
+<p>The default is &#8220;#nowplaying&#8221; to
+ignore all the audio player spam that some people like to produce.</p>
+<p>The entries should be comma separated, and must be quoted if they contain &#8216;#&#8217;
+to match hashtags.</p>
 <table class="docutils footnote" frame="void" id="id2" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
@@ -111,6 +122,7 @@ see <a class="reference external" href="http://standards.freedesktop.org/basedir
 <li><a class="reference external" href="#frequency-option"><tt class="docutils literal"><span class="pre">frequency</span></tt> option</a></li>
 <li><a class="reference external" href="#timeout-option"><tt class="docutils literal"><span class="pre">timeout</span></tt> option</a></li>
 <li><a class="reference external" href="#stealth-option"><tt class="docutils literal"><span class="pre">stealth</span></tt> option</a></li>
+<li><a class="reference external" href="#ignore-option"><tt class="docutils literal"><span class="pre">ignore</span></tt> option</a></li>
 </ul>
 </li>
 </ul>
