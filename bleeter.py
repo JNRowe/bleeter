@@ -524,6 +524,10 @@ def display(me, tweets, seen, timeout):
         # No tweets awaiting display
         return True
 
+    # tweets are sorted at this point, so this is a simple duplicate filter
+    if tweet.id <= seen["displayed"]:
+        return True
+
     note = pynotify.Notification("From %s about %s"
                                  % (tweet.user.name,
                                     relative_time(tweet.created_at)),
