@@ -142,7 +142,7 @@ def process_command_line(config_file):
     results = config.validate(validate.Validator())
     if results is not True:
         for key in filter(lambda k: not results[k], results):
-            print fail("Config value for `{0}' is invalid".format(key))
+            print fail("Config value for `%s' is invalid" % key)
         raise SyntaxError("Invalid configuration file")
 
     parser = optparse.OptionParser(usage="%prog [options...]",
