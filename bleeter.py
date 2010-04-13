@@ -654,7 +654,6 @@ def main(argv):
 
     auth.set_access_token(*options.token)
     api = tweepy.API(auth)
-    me = api.me()
 
     if os.path.exists(state_file):
         seen = json.load(open(state_file))
@@ -705,6 +704,7 @@ def main(argv):
             ctx.iteration()
 
     update(tweets, api, seen, options.stealth, options.ignore)
+    me = api.me()
     glib.timeout_add_seconds(options.frequency, update, tweets, api, seen,
                              options.stealth, options.ignore)
     glib.timeout_add_seconds(options.timeout + 1, display, me, tweets, seen,
