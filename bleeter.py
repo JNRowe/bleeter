@@ -104,6 +104,22 @@ USAGE = __doc__[:__doc__.find('\n\n', 100)].splitlines()[2:]
 USAGE = "\n".join(USAGE).replace("bleeter", "%prog")
 
 
+def find_app_icon():
+    """Find suitable bleeter application icon"""
+    icon_locations = [
+        "%s/share/pixmaps/bleeter.png" % sys.prefix,
+        "%s/bleeter/bleeter.png" % glib.get_user_cache_dir(),
+        "%s/bleeter.png" % os.path.abspath(sys.path[0]),
+        None,
+    ]
+    for icon in icon_locations:
+        if os.path.exists(icon):
+            break
+    if not icon:
+        raise EnvironmentError("Can't find application icon!")
+    return "file://%s" % icon
+
+
 def process_command_line(config_file):
     """Main command line interface
 
@@ -299,7 +315,7 @@ def format_tweet(text):
     return text
 
 
-def get_icon(user):
+def get_user_icon(user):
     """Get icon location for user
 
     :type user: ``tweepy.models.User``
@@ -318,7 +334,7 @@ def get_icon(user):
         except IOError:
             # Fallback to application icon
             if not os.path.exists("%s/bleeter.png" % cache_dir):
-                shutil.copy("%s/bleeter.png" % sys.path[0], cache_dir)
+                shutil.copy(find_app_icon(), cache_dir)
             filename = "%s/bleeter.png" % cache_dir
         if gtk:
             icon = gtk.gdk.pixbuf_new_from_file(filename)
@@ -532,7 +548,7 @@ def display(me, tweets, seen, timeout):
                                  % (tweet.user.name,
                                     relative_time(tweet.created_at)),
                                  format_tweet(tweet.text),
-                                 get_icon(tweet.user))
+                                 get_user_icon(tweet.user))
     if "actions" in NOTIFY_SERVER_CAPS:
         note.add_action("default", " ", open_tweet(tweet))
         note.add_action("mail-forward", "retweet",
@@ -680,7 +696,7 @@ def main(argv):
                 raise OSError("Notification failed to display!")
             return errno.EPERM
 
-        icon = gtk.status_icon_new_from_file("%s/bleeter.png" % sys.path[0])
+        icon = gtk.status_icon_new_from_file(find_app_icon())
         icon.set_tooltip("Initial update in progress")
 
         # Make sure icon is set up, before entering update()
