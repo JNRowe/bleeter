@@ -107,14 +107,10 @@ If you're not using either Ubuntu or e17_ then you're encouraged to post
 a screenshot online somewhere and either link to it when you `file a bug`_ or
 send me a mail_ with a link explaining the problem.
 
-Why is there no ``setup.py``?
------------------------------
+.. _pypi listing:
 
-There will be at some point in the future, I just haven't decided how to handle
-it.  See the next question and answer for the reasoning.
-
-Why can't I ``easy_install`` this?
-----------------------------------
+Why isn't this listed on PyPI?
+------------------------------
 
 For the Python projects I've posted on PyPI_, or contributed to significantly,
 I'd say at least 90% of the bug reports have been from ``easy_install`` users
@@ -125,6 +121,11 @@ Handling such bug reports killed public releases of upoints_, and the plone_
 users finally killed public releases of pyisbn_.  Having given this some
 considerable thought I decided that my hobby projects shouldn't be exposed to
 that, so they can remain fun.
+
+Why can't I ``easy_install`` this?
+----------------------------------
+
+See `PyPI listing`_.
 
 .. _PyPI: http://pypi.python.org/pypi
 .. _upoints: http://github.com/JNRowe/upoints
