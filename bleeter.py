@@ -104,8 +104,15 @@ USAGE = __doc__[:__doc__.find('\n\n', 100)].splitlines()[2:]
 USAGE = "\n".join(USAGE).replace("bleeter", "%prog")
 
 
-def find_app_icon():
-    """Find suitable bleeter application icon"""
+def find_app_icon(uri=True):
+    """Find suitable bleeter application icon
+
+    :type uri: ``bool``
+    :param uri: Return a URI for the path
+    :rtype: ``str``
+    :return: Path to the application icon
+
+    """
     icon_locations = [
         "%s/share/pixmaps/bleeter.png" % sys.prefix,
         "%s/bleeter/bleeter.png" % glib.get_user_cache_dir(),
@@ -117,7 +124,7 @@ def find_app_icon():
             break
     if not icon:
         raise EnvironmentError("Can't find application icon!")
-    return "file://%s" % icon
+    return "%s%s" % ("file://" if uri else "", icon)
 
 
 def process_command_line(config_file):
@@ -675,7 +682,7 @@ def main(argv):
         # Show a "hello" message, as it can take some time the first real
         # notification
         note = pynotify.Notification("bleeter v%s" % (__version__), "Started",
-                                     "%s/bleeter.png" % sys.path[0])
+                                     find_app_icon())
         note.set_timeout(options.timeout * 1000)
         note.set_urgency(pynotify.URGENCY_LOW)
         if not note.show():
@@ -695,7 +702,7 @@ def main(argv):
                 raise OSError("Notification failed to display!")
             return errno.EPERM
 
-        icon = gtk.status_icon_new_from_file(find_app_icon())
+        icon = gtk.status_icon_new_from_file(find_app_icon(uri=False))
         icon.set_tooltip("Initial update in progress")
 
         # Make sure icon is set up, before entering update()
