@@ -6,12 +6,15 @@ User-visible changes
 
 .. contents::
 
-VCS only
---------
+0.4.0 - 2010-04-21
+------------------
 
     * Systray icon is now optional
-    * Tweets with geotags have a button to open the location in Google Maps
+    * Tweets with geotags have a button to open the location in `Google Maps`_
+    * Added support for ignoring tweets containing certain words, by default
+      the ``#nowplaying`` hashtag
 
+.. _Google maps: http://maps.google.com/
 
 0.3.0 - 2010-04-07
 ------------------
