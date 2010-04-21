@@ -18,7 +18,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-__version__ = "0.4.0"
+__version__ = "0.4.1"
 __date__ = "2010-04-21"
 __author__ = "James Rowe <jnrowe@gmail.com>"
 __copyright__ = "Copyright (C) 2010 James Rowe <jnrowe@gmail.com>"
