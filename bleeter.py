@@ -704,6 +704,8 @@ def main(argv):
 
         icon = gtk.status_icon_new_from_file(find_app_icon(uri=False))
         icon.set_tooltip("Initial update in progress")
+        icon.connect("activate",
+                     lambda x: webbrowser.open("http://twitter.com/", new=2))
 
         # Make sure icon is set up, before entering update()
         ctx = loop.get_context()
