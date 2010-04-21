@@ -33,17 +33,17 @@ dependencies aren't ported yet.
 Configuration
 -------------
 
-It is also possible to include tweets from users you are not directly following
-by adding them to the configuration file, which should be placed in
+The first time you run ``bleeter`` you should use the ``--get-token`` option to
+setup OAuth_ access.
+
+It is possible to include tweets from users you are not directly following by
+adding them to the configuration file, which should be placed in
 ``${XDG_CONFIG_HOME}/bleeter/config.ini``.  Its format should be::
 
     stealth = NotThatInteresting,Boring
 
 Where the ``stealth`` value should be a comma separated list of twitter
 usernames or numeric identifiers.
-
-The first time you run ``bleeter`` you should use the ``--get-token`` option to
-setup OAuth_ access.
 
 There is an ``ignore`` option that allows you to specify a list of keywords you
 wish to use as ignore filters for tweets you receive.  Keywords can be normal

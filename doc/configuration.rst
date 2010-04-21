@@ -48,8 +48,8 @@ The ``ignore`` option allows you to specify a list of keywords you wish to
 use as ignore filters for tweets you receive.  Keywords can be normal words,
 ``@user`` usernames, ``#tag`` hashtags or any other word type.
 
-The default is "#nowplaying" to
-ignore all the audio player spam that some people like to produce.
+The default is "#nowplaying" to ignore all the audio player spam that some
+people like to produce.
 
 The entries should be comma separated, and must be quoted if they contain '#'
 to match hashtags.
