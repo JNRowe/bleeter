@@ -45,6 +45,11 @@ usernames or numeric identifiers.
 The first time you run ``bleeter`` you should use the ``--get-token`` option to
 setup OAuth_ access.
 
+There is an ``ignore`` option that allows you to specify a list of keywords you
+wish to use as ignore filters for tweets you receive.  Keywords can be normal
+words, ``@user`` usernames, ``#tag`` hashtags or any other word type.  By
+default, tweets containing ``#nowplaying`` are ignored.
+
 If you notification daemon supports it you can click on the popup to open the
 tweet in your browser of choice.  The Python webbrowser_ module is used to
 accomplish this and as such can be configured by setting the ``BROWSER``
