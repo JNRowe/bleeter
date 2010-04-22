@@ -712,8 +712,19 @@ def main(argv):
         while ctx.pending():
             ctx.iteration()
 
+    try:
+        me = api.me()
+    except tweepy.TweepError:
+        message = "Talking to twitter failed.  Is twitter or your network down?"
+        print fail(message)
+        error = pynotify.Notification("Network error", message,
+                                      "error")
+        error.set_timeout(options.timeout * 1000)
+        if not error.show():
+            raise OSError("Notification failed to display!")
+        return errno.EIO
     update(tweets, api, seen, options.stealth, options.ignore)
-    me = api.me()
+
     glib.timeout_add_seconds(options.frequency, update, tweets, api, seen,
                              options.stealth, options.ignore)
     glib.timeout_add_seconds(options.timeout + 1, display, me, tweets, seen,
