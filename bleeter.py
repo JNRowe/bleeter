@@ -592,7 +592,10 @@ def tooltip(icon, tweets):
     :param tweets: Tweets pending display
     """
 
-    icon.set_tooltip("%i tweets awaiting display" % len(tweets))
+    n = len(tweets)
+
+    icon.set_visible(n)
+    icon.set_tooltip("%i tweets awaiting display" % n)
     return True
 
 
