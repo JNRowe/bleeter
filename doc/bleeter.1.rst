@@ -71,7 +71,7 @@ example::
     stealth = unfolloweduser
 
 With the above configuration file twitter will be checked every ten minutes for
-updates,.new tweets will be shown for 10 seconds and **unfolloweduser** will be
+updates, new tweets will be shown for 10 seconds and **unfolloweduser** will be
 watched for updates.
 
 BUGS

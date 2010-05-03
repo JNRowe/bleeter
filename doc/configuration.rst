@@ -56,7 +56,7 @@ to match hashtags.
 
 .. [#] The default value for ``${XDG_CONFIG_HOME}`` is system dependent, but
        likely to be ``~/.config`` if you haven't set it.  For more information
-       see `XDG base directory specification`_
+       see `XDG base directory specification`_.
 
 .. _configobj: http://www.voidspace.org.uk/python/configobj.html
 .. _XDG base directory specification: http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
