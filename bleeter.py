@@ -46,9 +46,10 @@ import os
 import re
 import shutil
 import sys
+import subprocess
 import urllib
-import warnings
 import webbrowser
+import warnings
 
 from xml.sax import saxutils
 
@@ -102,6 +103,28 @@ NOTIFY_SERVER_CAPS = []
 USAGE = __doc__[:__doc__.find('\n\n', 100)].splitlines()[2:]
 # Replace script name with optparse's substitution var, and rebuild string
 USAGE = "\n".join(USAGE).replace("bleeter", "%prog")
+
+
+def open_browser(url):
+    """Open URL in user's browser
+
+    :type uri: ``str``
+    :param uri: URL to open
+
+    """
+
+    try:
+        subprocess.call(["xdg-open", url])
+    except OSError:
+        try:
+            webbrowser.open(url, new=2)
+        except webbrowser.Error:
+            message = "Failed to open link"
+            print fail(message)
+            error = pynotify.Notification("bleeter", message, "error")
+            if not error.show():
+                raise OSError("Notification failed to display!")
+            return errno.EPERM
 
 
 def find_app_icon(uri=True):
@@ -376,10 +399,8 @@ def open_tweet(tweet):
         :param action: Calling action name
         """
 
-        # TODO: Perhaps make the new tab, new window, etc configurable?
-        webbrowser.open("http://twitter.com/%s/status/%s"
-                        % (tweet.user.screen_name, tweet.id),
-                        new=2)
+        open_browser("http://twitter.com/%s/status/%s"
+                     % (tweet.user.screen_name, tweet.id))
     return show
 
 
@@ -404,9 +425,8 @@ def open_geo(tweet):
         latlon = ",".join(map(str, tweet.geo['coordinates']))
 
         # TODO: Perhaps make the new tab, new window, etc configurable?
-        webbrowser.open("http://maps.google.com/maps?q=%s@%s&sll=%s&z=16"
-                        % (tweet.user.screen_name, latlon, latlon),
-                        new=2)
+        open_browser("http://maps.google.com/maps?q=%s@%s&sll=%s&z=16"
+                     % (tweet.user.screen_name, latlon, latlon))
     return show
 
 
@@ -708,8 +728,7 @@ def main(argv):
 
         icon = gtk.status_icon_new_from_file(find_app_icon(uri=False))
         icon.set_tooltip("Initial update in progress")
-        icon.connect("activate",
-                     lambda x: webbrowser.open("http://twitter.com/", new=2))
+        icon.connect("activate", lambda x: open_browser("http://twitter.com/"))
 
         # Make sure icon is set up, before entering update()
         ctx = loop.get_context()

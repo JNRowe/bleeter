@@ -51,10 +51,9 @@ words, ``@user`` usernames, ``#tag`` hashtags or any other word type.  By
 default, tweets containing ``#nowplaying`` are ignored.
 
 If you notification daemon supports it you can click on the popup to open the
-tweet in your browser of choice.  The Python webbrowser_ module is used to
-accomplish this and as such can be configured by setting the ``BROWSER``
-environment variable on most systems(refer to the webbrowser_ documentation for
-details).
+tweet in your browser of choice.  The browser is opened using ``xdg-open`` from
+xdg-utils_.  It should use your default browser under KDE_ or gnome_, or
+whatever you've configured in the ``BROWSER`` environment variable elsewhere.
 
 Contributors
 ------------
@@ -120,7 +119,9 @@ the problem, or even better a patch!
 .. _notify-python: http://www.galago-project.org/
 .. _pygobject: http://www.pygtk.org/
 .. _configobj: http://www.voidspace.org.uk/python/configobj.html
-.. _webbrowser: http://docs.python.org/library/webbrowser.html
+.. _xdg-utils: http://portland.freedesktop.org/wiki
+.. _KDE: http://www.kde.org/
+.. _gnome: http://www.gnome.org/
 .. _xfce4-notifyd: http://spuriousinterrupt.org/projects/xfce4-notifyd
 .. _notification-daemon: http://www.galago-project.org/
 .. _simplejson: http://undefined.org/python/#simplejson
