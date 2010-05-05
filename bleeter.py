@@ -105,6 +105,24 @@ USAGE = __doc__[:__doc__.find('\n\n', 100)].splitlines()[2:]
 USAGE = "\n".join(USAGE).replace("bleeter", "%prog")
 
 
+def mkdir(dir):
+    """Create dir, including parents
+
+    :type dir: ``str``
+    :param dir: Directory to create
+    :raise OSError: Unable to create directory
+
+    """
+
+    try:
+        os.makedirs(os.path.expanduser(dir))
+    except OSError as exc: # Python >2.5
+        if exc.errno == errno.EEXIST:
+            pass
+        else:
+            raise
+
+
 def open_browser(url):
     """Open URL in user's browser
 
@@ -636,9 +654,11 @@ def main(argv):
     config_file = "%s/bleeter/config.ini" % glib.get_user_config_dir()
     options = process_command_line(config_file)
 
-    state_file = "%s/bleeter/state.db" % glib.get_user_config_dir()
+    state_file = "%s/bleeter/state.db" % glib.get_user_data_dir()
     lock_file = "%s.lock" % state_file
 
+    # Create directory for state storage
+    mkdir(os.path.dirname(lock_file))
     if os.path.exists(lock_file):
         print fail("Another instance is running, or `%s' is stale" % lock_file)
         return errno.EBUSY
@@ -666,6 +686,7 @@ def main(argv):
         except tweepy.TweepError:
             print fail("Fetching token failed")
             return errno.EIO
+        mkdir(os.path.dirname(config_file))
         conf = configobj.ConfigObj(config_file)
         conf['token'] = [token.key, token.secret]
         conf.write()
