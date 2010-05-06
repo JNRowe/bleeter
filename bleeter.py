@@ -758,6 +758,14 @@ def main(argv):
             guesser.load(bayes_db)
     else:
         guesser = None
+    if not Bayes and options.bayes:
+        message = "Bayes support requires the reverend module"
+        print warn(message)
+        note = pynotify.Notification("bleeter v%s" % (__version__), message,
+                                     "stock_dialog-warning")
+        note.set_urgency(pynotify.URGENCY_LOW)
+        if not note.show():
+            raise OSError("Notification failed to display!")
 
     auth.set_access_token(*options.token)
     api = tweepy.API(auth)
