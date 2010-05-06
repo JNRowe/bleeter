@@ -55,7 +55,7 @@ from xml.sax import saxutils
 
 try:
     import json
-except ImportError:
+except ImportError: # pragma: no cover
     import simplejson as json
 
 import configobj
@@ -73,17 +73,17 @@ try:
     import pygtk
     pygtk.require('2.0')
     import gtk
-except ImportError:
+except ImportError: # pragma: no cover
     gtk = False  # pylint: disable-msg=C0103
 
 try:
     from reverend.thomas import Bayes
-except Error:
+except ImportError: # pragma: no cover
     Bayes = None
 
 try:
     import termstyle
-except ImportError:
+except ImportError: # pragma: no cover
     termstyle = None  # pylint: disable-msg=C0103
 
 # Select colours if terminal is a tty
@@ -93,7 +93,7 @@ if termstyle:
     success = termstyle.green
     fail = termstyle.red
     warn = termstyle.yellow
-else:
+else: # pragma: no cover
     # pylint: disable-msg=C0103
     success = fail = warn = str
 
