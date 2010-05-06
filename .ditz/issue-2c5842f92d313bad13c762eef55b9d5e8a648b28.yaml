@@ -15,8 +15,8 @@ type: :feature
 component: bleeter
 release: 
 reporter: Rach Holmes <rach.c.holmes@gmail.com>
-status: :unstarted
-disposition: 
+status: :closed
+disposition: :fixed
 creation_time: 2010-05-06 13:03:11.618723 Z
 references: []
 
@@ -26,5 +26,22 @@ log_events:
   - Rach Holmes <rach.c.holmes@gmail.com>
   - created
   - ""
-claimer: 
+- - 2010-05-06 18:14:20.703884 Z
+  - James Rowe <jnrowe@gmail.com>
+  - changed status from unstarted to in_progress
+  - Okay, lets try it and see what happens.
+- - 2010-05-06 18:14:26.959904 Z
+  - James Rowe <jnrowe@gmail.com>
+  - issue claimed
+  - ""
+- - 2010-05-06 18:24:35.551230 Z
+  - James Rowe <jnrowe@gmail.com>
+  - closed with disposition fixed
+  - |-
+    This is a basic implementation, see if it works for you.  I'm not entirely
+    convinced yet...
+    
+    You must start bleeter with -b, and you must have reverend installed.  Pull it
+    from http://github.com/JNRowe/reverend, to kill the deprecation warnings.
+claimer: James Rowe <jnrowe@gmail.com>
 git_branch: 

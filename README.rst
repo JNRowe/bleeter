@@ -26,9 +26,15 @@ still using Python 2.5 you'll also need the simplejson_ library.
 If you wish to use the systray_ icon you'll also need pygtk_, if you do not wish
 to use the systray_ icon you'll need PIL_ for processing the user icons.
 
+If you wish to use the Bayesian adaptive timeouts for notifications, you will
+need reverend_ [#]_.
+
 ``bleeter`` should run with Python 2.5 or any newer release from the 2.x branch.
 No effort has been put in to making it work with Python 3, as a few of the
 dependencies aren't ported yet.
+
+.. [#] You can use the `updated reverend repository`_ on GitHub, to fix the
+       deprecation warnings on startup
 
 Configuration
 -------------
@@ -71,6 +77,7 @@ Ideas
 '''''
 
 * Paul Murray
+* Rachel Holmes
 
 If I've forgotten to include your name I wholeheartedly apologise.  Just drop me
 an email_ and I'll update the list!
@@ -128,6 +135,8 @@ the problem, or even better a patch!
 .. _systray: http://standards.freedesktop.org/systemtray-spec/systemtray-spec-latest.html
 .. _pygtk: http://www.pygtk.org/
 .. _PIL: http://www.pythonware.com/products/pil/index.htm
+.. _reverend: http://divmod.org/trac/wiki/DivmodReverend
+.. _updated reverend repository: http://github.com/JNRowe/reverend
 .. _email: jnrowe@gmail.com
 .. _OAuth: http://oauth.net/
 

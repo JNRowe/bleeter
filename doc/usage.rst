@@ -50,6 +50,10 @@ Options
 
    disable the system tray icon
 
+.. cmdoption:: -b, --bayes
+
+   enable Bayesian timeout adjustment
+
 .. cmdoption:: -v, --verbose
 
    produce verbose output

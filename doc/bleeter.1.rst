@@ -53,6 +53,9 @@ OPTIONS
 --no-tray
     disable the system tray icon
 
+-b, --bayes
+    enable Bayesian timeout adjustment
+
 -v, --verbose
     produce verbose output
 
