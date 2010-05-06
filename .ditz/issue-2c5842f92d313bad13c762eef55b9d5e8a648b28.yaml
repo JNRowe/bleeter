@@ -1,0 +1,30 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: Use Bayesian inference for notification timeout.
+desc: |-
+  I've been thinking it would be nice to have Up and Down buttons for
+  notifications that trigger Bayesian learning for tweet text.  Higher guesses for
+  new tweets would adjust the length of the notification.  This would make tweets
+  that are likely to be more interesting last longer, and more likely to be read.
+  
+  Perhaps tweets with really low scores need not be displayed at all, but doing so
+  would remove the ability to re-train the database.  Maybe there is a way around
+  it?
+  
+  Or, is this just all kinds of stupid?
+type: :feature
+component: bleeter
+release: 
+reporter: Rach Holmes <rach.c.holmes@gmail.com>
+status: :unstarted
+disposition: 
+creation_time: 2010-05-06 13:03:11.618723 Z
+references: []
+
+id: 2c5842f92d313bad13c762eef55b9d5e8a648b28
+log_events: 
+- - 2010-05-06 13:03:12.946597 Z
+  - Rach Holmes <rach.c.holmes@gmail.com>
+  - created
+  - ""
+claimer: 
+git_branch: 
