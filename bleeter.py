@@ -642,14 +642,14 @@ def display(me, tweets, seen, timeout, guesser):
                             method_tweet(tweet, "favorite"))
         if tweet.geo:
             note.add_action("find", "Geo", open_geo(tweet))
-        if guesser:
+        if guesser is not None:
             note.add_action("up", "Like", train_bayes(guesser, "like", tweet))
             note.add_action("down", "Dislike",
                             train_bayes(guesser, "dislike", tweet))
         # Keep a reference for handling the action.
         NOTIFICATIONS[hash(note)] = note
         note.connect_object("closed", NOTIFICATIONS.pop, hash(note))
-    if guesser:
+    if guesser is not None:
         result = collections.defaultdict(int)
         result.update(guesser.guess(tweet.text.lower()))
         mult = result["like"] - result["dislike"]
