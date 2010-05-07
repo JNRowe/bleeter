@@ -93,7 +93,7 @@ support.
 The tweets don't have the same formatting as the screenshots!
 -------------------------------------------------------------
 
-If you're using Ubuntu or e17_ this is expected behaviour.
+If you're using Ubuntu, Xfce_ or e17_ this is expected behaviour.
 
 .. figure:: http://jnrowe.github.com/images/ubuntu-notify3.png
 
@@ -103,9 +103,17 @@ It is likely the feature you're missing is either ``body-markup`` or
 ``body-hyperlinks``, see `capabilities testing`_ for a method you can use to
 check your notification systems supported capabilities.
 
-If you're not using either Ubuntu or e17_ then you're encouraged to post
+The Xfce_ notification system, xfce4-notifyd_, supports ``actions`` and
+``body-markup`` which means it is still quite usable with ``bleeter``.  The only
+functionality you'll be missing is the direct opening of links within tweet
+text.
+
+If you're not using either Ubuntu, Xfce_ or e17_ then you're encouraged to post
 a screenshot online somewhere and either link to it when you `file a bug`_ or
 send me a mail_ with a link explaining the problem.
+
+.. _Xfce: http://www.xfce.org/
+.. _xfce4-notifyd: http://spuriousinterrupt.org/projects/xfce4-notifyd
 
 .. _pypi listing:
 
