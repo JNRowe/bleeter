@@ -43,5 +43,12 @@ log_events:
     
     You must start bleeter with -b, and you must have reverend installed.  Pull it
     from http://github.com/JNRowe/reverend, to kill the deprecation warnings.
+- - 2010-05-08 19:11:48.173025 Z
+  - James Rowe <jnrowe@gmail.com>
+  - commented
+  - |-
+    I think I'm going to pull this as it doesn't fit the interface very well.
+    Either, tweets need to become "genuine" dialog windows with timeouts so multiple
+    buttons can be pushed or this needs to be dropped.
 claimer: James Rowe <jnrowe@gmail.com>
 git_branch: 
