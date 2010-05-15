@@ -360,14 +360,18 @@ def format_tweet(text):
     # Sanitize entity escaping for input
     text = glib.markup_escape_text(saxutils.unescape(text))
 
+    # re is smart enough to use pre-cached versions
+    url_match = re.compile(r'(http://[\w\.?=\+/_-]+)')
+    user_match = re.compile(r'@(\w+)')
+    hashtag_match = re.compile(r'(#\w+)')
+
     if "body-markup" in NOTIFY_SERVER_CAPS:
-        text = re.sub(r'@(\w+)', r'@<u>\1</u>', text)
-        text = re.sub(r'(#\w+)', r'<i>\1</i>', text)
+        text = user_match.sub(r'@<u>\1</u>', text)
+        text = hashtag_match.sub(r'<i>\1</i>', text)
         if "body-hyperlinks" in NOTIFY_SERVER_CAPS:
-            text = re.sub(r'(http://[\w\.?=\+/_-]+)', r'<a href="\1">\1</a>',
-                          text)
+            text = url_match.sub(r'<a href="\1">\1</a>', text)
         else:
-            text = re.sub(r'(http://[\w\.?=\+/_-]+)', r'<u>\1</u>', text)
+            text = url_match.sub(r'<u>\1</u>', text)
 
         if text.startswith("RT "):
             text = "<b>RT</b> " + text[3:]
