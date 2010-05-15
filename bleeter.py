@@ -50,7 +50,6 @@ import sys
 import subprocess
 import urllib
 import webbrowser
-import warnings
 
 from xml.sax import saxutils
 
@@ -134,6 +133,42 @@ def mkdir(dir):
             raise
 
 
+def usage_note(message, title=None, level=warn, icon=None):
+    """Display a usage notification
+
+    :type message: ``str``
+    :param message: Message to display
+    :type title: ``str`` or ``None`
+    :param title: Title for notification popup
+    :type level: ``func``
+    :param level: Function to display text message with
+    :type icon: ``str``
+    :param iconL: Icon to use for notification popup
+    """
+
+    message = message.replace("%prog", sys.argv[0])
+    if not title:
+        title = "%%prog %s" % __version__
+    title = title.replace("%prog", sys.argv[0])
+    print level(message)
+    if not icon:
+        if level == success:
+            icon = find_app_icon()
+        elif level == warn:
+            icon = "stock_dialog-warning"
+        elif level == fail:
+            icon = "error"
+    note = pynotify.Notification(title, message, icon)
+    if level == warn:
+        note.set_urgency(pynotify.URGENCY_LOW)
+    elif level == fail:
+        note.set_urgency(pynotify.URGENCY_CRITICAL)
+        note.set_timeout(pynotify.EXPIRES_NEVER)
+    if not note.show():
+        raise OSError("Notification failed to display!")
+    return errno.EPERM
+
+
 def open_browser(url):
     """Open URL in user's browser
 
@@ -148,12 +183,7 @@ def open_browser(url):
         try:
             webbrowser.open(url, new=2)
         except webbrowser.Error:
-            message = "Failed to open link"
-            print fail(message)
-            error = pynotify.Notification("bleeter", message, "error")
-            if not error.show():
-                raise OSError("Notification failed to display!")
-            return errno.EPERM
+            usage_note("Failed to open link", level=fail)
 
 
 def find_app_icon(uri=True):
@@ -619,11 +649,7 @@ def update(tweets, api, seen, users, ignore):
         new_tweets = api.home_timeline(since_id=old_seen, headers=headers)
         new_tweets.extend(api.mentions(since_id=old_seen, headers=headers))
     except tweepy.TweepError, e:
-        error = pynotify.Notification("Fetching user data failed", "",
-                                      "error")
-        if not error.show():
-            raise OSError("Notification failed to display!")
-        warnings.warn("User data fetch failed: %s" % e.reason)
+        usage_note("Fetching user data failed", level=fail)
         # Still return True, so we re-enter the loop
         return True
 
@@ -632,12 +658,8 @@ def update(tweets, api, seen, users, ignore):
             new_tweets.extend(api.user_timeline(user, since_id=old_seen,
                                                 headers=headers))
         except tweepy.TweepError, e:
-            error = pynotify.Notification("Fetching user data failed",
-                                          "Data for `%s' not available" % user,
-                                          "error")
-            if not error.show():
-                raise OSError("Notification failed to display!")
-            warnings.warn("Stealth data fetch failed: %s" % e.reason)
+            usage_note("Data for `%s' not available" % user,
+                       "Fetching user data failed", fail)
             # Still return True, so we re-enter the loop
             return True
 
@@ -807,41 +829,25 @@ def main(argv):
         return get_token(auth, config_file)
 
     if not options.token or not all(options.token):
-        message = "Use `%s --get-token' from the command line to set it" \
-            % sys.argv[0]
-        print fail(message)
-        error = pynotify.Notification("No OAuth token for bleeter", message,
-                                      "error")
-        error.set_timeout(options.timeout * 1000)
-        if not error.show():
-            raise OSError("Notification failed to display!")
-        return errno.EPERM
+        usage_note("Use `%prog --get-token' from the command line to set it",
+                   "No OAuth token for bleeter")
 
-    if Bayes and options.bayes:
+    if not Bayes and options.bayes:
+        usage_note("Bayes support requires the reverend module")
+        options.bayes = False
+
+    if not urlunshort and options.expand:
+        usage_note("Link expansion support requires the urlunshort module")
+        options.expand = False
+
+
+    if options.bayes:
         bayes_db = "%s/bleeter/bayes.db" % glib.get_user_data_dir()
         guesser = Bayes()
         if os.path.exists(bayes_db):
             guesser.load(bayes_db)
     else:
         guesser = None
-    if not Bayes and options.bayes:
-        message = "Bayes support requires the reverend module"
-        print warn(message)
-        note = pynotify.Notification("bleeter v%s" % (__version__), message,
-                                     "stock_dialog-warning")
-        note.set_urgency(pynotify.URGENCY_LOW)
-        if not note.show():
-            raise OSError("Notification failed to display!")
-
-    if not urlunshort and options.expand:
-        message = "Link expansion support requires the urlunshort module"
-        print warn(message)
-        note = pynotify.Notification("bleeter v%s" % (__version__), message,
-                                     "stock_dialog-warning")
-        note.set_urgency(pynotify.URGENCY_LOW)
-        if not note.show():
-            raise OSError("Notification failed to display!")
-        options.expand = False
 
     auth.set_access_token(*options.token)
     api = tweepy.API(auth)
@@ -871,26 +877,15 @@ def main(argv):
     if options.verbose or not options.tray:
         # Show a "hello" message, as it can take some time the first real
         # notification
-        note = pynotify.Notification("bleeter v%s" % (__version__), "Started",
-                                     find_app_icon())
-        note.set_timeout(options.timeout * 1000)
-        note.set_urgency(pynotify.URGENCY_LOW)
-        if not note.show():
-            raise OSError("Notification failed to display!")
+        usage_note("Started", level=success)
 
     tweets = collections.deque(maxlen=options.frequency / (options.timeout + 1))
 
     loop = glib.MainLoop()
     if options.tray:
         if not gtk:
-            message = "`pygtk' is required for systray support"
-            print fail(message)
-            error = pynotify.Notification("Missing pygtk", message,
-                                          "error")
-            error.set_timeout(options.timeout * 1000)
-            if not error.show():
-                raise OSError("Notification failed to display!")
-            return errno.EPERM
+            usage_note("pygtk is required for systray support", "Missing pygtk",
+                       fail)
 
         icon = gtk.status_icon_new_from_file(find_app_icon(uri=False))
         icon.set_tooltip("Initial update in progress")
@@ -904,14 +899,8 @@ def main(argv):
     try:
         me = api.me()
     except tweepy.TweepError:
-        message = "Talking to twitter failed.  Is twitter or your network down?"
-        print fail(message)
-        error = pynotify.Notification("Network error", message,
-                                      "error")
-        error.set_timeout(options.timeout * 1000)
-        if not error.show():
-            raise OSError("Notification failed to display!")
-        return errno.EIO
+        usage_note("Talking to twitter failed.  Is twitter or your network down?",
+                   "Network error", fail)
     update(tweets, api, seen, options.stealth, options.ignore)
 
     glib.timeout_add_seconds(options.frequency, update, tweets, api, seen,
