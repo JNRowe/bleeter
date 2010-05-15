@@ -54,6 +54,10 @@ Options
 
    enable Bayesian timeout adjustment
 
+.. cmdoption:: -e, --expand
+
+   expand links in tweets
+
 .. cmdoption:: -v, --verbose
 
    produce verbose output

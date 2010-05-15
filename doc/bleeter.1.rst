@@ -56,6 +56,10 @@ OPTIONS
 -b, --bayes
     enable Bayesian timeout adjustment
 
+-e, --expand
+    expand links in tweets
+
+
 -v, --verbose
     produce verbose output
 

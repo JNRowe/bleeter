@@ -83,6 +83,11 @@ except ImportError: # pragma: no cover
     Bayes = None
 
 try:
+    import urlunshort
+except ImportError: # pragma: no cover
+    urlunshort = None
+
+try:
     import termstyle
 except ImportError: # pragma: no cover
     termstyle = None  # pylint: disable-msg=C0103
@@ -208,6 +213,7 @@ def process_command_line(config_file):
         "ignore = list(default=list('#nowplaying'))",
         "tray = boolean(default=True)",
         "bayes = boolean(default=False)",
+        "expand = boolean(default=False)",
     ]
     config = configobj.ConfigObj(config_file, configspec=config_spec)
     results = config.validate(validate.Validator())
@@ -226,7 +232,8 @@ def process_command_line(config_file):
                         stealth=config.get("stealth"),
                         ignore=config.get("ignore"),
                         tray=config.get("tray"),
-                        bayes=config.get("bayes"))
+                        bayes=config.get("bayes"),
+                        expand=config.get("expand"))
 
     parser.add_option("-t", "--timeout", action="callback", type="int",
                       metavar=config["timeout"],
@@ -251,6 +258,8 @@ def process_command_line(config_file):
                       dest="tray", help="Disable systray icon")
     parser.add_option("-b", "--bayes", action="store_true",
                       help="Enable Bayesian timeout adjustment")
+    parser.add_option("-e", "--expand", action="store_true",
+                      help="Expand links in tweets")
     parser.add_option("-v", "--verbose", action="store_true",
                       dest="verbose", help="Produce verbose output")
     parser.add_option("-q", "--quiet", action="store_false",
@@ -326,8 +335,33 @@ def relative_time(timestamp):
                                   "s" if i > 1 else "")
     return result
 
+# Keep a cache for free handling of retweets and such.
+URLS = {}
+def url_expand(m):
+    """Generate links with expanded URLs
 
-def format_tweet(text):
+    >>> NOTIFY_SERVER_CAPS.extend(["body-markup", "body-hyperlinks"])
+    >>> URLS["http://bit.ly/dunMgV"] = "http://jnrowe.github.com/vim-jnrowe/terminal.png"
+    >>> format_tweet("See http://bit.ly/dunMgV",
+    ...              True)
+    'See <a href="http://jnrowe.github.com/vim-jnrowe/terminal.png">http://jnrowe.github.com/vim-jnrowe/terminal.png</a>'
+    >>> NOTIFY_SERVER_CAPS[:] = []
+
+    :type m: ``SRE_Match``
+    :param m: Regular expression match object
+    :rtype: ``str``
+    :return: HTML formatted link for URL
+    """
+    url = m.group()
+    if not url in URLS:
+        if urlunshort.is_shortened(url):
+            URLS[url] = urlunshort.resolve(url)
+        else:
+            URLS[url] = url
+    return '<a href="%s">%s</a>' % (URLS[url], URLS[url])
+
+
+def format_tweet(text, expand=False):
     """Format tweet for display
 
     >>> format_tweet("Populate #sup contacts from #abook")
@@ -352,9 +386,12 @@ def format_tweet(text):
     'Handle ampersands &amp; win'
     >>> format_tweet("entity test, & \\" ' < >")
     'entity test, &amp; &quot; &apos; &lt; &gt;'
+    >>> NOTIFY_SERVER_CAPS[:] = []
 
     :type text: ``str``
     :param api: Tweet content
+    :type expand: ``bool``
+    :param expand: Expand links in tweet text
     :rtype: ``str``
     :return: Tweet content with pretty formatting
     """
@@ -369,7 +406,10 @@ def format_tweet(text):
 
     if "body-markup" in NOTIFY_SERVER_CAPS:
         if "body-hyperlinks" in NOTIFY_SERVER_CAPS:
-            text = url_match.sub(r'<a href="\1">\1</a>', text)
+            if expand:
+                text = url_match.sub(url_expand, text)
+            else:
+                text = url_match.sub(r'<a href="\1">\1</a>', text)
             text = user_match.sub(r'@<a href="http://twitter.com/\1">\1</a>',
                                   text)
             text = hashtag_match.sub(r'<a href="http://twitter.com/search?q=\1">\1</a>',
@@ -610,7 +650,7 @@ def update(tweets, api, seen, users, ignore):
 
 
 NOTIFICATIONS = {}
-def display(me, tweets, seen, timeout, guesser):
+def display(me, tweets, seen, timeout, guesser, expand):
     """Display notifications for new tweets
 
     :type me: ``tweepy.models.User``
@@ -623,6 +663,8 @@ def display(me, tweets, seen, timeout, guesser):
     :param timeout: Timeout for notifications in seconds
     :type guesser: ``Bayes`` or ``None``
     :param guesser: Tweet Bayesian database, if available
+    :type expand: ``bool``
+    :param expand: Whether to expand links in tweet text
     :rtype: ``True``
     :return: Timers must return a ``True`` value for timer to continue
 
@@ -641,7 +683,7 @@ def display(me, tweets, seen, timeout, guesser):
     note = pynotify.Notification("From %s about %s"
                                  % (tweet.user.name,
                                     relative_time(tweet.created_at)),
-                                 format_tweet(tweet.text),
+                                 format_tweet(tweet.text, expand),
                                  get_user_icon(tweet.user))
     if "actions" in NOTIFY_SERVER_CAPS:
         note.add_action("default", " ", open_tweet(tweet))
@@ -778,6 +820,16 @@ def main(argv):
         if not note.show():
             raise OSError("Notification failed to display!")
 
+    if not urlunshort and options.expand:
+        message = "Link expansion support requires the urlunshort module"
+        print warn(message)
+        note = pynotify.Notification("bleeter v%s" % (__version__), message,
+                                     "stock_dialog-warning")
+        note.set_urgency(pynotify.URGENCY_LOW)
+        if not note.show():
+            raise OSError("Notification failed to display!")
+        options.expand = False
+
     auth.set_access_token(*options.token)
     api = tweepy.API(auth)
 
@@ -852,7 +904,7 @@ def main(argv):
     glib.timeout_add_seconds(options.frequency, update, tweets, api, seen,
                              options.stealth, options.ignore)
     glib.timeout_add_seconds(options.timeout + 1, display, me, tweets, seen,
-                             options.timeout, guesser)
+                             options.timeout, guesser, options.expand)
     if options.tray:
         glib.timeout_add_seconds(options.timeout // 2, tooltip, icon, tweets)
     loop.run()
