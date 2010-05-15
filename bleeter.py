@@ -40,6 +40,7 @@ import atexit
 import collections
 import datetime
 import errno
+import hashlib
 import operator
 import optparse
 import os
@@ -383,9 +384,9 @@ def get_user_icon(user):
     """
 
     cache_dir = "%s/bleeter" % glib.get_user_cache_dir()
-    if not os.path.isdir(cache_dir):
-        os.makedirs(cache_dir)
-    filename = "%s/%s" % (cache_dir, urllib.quote_plus(user.profile_image_url))
+    mkdir(cache_dir)
+    filename = "%s/%s" % (cache_dir,
+                          hashlib.md5(user.profile_image_url).hexdigest())
     if not os.path.exists(filename):
         try:
             urllib.urlretrieve(user.profile_image_url, filename)
@@ -398,12 +399,12 @@ def get_user_icon(user):
             icon = gtk.gdk.pixbuf_new_from_file(filename)
             if not (icon.get_width(), icon.get_height()) == (48, 48):
                 icon = icon.scale_simple(48, 48, gtk.gdk.INTERP_BILINEAR)
-                icon.save(filename)
+                icon.save(filename, "png")
         else:
             icon = Image.open(filename)
             if not icon.size == (48, 48):
                 icon = icon.resize((48, 48), Image.ANTIALIAS)
-                icon.save(filename)
+                icon.save(filename, "png")
 
     return "file://%s" % filename
 
