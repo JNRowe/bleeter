@@ -366,12 +366,16 @@ def format_tweet(text):
     hashtag_match = re.compile(r'(#\w+)')
 
     if "body-markup" in NOTIFY_SERVER_CAPS:
-        text = user_match.sub(r'@<u>\1</u>', text)
-        text = hashtag_match.sub(r'<i>\1</i>', text)
         if "body-hyperlinks" in NOTIFY_SERVER_CAPS:
             text = url_match.sub(r'<a href="\1">\1</a>', text)
+            text = user_match.sub(r'@<a href="http://twitter.com/\1">\1</a>',
+                                  text)
+            text = hashtag_match.sub(r'<a href="http://twitter.com/search?q=\1">\1</a>',
+                                     text)
         else:
             text = url_match.sub(r'<u>\1</u>', text)
+            text = user_match.sub(r'@<u>\1</u>', text)
+            text = hashtag_match.sub(r'<i>\1</i>', text)
 
         if text.startswith("RT "):
             text = "<b>RT</b> " + text[3:]
