@@ -819,9 +819,7 @@ def main(argv):
     if os.path.exists(lock_file):
         print fail("Another instance is running, or `%s' is stale" % lock_file)
         return errno.EBUSY
-    lock = open(lock_file, "w")
-    lock.write("locked")
-
+    open(lock_file, "w").write(str(os.getpid()))
     atexit.register(os.unlink, lock_file)
 
     auth = tweepy.OAuthHandler(OAUTH_KEY, OAUTH_SECRET)
