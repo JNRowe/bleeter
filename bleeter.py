@@ -344,6 +344,8 @@ def format_tweet(text):
     >>> NOTIFY_SERVER_CAPS.append("body-hyperlinks")
     >>> format_tweet("See http://bit.ly/dunMgV")
     'See <a href="http://bit.ly/dunMgV">http://bit.ly/dunMgV</a>'
+    >>> format_tweet("@someone with a @someone/list")
+    '@<a href="http://twitter.com/someone">someone</a> with a @<a href="http://twitter.com/someone/list">someone/list</a>'
     >>> format_tweet("See http://example.com/url-hyphen?and=parms")
     'See <a href="http://example.com/url-hyphen?and=parms">http://example.com/url-hyphen?and=parms</a>'
     >>> format_tweet("Handle ampersands & win")
@@ -362,7 +364,7 @@ def format_tweet(text):
 
     # re is smart enough to use pre-cached versions
     url_match = re.compile(r'(http://[\w\.?=\+/_-]+)')
-    user_match = re.compile(r'@(\w+)')
+    user_match = re.compile(r'@(\w+(/\w+)?)')
     hashtag_match = re.compile(r'(#\w+)')
 
     if "body-markup" in NOTIFY_SERVER_CAPS:
