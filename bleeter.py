@@ -737,6 +737,41 @@ def tooltip(icon, tweets):
     return True
 
 
+def get_token(auth, config_file):
+    """Fetch a new OAuth token
+
+    We purposely don't open the URL for the user here, as users shouldn't get in
+    the habit of trusting random apps to open real verifier pages where they may
+    have to login.
+
+    :type auth: ``OAuthHandler``
+    :param auth: OAuth handler for bleeter
+    """
+
+    try:
+        print "Visit `%s' to fetch the new OAuth token" \
+            % auth.get_authorization_url()
+    except tweepy.TweepError:
+        print fail("Talking to twitter failed.  "
+                   "Is twitter or your network down?")
+        return errno.EIO
+    while True:
+        verifier = raw_input("Input verifier? ")
+        if verifier:
+            break
+        print fail("You must supply a verifier")
+    try:
+        token = auth.get_access_token(verifier.strip())
+    except tweepy.TweepError:
+        print fail("Fetching token failed")
+        return errno.EIO
+    mkdir(os.path.dirname(config_file))
+    conf = configobj.ConfigObj(config_file)
+    conf['token'] = [token.key, token.secret]
+    conf.write()
+    print success("Token set!")
+
+
 def main(argv):
     """Main handler
 
@@ -769,29 +804,7 @@ def main(argv):
 
     auth = tweepy.OAuthHandler(OAUTH_KEY, OAUTH_SECRET)
     if options.get_token:
-        try:
-            print "Visit `%s' to fetch the new OAuth token" \
-                % auth.get_authorization_url()
-        except tweepy.TweepError:
-            print fail("Talking to twitter failed.  "
-                       "Is twitter or your network down?")
-            return errno.EIO
-        while True:
-            verifier = raw_input("Input verifier? ")
-            if verifier:
-                break
-            print fail("You must supply a verifier")
-        try:
-            token = auth.get_access_token(verifier.strip())
-        except tweepy.TweepError:
-            print fail("Fetching token failed")
-            return errno.EIO
-        mkdir(os.path.dirname(config_file))
-        conf = configobj.ConfigObj(config_file)
-        conf['token'] = [token.key, token.secret]
-        conf.write()
-        print success("Token set!")
-        return 0
+        return get_token(auth, config_file)
 
     if not options.token or not all(options.token):
         message = "Use `%s --get-token' from the command line to set it" \
