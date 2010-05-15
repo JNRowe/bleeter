@@ -336,9 +336,9 @@ def format_tweet(text):
     >>> format_tweet("Populate #sup contacts from #abook")
     'Populate <i>#sup</i> contacts from <i>#abook</i>'
     >>> format_tweet("RT @ewornj Populate #sup contacts from #abook")
-    '<b>RT</b> <u>@ewornj</u> Populate <i>#sup</i> contacts from <i>#abook</i>'
+    '<b>RT</b> @<u>ewornj</u> Populate <i>#sup</i> contacts from <i>#abook</i>'
     >>> format_tweet("@rachcholmes London marathon signup closed yet? ;)")
-    '<u>@rachcholmes</u> London marathon signup closed yet? ;)'
+    '@<u>rachcholmes</u> London marathon signup closed yet? ;)'
     >>> format_tweet("Updated my vim colour scheme see http://bit.ly/dunMgV")
     'Updated my vim colour scheme see <u>http://bit.ly/dunMgV</u>'
     >>> NOTIFY_SERVER_CAPS.append("body-hyperlinks")
@@ -361,7 +361,7 @@ def format_tweet(text):
     text = glib.markup_escape_text(saxutils.unescape(text))
 
     if "body-markup" in NOTIFY_SERVER_CAPS:
-        text = re.sub(r'(@\w+)', r'<u>\1</u>', text)
+        text = re.sub(r'@(\w+)', r'@<u>\1</u>', text)
         text = re.sub(r'(#\w+)', r'<i>\1</i>', text)
         if "body-hyperlinks" in NOTIFY_SERVER_CAPS:
             text = re.sub(r'(http://[\w\.?=\+/_-]+)', r'<a href="\1">\1</a>',
