@@ -50,10 +50,6 @@ Options
 
    disable the system tray icon
 
-.. cmdoption:: -b, --bayes
-
-   enable Bayesian timeout adjustment
-
 .. cmdoption:: -e, --expand
 
    expand links in tweets

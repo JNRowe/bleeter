@@ -77,11 +77,6 @@ except ImportError: # pragma: no cover
     gtk = False  # pylint: disable-msg=C0103
 
 try:
-    from reverend.thomas import Bayes
-except ImportError: # pragma: no cover
-    Bayes = None
-
-try:
     import urlunshort
 except ImportError: # pragma: no cover
     urlunshort = None
@@ -242,7 +237,6 @@ def process_command_line(config_file):
         "stealth = list(default=list('ewornj'))",
         "ignore = list(default=list('#nowplaying'))",
         "tray = boolean(default=True)",
-        "bayes = boolean(default=False)",
         "expand = boolean(default=False)",
     ]
     config = configobj.ConfigObj(config_file, configspec=config_spec)
@@ -262,7 +256,6 @@ def process_command_line(config_file):
                         stealth=config.get("stealth"),
                         ignore=config.get("ignore"),
                         tray=config.get("tray"),
-                        bayes=config.get("bayes"),
                         expand=config.get("expand"))
 
     parser.add_option("-t", "--timeout", action="callback", type="int",
@@ -286,8 +279,6 @@ def process_command_line(config_file):
                       help="Keywords to ignore in tweets(comma separated)")
     parser.add_option("--no-tray", action="store_false",
                       dest="tray", help="Disable systray icon")
-    parser.add_option("-b", "--bayes", action="store_true",
-                      help="Enable Bayesian timeout adjustment")
     parser.add_option("-e", "--expand", action="store_true",
                       help="Expand links in tweets")
     parser.add_option("-v", "--verbose", action="store_true",
@@ -561,31 +552,6 @@ def method_tweet(tweet, method):
         getattr(tweet, method)()
     return wrapper
 
-def train_bayes(guesser, bucket, tweet):
-    """"Create tweet opening function for location
-
-    :type guesser: ``Bayes`` or ``None``
-    :param guesser: Tweet Bayesian database, if available
-    :type bucket: ``str``
-    :param bucket: Bucket to adjust
-    :type tweet: ``tweepy.models.Status``
-    :param tweet: Twitter status message to open
-    :rtype: ``FunctionType``
-    :return: Wrapper to update the Bayesian database
-    """
-
-    def train(notification, action):  # pylint: disable-msg=W0613
-        """Open tweet location in browser
-
-        :type notification: ``pynotify.Notification``
-        :param notification: Calling notification instance
-        :type action: ``str``
-        :param action: Calling action name
-        """
-
-        guesser.train(bucket, tweet.text.lower())
-    return train
-
 
 def skip_check(ignore):
     """"Create tweet skip testing wrapper function
@@ -672,7 +638,7 @@ def update(tweets, api, seen, users, ignore):
 
 
 NOTIFICATIONS = {}
-def display(me, tweets, seen, timeout, guesser, expand):
+def display(me, tweets, seen, timeout, expand):
     """Display notifications for new tweets
 
     :type me: ``tweepy.models.User``
@@ -683,8 +649,6 @@ def display(me, tweets, seen, timeout, guesser, expand):
     :param seen: Last seen status
     :type timeout: ``tweepy.api.API``
     :param timeout: Timeout for notifications in seconds
-    :type guesser: ``Bayes`` or ``None``
-    :param guesser: Tweet Bayesian database, if available
     :type expand: ``bool``
     :param expand: Whether to expand links in tweet text
     :rtype: ``True``
@@ -717,20 +681,10 @@ def display(me, tweets, seen, timeout, guesser, expand):
                             method_tweet(tweet, "favorite"))
         if tweet.geo:
             note.add_action("find", "Geo", open_geo(tweet))
-        if guesser is not None:
-            note.add_action("up", "Like", train_bayes(guesser, "like", tweet))
-            note.add_action("down", "Dislike",
-                            train_bayes(guesser, "dislike", tweet))
         # Keep a reference for handling the action.
         NOTIFICATIONS[hash(note)] = note
         note.connect_object("closed", NOTIFICATIONS.pop, hash(note))
-    if guesser is not None:
-        result = collections.defaultdict(int)
-        result.update(guesser.guess(tweet.text.lower()))
-        mult = result["like"] - result["dislike"]
-        note.set_timeout(timeout * 1000 * (mult if mult > 1 else 1))
-    else:
-        note.set_timeout(timeout * 1000)
+    note.set_timeout(timeout * 1000)
     note.set_category("im.received")
     if me.screen_name in tweet.text:
         note.set_urgency(pynotify.URGENCY_CRITICAL)
@@ -830,22 +784,9 @@ def main(argv):
         usage_note("Use `%prog --get-token' from the command line to set it",
                    "No OAuth token for bleeter")
 
-    if not Bayes and options.bayes:
-        usage_note("Bayes support requires the reverend module")
-        options.bayes = False
-
     if not urlunshort and options.expand:
         usage_note("Link expansion support requires the urlunshort module")
         options.expand = False
-
-
-    if options.bayes:
-        bayes_db = "%s/bleeter/bayes.db" % glib.get_user_data_dir()
-        guesser = Bayes()
-        if os.path.exists(bayes_db):
-            guesser.load(bayes_db)
-    else:
-        guesser = None
 
     auth.set_access_token(*options.token)
     api = tweepy.API(auth)
@@ -857,20 +798,15 @@ def main(argv):
     else:
         seen = {"displayed": 1, "fetched": 1}
 
-    def save_state(seen, guesser):
+    def save_state(seen):
         """Seen tweets state saver
 
         :type seen: ``list``
         :param seen: Already seen tweets
-        :type guesser: ``Bayes`` or ``None``
-        :param guesser: Tweet Bayesian database
-
         """
         json.dump(seen, open(state_file, "w"), indent=4)
-        if guesser:
-            guesser.save(bayes_db)
 
-    atexit.register(save_state, seen, guesser)
+    atexit.register(save_state, seen)
 
     if options.verbose or not options.tray:
         # Show a "hello" message, as it can take some time the first real
@@ -904,7 +840,7 @@ def main(argv):
     glib.timeout_add_seconds(options.frequency, update, tweets, api, seen,
                              options.stealth, options.ignore)
     glib.timeout_add_seconds(options.timeout + 1, display, me, tweets, seen,
-                             options.timeout, guesser, options.expand)
+                             options.timeout, options.expand)
     if options.tray:
         glib.timeout_add_seconds(options.timeout // 2, tooltip, icon, tweets)
     loop.run()

@@ -16,7 +16,7 @@ component: bleeter
 release: 
 reporter: Rach Holmes <rach.c.holmes@gmail.com>
 status: :closed
-disposition: :fixed
+disposition: :wontfix
 creation_time: 2010-05-06 13:03:11.618723 Z
 references: []
 
@@ -50,5 +50,15 @@ log_events:
     I think I'm going to pull this as it doesn't fit the interface very well.
     Either, tweets need to become "genuine" dialog windows with timeouts so multiple
     buttons can be pushed or this needs to be dropped.
+- - 2010-05-16 08:24:58.607967 Z
+  - James Rowe <jnrowe@gmail.com>
+  - commented
+  - |-
+    This functionality is being removed for the time being, perhaps if the interface
+    changes it can be re-enabled.
+- - 2010-05-16 08:25:11.159889 Z
+  - James Rowe <jnrowe@gmail.com>
+  - closed with disposition wontfix
+  - ""
 claimer: James Rowe <jnrowe@gmail.com>
 git_branch: 

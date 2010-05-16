@@ -53,9 +53,6 @@ OPTIONS
 --no-tray
     disable the system tray icon
 
--b, --bayes
-    enable Bayesian timeout adjustment
-
 -e, --expand
     expand links in tweets
 
