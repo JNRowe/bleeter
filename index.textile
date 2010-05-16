@@ -59,7 +59,7 @@ fn2. This button is only available if the tweet hasn't already been marked as a 
 
 h3. Other resources
 
-The "Sphinx":http://sphinx.pocoo.org/ generated documentation can be read at "online":sphinx/.
+The "Sphinx":http://sphinx.pocoo.org/ generated documentation can be read "online":sphinx/.
 
 You can view the "current bug status":ditz/ without installing "ditz":http://ditz.rubyforge.org/.
 
