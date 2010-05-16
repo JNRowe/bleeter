@@ -56,7 +56,6 @@ OPTIONS
 -e, --expand
     expand links in tweets
 
-
 -v, --verbose
     produce verbose output
 
