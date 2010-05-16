@@ -55,7 +55,7 @@ from xml.sax import saxutils
 
 try:
     import json
-except ImportError: # pragma: no cover
+except ImportError:  # pragma: no cover
     import simplejson as json
 
 import configobj
@@ -73,17 +73,17 @@ try:
     import pygtk
     pygtk.require('2.0')
     import gtk
-except ImportError: # pragma: no cover
+except ImportError:  # pragma: no cover
     gtk = False  # pylint: disable-msg=C0103
 
 try:
     import urlunshort
-except ImportError: # pragma: no cover
+except ImportError:  # pragma: no cover
     urlunshort = None
 
 try:
     import termstyle
-except ImportError: # pragma: no cover
+except ImportError:  # pragma: no cover
     termstyle = None  # pylint: disable-msg=C0103
 
 # Select colours if terminal is a tty
@@ -93,7 +93,7 @@ if termstyle:
     success = termstyle.green
     fail = termstyle.red
     warn = termstyle.yellow
-else: # pragma: no cover
+else:  # pragma: no cover
     # pylint: disable-msg=C0103
     success = fail = warn = str
 
@@ -121,7 +121,7 @@ def mkdir(dir):
 
     try:
         os.makedirs(os.path.expanduser(dir))
-    except OSError as exc: # Python >2.5
+    except OSError as exc:  # Python >2.5
         if exc.errno == errno.EEXIST:
             pass
         else:
@@ -362,10 +362,9 @@ def url_expand(m):
     """Generate links with expanded URLs
 
     >>> NOTIFY_SERVER_CAPS.extend(["body-markup", "body-hyperlinks"])
-    >>> URLS["http://bit.ly/dunMgV"] = "http://jnrowe.github.com/vim-jnrowe/terminal.png"
-    >>> format_tweet("See http://bit.ly/dunMgV",
-    ...              True)
-    'See <a href="http://jnrowe.github.com/vim-jnrowe/terminal.png">http://jnrowe.github.com/vim-jnrowe/terminal.png</a>'
+    >>> URLS["http://bit.ly/dunMgV"] = "terminal.png"
+    >>> format_tweet("See http://bit.ly/dunMgV", True)
+    'See <a href="terminal.png">terminal.png</a>'
     >>> NOTIFY_SERVER_CAPS[:] = []
 
     :type m: ``SRE_Match``
@@ -399,8 +398,8 @@ def format_tweet(text, expand=False):
     >>> NOTIFY_SERVER_CAPS.append("body-hyperlinks")
     >>> format_tweet("See http://bit.ly/dunMgV")
     'See <a href="http://bit.ly/dunMgV">http://bit.ly/dunMgV</a>'
-    >>> format_tweet("@someone with a @someone/list")
-    '@<a href="http://twitter.com/someone">someone</a> with a @<a href="http://twitter.com/someone/list">someone/list</a>'
+    >>> format_tweet("A list @someone/list")
+    'A list @<a href="http://twitter.com/someone/list">someone/list</a>'
     >>> format_tweet("See http://example.com/url-hyphen?and=parms")
     'See <a href="http://example.com/url-hyphen?and=parms">http://example.com/url-hyphen?and=parms</a>'
     >>> format_tweet("Handle ampersands & win")
