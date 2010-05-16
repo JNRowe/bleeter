@@ -6,6 +6,19 @@ User-visible changes
 
 .. contents::
 
+0.5.0 - 2010-05-16
+------------------
+
+    * Optional URL expansion with urlunshort_
+    * Links are now opened using ``xdg-open`` from xdg-utils_ if it is
+      available, which should handle default browsers better
+    * User names and hashtags are now linked in notifications if your daemon
+      supports links
+    * The status icon is only shown when there are tweets pending displayed
+
+.. _urlunshort: http://bitbucket.org/runeh/urlunshort
+.. _xdg-utils: http://portland.freedesktop.org/wiki
+
 0.4.0 - 2010-04-21
 ------------------
 
