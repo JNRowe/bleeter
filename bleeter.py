@@ -376,9 +376,9 @@ def url_expand(m):
     url = m.group()
     if not url in URLS:
         if urlunshort.is_shortened(url):
-            URLS[url] = urlunshort.resolve(url)
+            URLS[url] = glib.markup_escape_text(urlunshort.resolve(url))
         else:
-            URLS[url] = url
+            URLS[url] = glib.markup_escape_text(url)
     return '<a href="%s">%s</a>' % (URLS[url], URLS[url])
 
 
