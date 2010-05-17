@@ -303,23 +303,23 @@ def relative_time(timestamp):
     >>> relative_time(now - datetime.timedelta(days=365))
     'last year'
     >>> relative_time(now - datetime.timedelta(days=70))
-    'two months ago'
+    'about two months ago'
     >>> relative_time(now - datetime.timedelta(days=30))
     'last month'
     >>> relative_time(now - datetime.timedelta(days=21))
-    'three weeks ago'
+    'about three weeks ago'
     >>> relative_time(now - datetime.timedelta(days=4))
-    'four days ago'
+    'about four days ago'
     >>> relative_time(now - datetime.timedelta(days=1))
     'yesterday'
     >>> relative_time(now - datetime.timedelta(hours=5))
-    'five hours ago'
+    'about five hours ago'
     >>> relative_time(now - datetime.timedelta(hours=1))
-    'an hour ago'
+    'about an hour ago'
     >>> relative_time(now - datetime.timedelta(minutes=6))
-    'six minutes ago'
+    'about six minutes ago'
     >>> relative_time(now - datetime.timedelta(seconds=12))
-    '12 seconds ago'
+    'about 12 seconds ago'
 
     :type timestamp: ``datetime.datetime``
     :param timestamp: Event to generate relative timestamp against
@@ -350,9 +350,9 @@ def relative_time(timestamp):
     elif i == 1 and name == "day":
         result = "yesterday"
     elif i == 1 and name == "hour":
-        result = "an hour ago"
+        result = "about an hour ago"
     else:
-        result = "%s %s%s ago" % (i if i > 10 else numstr[i], name,
+        result = "about %s %s%s ago" % (i if i > 10 else numstr[i], name,
                                   "s" if i > 1 else "")
     return result
 
@@ -665,7 +665,7 @@ def display(me, tweets, seen, timeout, expand):
     if tweet.id <= seen["displayed"]:
         return True
 
-    note = pynotify.Notification("From %s about %s"
+    note = pynotify.Notification("From %s %s"
                                  % (tweet.user.name,
                                     relative_time(tweet.created_at)),
                                  format_tweet(tweet.text, expand),
