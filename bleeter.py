@@ -398,6 +398,8 @@ def format_tweet(text, expand=False):
     >>> NOTIFY_SERVER_CAPS.append("body-hyperlinks")
     >>> format_tweet("See http://bit.ly/dunMgV")
     'See <a href="http://bit.ly/dunMgV">http://bit.ly/dunMgV</a>'
+    >>> format_tweet("b123 https://example.com/dunMgV")
+    'b123 <a href="https://example.com/dunMgV">https://example.com/dunMgV</a>'
     >>> format_tweet("A list @someone/list")
     'A list @<a href="http://twitter.com/someone/list">someone/list</a>'
     >>> format_tweet("See http://example.com/url-hyphen?and=parms")
@@ -420,7 +422,7 @@ def format_tweet(text, expand=False):
     text = glib.markup_escape_text(saxutils.unescape(text))
 
     # re is smart enough to use pre-cached versions
-    url_match = re.compile(r'(http://[\w\.?=\+/_-]+)')
+    url_match = re.compile(r'(https?://[\w\.?=\+/_-]+)')
     user_match = re.compile(r'@(\w+(/\w+)?)')
     hashtag_match = re.compile(r'(#\w+)')
 
