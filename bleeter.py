@@ -771,7 +771,8 @@ def main(argv):
     # Create directory for state storage
     mkdir(os.path.dirname(lock_file))
     if os.path.exists(lock_file):
-        print fail("Another instance is running, or `%s' is stale" % lock_file)
+        usage_note("Another instance is running, or `%s' is stale" % lock_file,
+                   level=fail)
         return errno.EBUSY
     open(lock_file, "w").write(str(os.getpid()))
     atexit.register(os.unlink, lock_file)
