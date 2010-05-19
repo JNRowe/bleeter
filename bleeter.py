@@ -218,11 +218,11 @@ def process_command_line(config_file):
 
         # pylint: disable-msg=W0613
 
-        if "--frequency" in opt_str:
+        if option.dest == "frequency":
             if value < 60:
                 raise optparse.OptionValueError("%s must be at least 60"
                                                 % opt_str)
-        elif "--timeout" in opt_str:
+        elif option.dest == "timeout":
             if value < 1:
                 raise optparse.OptionValueError("%s must be at least 1"
                                                 % opt_str)
