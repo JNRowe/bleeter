@@ -79,7 +79,7 @@ except ImportError:  # pragma: no cover
 try:
     import urlunshort
 except ImportError:  # pragma: no cover
-    urlunshort = None
+    urlunshort = None  # pylint: disable-msg=C0103
 
 try:
     import termstyle
@@ -110,17 +110,17 @@ USAGE = __doc__[:__doc__.find('\n\n', 100)].splitlines()[2:]
 USAGE = "\n".join(USAGE).replace("bleeter", "%prog")
 
 
-def mkdir(dir):
-    """Create dir, including parents
+def mkdir(directory):
+    """Create directory, including parents
 
-    :type dir: ``str``
-    :param dir: Directory to create
+    :type directory: ``str``
+    :param directory: Directory to create
     :raise OSError: Unable to create directory
 
     """
 
     try:
-        os.makedirs(os.path.expanduser(dir))
+        os.makedirs(os.path.expanduser(directory))
     except OSError as exc:  # Python >2.5
         if exc.errno == errno.EEXIST:
             pass
@@ -198,10 +198,8 @@ def find_app_icon(uri=True):
     ]
     for icon in icon_locations:
         if os.path.exists(icon):
-            break
-    if not icon:
-        raise EnvironmentError("Can't find application icon!")
-    return "%s%s" % ("file://" if uri else "", icon)
+            return "%s%s" % ("file://" if uri else "", icon)
+    raise EnvironmentError("Can't find application icon!")
 
 
 def process_command_line(config_file):
@@ -374,7 +372,7 @@ def relative_time(timestamp):
         result = "about an hour ago"
     else:
         result = "about %s %s%s ago" % (i if i > 10 else numstr[i], name,
-                                  "s" if i > 1 else "")
+                                        "s" if i > 1 else "")
     return result
 
 # Keep a cache for free handling of retweets and such.
@@ -640,7 +638,7 @@ def update(tweets, api, seen, users, ignore):
     try:
         new_tweets = api.home_timeline(since_id=old_seen, headers=headers)
         new_tweets.extend(api.mentions(since_id=old_seen, headers=headers))
-    except tweepy.TweepError, e:
+    except tweepy.TweepError:
         usage_note("Fetching user data failed", level=fail)
         # Still return True, so we re-enter the loop
         return True
@@ -649,7 +647,7 @@ def update(tweets, api, seen, users, ignore):
         try:
             new_tweets.extend(api.user_timeline(user, since_id=old_seen,
                                                 headers=headers))
-        except tweepy.TweepError, e:
+        except tweepy.TweepError:
             usage_note("Data for `%s' not available" % user,
                        "Fetching user data failed", fail)
             # Still return True, so we re-enter the loop
@@ -807,8 +805,7 @@ def main(argv):
     auth = tweepy.OAuthHandler(OAUTH_KEY, OAUTH_SECRET)
     if options.get_token:
         return get_token(auth, config_file)
-
-    if not options.token or not all(options.token):
+    elif not options.token or not all(options.token):
         usage_note("Use `%prog --get-token' from the command line to set it",
                    "No OAuth token for bleeter")
 
@@ -833,7 +830,6 @@ def main(argv):
         :param seen: Already seen tweets
         """
         json.dump(seen, open(state_file, "w"), indent=4)
-
     atexit.register(save_state, seen)
 
     if options.verbose or not options.tray:
