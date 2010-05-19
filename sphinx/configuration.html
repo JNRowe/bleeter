@@ -63,6 +63,9 @@
 <p>The configuration file is a simple <tt class="docutils literal"><span class="pre">INI</span></tt> format file,   The file is processed
 with the <a class="reference external" href="http://www.voidspace.org.uk/python/configobj.html">configobj</a> module, the documentation for which will describe some of
 the advanced features available within the configuration file.</p>
+<p>You can specify command line options in the configuration file as defaults, and
+optionally override them from the command line.  To toggle disable options from
+the command line use their <tt class="docutils literal"><span class="pre">--no-</span></tt> prefixed versions.</p>
 <p>An example configuration file is below:</p>
 <div class="highlight-ini"><div class="highlight"><pre><span class="na">frequency</span> <span class="o">=</span> <span class="s">600</span>
 <span class="na">timeout</span> <span class="o">=</span> <span class="s">10</span>
