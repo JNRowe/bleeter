@@ -8,6 +8,10 @@ The configuration file is a simple ``INI`` format file,   The file is processed
 with the configobj_ module, the documentation for which will describe some of
 the advanced features available within the configuration file.
 
+You can specify command line options in the configuration file as defaults, and
+optionally override them from the command line.  To toggle disable options from
+the command line use their ``--no-`` prefixed versions.
+
 An example configuration file is below:
 
 .. code-block:: ini

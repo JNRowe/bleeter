@@ -274,13 +274,22 @@ def process_command_line(config_file):
     parser.add_option("-s", "--stealth", action="store",
                       metavar=",".join(config.get("stealth")),
                       help="Users to watch without following(comma separated)")
+    parser.add_option("--no-stealth", action="store_false",
+                      dest="stealth",
+                      help="Don't check stealth users for updates")
     parser.add_option("-i", "--ignore", action="store",
                       metavar=",".join(config.get("ignore")),
                       help="Keywords to ignore in tweets(comma separated)")
+    parser.add_option("--no-ignore", action="store_false",
+                      dest="ignore",
+                      help="Don't test for ignore keywords")
     parser.add_option("--no-tray", action="store_false",
                       dest="tray", help="Disable systray icon")
     parser.add_option("-e", "--expand", action="store_true",
                       help="Expand links in tweets")
+    parser.add_option("--no-expand", action="store_false",
+                      dest="expand",
+                      help="Don't expand links in tweets")
     parser.add_option("-v", "--verbose", action="store_true",
                       dest="verbose", help="Produce verbose output")
     parser.add_option("-q", "--quiet", action="store_false",
@@ -290,8 +299,12 @@ def process_command_line(config_file):
     options = parser.parse_args()[0]
     if isinstance(options.stealth, basestring):
         options.stealth = options.stealth.split(",")
+    elif options.stealth is False:
+        options.stealth = []
     if isinstance(options.ignore, basestring):
         options.ignore = options.ignore.split(",")
+    if options.ignore is False:
+        options.ignore = []
 
     return options
 
@@ -568,6 +581,10 @@ def skip_check(ignore):
     >>> tweet.text = "Reply to @boring"
     >>> filt(tweet)
     False
+    >>> filt = skip_check([])
+    >>> tweet.text = "This is a test #nowplaying"
+    >>> filt(tweet)
+    True
 
     :type ignore: ``list`` of ``str``
     :param ignore: List of words to trigger tweet skipping

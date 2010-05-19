@@ -42,9 +42,17 @@ Options
 
    users to watch without following(comma separated)
 
+.. cmdoption:: --no-stealth
+
+   don't check stealth users for updates
+
 .. cmdoption:: -i "#nowplaying", --ignore "#nowplaying"
 
    keywords to ignore in tweets(comma separated)
+
+.. cmdoption:: --no-ignore
+
+   don't test for ignore keywords
 
 .. cmdoption:: --no-tray
 
@@ -53,6 +61,10 @@ Options
 .. cmdoption:: -e, --expand
 
    expand links in tweets
+
+.. cmdoption:: --no-expand
+
+   don't expand links in tweets
 
 .. cmdoption:: -v, --verbose
 

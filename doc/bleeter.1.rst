@@ -47,14 +47,24 @@ OPTIONS
 -s, --stealth **user**
     users to watch without following(comma separated)
 
+--no-stealth
+    don't check stealth users for updates
+
 -i, --ignore **word**
     keywords to ignore in tweets(comma separated)
+
+--no-ignore
+
+    don't test for ignore keywords
 
 --no-tray
     disable the system tray icon
 
 -e, --expand
     expand links in tweets
+
+--no-expand
+    don't expand links in tweets
 
 -v, --verbose
     produce verbose output
