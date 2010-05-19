@@ -266,30 +266,38 @@ def process_command_line(config_file):
                       metavar=config["frequency"],
                       callback=check_value,
                       help="Update frequency in in seconds")
-    parser.add_option("-r", "--token", action="store",
-                      metavar="<key>,<secret>",
-                      help="OAuth token for twitter")
-    parser.add_option("-g", "--get-token", action="store_true",
-                      help="Generate a new OAuth token for twitter")
-    parser.add_option("-s", "--stealth", action="store",
-                      metavar=",".join(config.get("stealth")),
-                      help="Users to watch without following(comma separated)")
-    parser.add_option("--no-stealth", action="store_false",
-                      dest="stealth",
-                      help="Don't check stealth users for updates")
-    parser.add_option("-i", "--ignore", action="store",
-                      metavar=",".join(config.get("ignore")),
-                      help="Keywords to ignore in tweets(comma separated)")
-    parser.add_option("--no-ignore", action="store_false",
-                      dest="ignore",
-                      help="Don't test for ignore keywords")
+
+    auth_opts = optparse.OptionGroup(parser, "Authentication options")
+    parser.add_option_group(auth_opts)
+    auth_opts.add_option("-r", "--token", action="store",
+                         metavar="<key>,<secret>",
+                         help="OAuth token for twitter")
+    auth_opts.add_option("-g", "--get-token", action="store_true",
+                         help="Generate a new OAuth token for twitter")
+
+    user_opts = optparse.OptionGroup(parser, "User options")
+    parser.add_option_group(user_opts)
+    user_opts.add_option("-s", "--stealth", action="store",
+                         metavar=",".join(config.get("stealth")),
+                         help="Users to watch without following(comma separated)")
+    user_opts.add_option("--no-stealth", action="store_false",
+                         dest="stealth",
+                         help="Don't check stealth users for updates")
+
+    tweet_opts = optparse.OptionGroup(parser, "Tweet options")
+    parser.add_option_group(tweet_opts)
+    tweet_opts.add_option("-i", "--ignore", action="store",
+                          metavar=",".join(config.get("ignore")),
+                          help="Keywords to ignore in tweets(comma separated)")
+    tweet_opts.add_option("--no-ignore", action="store_false",
+                          dest="ignore", help="Don't test for ignore keywords")
+    tweet_opts.add_option("-e", "--expand", action="store_true",
+                          help="Expand links in tweets")
+    tweet_opts.add_option("--no-expand", action="store_false",
+                          dest="expand", help="Don't expand links in tweets")
+
     parser.add_option("--no-tray", action="store_false",
                       dest="tray", help="Disable systray icon")
-    parser.add_option("-e", "--expand", action="store_true",
-                      help="Expand links in tweets")
-    parser.add_option("--no-expand", action="store_false",
-                      dest="expand",
-                      help="Don't expand links in tweets")
     parser.add_option("-v", "--verbose", action="store_true",
                       dest="verbose", help="Produce verbose output")
     parser.add_option("-q", "--quiet", action="store_false",
