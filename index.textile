@@ -7,7 +7,6 @@ description: Nasty little twitter viewer
 categories: [bleeter, index, jnrowe, twitter]
 ---
 
-
 !>images/bleeter.png(bleeter logo)!
 
 h2. Introduction
@@ -78,3 +77,5 @@ You can download this repository as a "tarball":http://github.com/JNRowe/bleeter
 {% highlight text %}
 $ git clone git://github.com/JNRowe/bleeter.git
 {% endhighlight %}
+
+If you have made changes that you wish to contribute back then GitHub pull requests are the preferred method.  Patches by email are also welcome, but pull requests are likely to be handled faster.
