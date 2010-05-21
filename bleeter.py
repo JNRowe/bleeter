@@ -18,6 +18,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+from __future__ import print_function
+
 __version__ = "0.5.0"
 __date__ = "2010-05-16"
 __author__ = "James Rowe <jnrowe@gmail.com>"
@@ -142,7 +144,7 @@ def usage_note(message, title=None, level=warn, icon=None):
     if not title:
         title = "%%prog %s" % __version__
     title = title.replace("%prog", sys.argv[0])
-    print level(message)
+    print(level(message))
     if not icon:
         if level == success:
             icon = find_app_icon()
@@ -238,7 +240,7 @@ def process_command_line(config_file):
     results = config.validate(validate.Validator())
     if results is not True:
         for key in filter(lambda k: not results[k], results):
-            print fail("Config value for `%s' is invalid" % key)
+            print(fail("Config value for `%s' is invalid" % key))
         raise SyntaxError("Invalid configuration file")
 
     parser = optparse.OptionParser(usage="%prog [options...]",
@@ -747,27 +749,27 @@ def get_token(auth, config_file):
     """
 
     try:
-        print "Visit `%s' to fetch the new OAuth token" \
-            % auth.get_authorization_url()
+        print("Visit `%s' to fetch the new OAuth token"
+              % auth.get_authorization_url())
     except tweepy.TweepError:
-        print fail("Talking to twitter failed.  "
-                   "Is twitter or your network down?")
+        print(fail("Talking to twitter failed.  "
+                   "Is twitter or your network down?"))
         return errno.EIO
     while True:
         verifier = raw_input("Input verifier? ")
         if verifier:
             break
-        print fail("You must supply a verifier")
+        print(fail("You must supply a verifier"))
     try:
         token = auth.get_access_token(verifier.strip())
     except tweepy.TweepError:
-        print fail("Fetching token failed")
+        print(fail("Fetching token failed"))
         return errno.EIO
     mkdir(os.path.dirname(config_file))
     conf = configobj.ConfigObj(config_file)
     conf['token'] = [token.key, token.secret]
     conf.write()
-    print success("Token set!")
+    print(success("Token set!"))
 
 
 def main(argv):
@@ -780,7 +782,7 @@ def main(argv):
     """
 
     if not pynotify.init(argv[0]):
-        print fail("Unable to initialise pynotify!")
+        print(fail("Unable to initialise pynotify!"))
         return errno.EIO
     NOTIFY_SERVER_CAPS.extend(pynotify.get_server_caps())
 
