@@ -19,9 +19,9 @@ buttons on the popup.
 Requirements
 ------------
 
-``bleeter``'s mandatory dependencies outside of the Python_ standard library are
-the configobj_, notify-python_, pygobject_ and tweepy_ packages.  If you're
-still using Python 2.5 you'll also need the simplejson_ library.
+``bleeter`` requires Python_ v2.6 or above. ``bleeter``'s mandatory dependencies
+outside of the standard library are the configobj_, notify-python_, pygobject_
+and tweepy_ packages.
 
 If you wish to use the systray_ icon you'll also need pygtk_, if you do not wish
 to use the systray_ icon you'll need PIL_ for processing the user icons.
@@ -29,9 +29,8 @@ to use the systray_ icon you'll need PIL_ for processing the user icons.
 If you wish to use the URL expansion option for shortened links, you will need
 urlunshort_.
 
-``bleeter`` should run with Python 2.5 or any newer release from the 2.x branch.
-No effort has been put in to making it work with Python 3, as a few of the
-dependencies aren't ported yet.
+No significant effort has been put in to making ``bleeter`` work with Python 3,
+as a few of the dependencies aren't ported yet.
 
 Configuration
 -------------
@@ -128,7 +127,6 @@ the problem, or even better a patch!
 .. _gnome: http://www.gnome.org/
 .. _xfce4-notifyd: http://spuriousinterrupt.org/projects/xfce4-notifyd
 .. _notification-daemon: http://www.galago-project.org/
-.. _simplejson: http://undefined.org/python/#simplejson
 .. _systray: http://standards.freedesktop.org/systemtray-spec/systemtray-spec-latest.html
 .. _pygtk: http://www.pygtk.org/
 .. _PIL: http://www.pythonware.com/products/pil/index.htm

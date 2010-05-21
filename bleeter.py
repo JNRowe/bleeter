@@ -53,10 +53,7 @@ import webbrowser
 
 from xml.sax import saxutils
 
-try:
-    import json
-except ImportError:  # pragma: no cover
-    import simplejson as json
+import json
 
 import configobj
 import glib
@@ -121,7 +118,7 @@ def mkdir(directory):
 
     try:
         os.makedirs(os.path.expanduser(directory))
-    except OSError as exc:  # Python >2.5
+    except OSError as exc:
         if exc.errno == errno.EEXIST:
             pass
         else:
