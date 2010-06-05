@@ -858,6 +858,7 @@ def main(argv):
     except tweepy.TweepError:
         usage_note("Talking to twitter failed.  Is twitter or your network down?",
                    "Network error", fail)
+        return errno.EIO
     update(tweets, api, seen, options.stealth, options.ignore)
 
     glib.timeout_add_seconds(options.frequency, update, tweets, api, seen,
