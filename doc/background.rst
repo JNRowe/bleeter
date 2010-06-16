@@ -4,9 +4,9 @@ Background
 I have had no real urge to use twitter_, and to this day I still don't.
 Unfortunately, I know a few people who use only twitter_ to push updates.
 Originally, I had included the RSS feed of their timelines in my feed reader,
-but I had been finding it to be a touch little annoying to process the entries
-that way.  I decided to bite the bullet and use a twitter client, that way
-I could also watch the build bots for a couple of projects I care about too.
+but I had been finding it to be a touch too annoying to process the entries that
+way.  I decided to bite the bullet and use a twitter client, that way I could
+also watch the build bots for a couple of projects I care about too.
 
 And that is where the problems began.  It turns out there are no clients that
 suit my needs.  All I want is something fast, light, usable on my mobile
