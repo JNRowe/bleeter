@@ -72,7 +72,6 @@ Ideas
 '''''
 
 * Paul Murray
-* Rachel Holmes
 
 If I've forgotten to include your name I wholeheartedly apologise.  Just drop me
 an email_ and I'll update the list!
