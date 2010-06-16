@@ -64,17 +64,9 @@ import pynotify
 import tweepy
 import validate
 
-try:
-    import Image
-except ImportError:
-    pass
-
-try:
-    import pygtk
-    pygtk.require('2.0')
-    import gtk
-except ImportError:  # pragma: no cover
-    gtk = False  # pylint: disable-msg=C0103
+import pygtk
+pygtk.require('2.0')
+import gtk
 
 try:
     import urlunshort
@@ -481,16 +473,10 @@ def get_user_icon(user):
             if not os.path.exists("%s/bleeter.png" % cache_dir):
                 shutil.copy(find_app_icon(), cache_dir)
             filename = "%s/bleeter.png" % cache_dir
-        if gtk:
-            icon = gtk.gdk.pixbuf_new_from_file(filename)
-            if not (icon.get_width(), icon.get_height()) == (48, 48):
-                icon = icon.scale_simple(48, 48, gtk.gdk.INTERP_BILINEAR)
-                icon.save(filename, "png")
-        else:
-            icon = Image.open(filename)
-            if not icon.size == (48, 48):
-                icon = icon.resize((48, 48), Image.ANTIALIAS)
-                icon.save(filename, "png")
+        icon = gtk.gdk.pixbuf_new_from_file(filename)
+        if not (icon.get_width(), icon.get_height()) == (48, 48):
+            icon = icon.scale_simple(48, 48, gtk.gdk.INTERP_BILINEAR)
+            icon.save(filename, "png")
 
     return "file://%s" % filename
 
@@ -866,10 +852,6 @@ def main(argv):
 
     loop = glib.MainLoop()
     if options.tray:
-        if not gtk:
-            usage_note("pygtk is required for systray support", "Missing pygtk",
-                       fail)
-
         icon = gtk.status_icon_new_from_file(find_app_icon(uri=False))
         icon.set_tooltip("Initial update in progress")
         icon.connect("activate", lambda x: open_browser("http://twitter.com/"))
