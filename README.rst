@@ -20,11 +20,8 @@ Requirements
 ------------
 
 ``bleeter`` requires Python_ v2.6 or above. ``bleeter``'s mandatory dependencies
-outside of the standard library are the configobj_, notify-python_, pygobject_
-and tweepy_ packages.
-
-If you wish to use the systray_ icon you'll also need pygtk_, if you do not wish
-to use the systray_ icon you'll need PIL_ for processing the user icons.
+outside of the standard library are the configobj_, notify-python_, pygtk_ and
+tweepy_ packages.
 
 If you wish to use the URL expansion option for shortened links, you will need
 urlunshort_.
@@ -35,8 +32,10 @@ as a few of the dependencies aren't ported yet.
 Configuration
 -------------
 
-The first time you run ``bleeter`` you should use the ``--get-token`` option to
-setup OAuth_ access.
+The first time you run ``bleeter`` it will open an authentication link in your
+default web browser and prompt you for the twitter provided PIN.  Should you
+wish, or need to generate a new authentication token you can use the
+``--get-token`` option.
 
 It is possible to include tweets from users you are not directly following by
 adding them to the configuration file, which should be placed in
@@ -120,19 +119,15 @@ the problem, or even better a patch!
 .. _Python: http://www.python.org/
 .. _tweepy: http://pypi.python.org/pypi/tweepy/
 .. _notify-python: http://www.galago-project.org/
-.. _pygobject: http://www.pygtk.org/
 .. _configobj: http://www.voidspace.org.uk/python/configobj.html
 .. _xdg-utils: http://portland.freedesktop.org/wiki
 .. _KDE: http://www.kde.org/
 .. _gnome: http://www.gnome.org/
 .. _xfce4-notifyd: http://spuriousinterrupt.org/projects/xfce4-notifyd
 .. _notification-daemon: http://www.galago-project.org/
-.. _systray: http://standards.freedesktop.org/systemtray-spec/systemtray-spec-latest.html
 .. _pygtk: http://www.pygtk.org/
-.. _PIL: http://www.pythonware.com/products/pil/index.htm
 .. _urlunshort: http://bitbucket.org/runeh/urlunshort
 .. _email: jnrowe@gmail.com
-.. _OAuth: http://oauth.net/
 
 ..
     :vim: set ft=rst ts=4 sw=4 et:

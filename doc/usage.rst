@@ -1,13 +1,20 @@
 Usage
 -----
 
-:program:`bleeter.py` must initially be run from the command line to fetch the
-user's authentication data::
+:program:`bleeter.py` will seek authorisation when initially run.  As twitter_
+uses OAuth_ this process is a little more cumbersome than it should be.
+
+* An authentication link will be opened in your default browser, allowing you to
+  sign in to twitter_ and declare that you want :program:`bleeter` to have
+  access to your account.
+* A small dialog window will pop up where you can enter the PIN given to you by
+  twitter_.
+
+If you wish to create a new authentication token, or need to regenerate it, you
+can be doing one of the following::
 
     $ bleeter.py --get-token
-
-Once you've set up the authentication following runs of :program:`bleeter.py`
-can be run from either the command prompt or your session's startup files.
+    $ rm ${XDG_DATA_HOME:-~/.local}/bleeter/oauth_token
 
 Options
 '''''''
@@ -29,10 +36,6 @@ Options
 .. cmdoption:: -f <n>, --frequency=<n>
 
    update frequency in in seconds
-
-.. cmdoption:: -r <key>,<secret>, --token=<key>,<secret>
-
-   OAuth token for twitter(mostly used for testing)
 
 .. cmdoption:: -g, --get-token
 
@@ -74,3 +77,5 @@ Options
 
    output only results and errors
 
+.. _oauth: http://oauth.net/
+.. _twitter: http://twitter.com/

@@ -50,6 +50,7 @@ import re
 import shutil
 import sys
 import subprocess
+import time
 import urllib
 import webbrowser
 
@@ -230,7 +231,6 @@ def process_command_line(config_file):
     config_spec = [
         "timeout = integer(min=1, default=10)",
         "frequency = integer(min=60, default=300)",
-        "token = list(default=list('', ''))",
         "stealth = list(default=list('ewornj'))",
         "ignore = list(default=list('#nowplaying'))",
         "tray = boolean(default=True)",
@@ -249,7 +249,6 @@ def process_command_line(config_file):
 
     parser.set_defaults(timeout=config["timeout"],
                         frequency=config["frequency"],
-                        token=config.get("token"),
                         stealth=config.get("stealth"),
                         ignore=config.get("ignore"),
                         tray=config.get("tray"),
@@ -266,9 +265,6 @@ def process_command_line(config_file):
 
     auth_opts = optparse.OptionGroup(parser, "Authentication options")
     parser.add_option_group(auth_opts)
-    auth_opts.add_option("-r", "--token", action="store",
-                         metavar="<key>,<secret>",
-                         help="OAuth token for twitter")
     auth_opts.add_option("-g", "--get-token", action="store_true",
                          help="Generate a new OAuth token for twitter")
 
@@ -737,39 +733,67 @@ def tooltip(icon, tweets):
     return True
 
 
-def get_token(auth, config_file):
+def get_token(auth, fetch, token_file):
     """Fetch a new OAuth token
-
-    We purposely don't open the URL for the user here, as users shouldn't get in
-    the habit of trusting random apps to open real verifier pages where they may
-    have to login.
 
     :type auth: ``OAuthHandler``
     :param auth: OAuth handler for bleeter
+    :type fetch: ``bool``
+    :param fetch: Fetch a new token, even if one exists
+    :type token_file: ``str``
+    :param token_file: Filename to store token data in
     """
 
+    if os.path.exists(token_file) and not fetch:
+        return json.load(open(token_file))
+
     try:
-        print("Visit `%s' to fetch the new OAuth token"
-              % auth.get_authorization_url())
+        open_browser(auth.get_authorization_url())
     except tweepy.TweepError:
-        print(fail("Talking to twitter failed.  "
-                   "Is twitter or your network down?"))
-        return errno.EIO
-    while True:
-        verifier = raw_input("Input verifier? ")
-        if verifier:
-            break
-        print(fail("You must supply a verifier"))
-    try:
-        token = auth.get_access_token(verifier.strip())
-    except tweepy.TweepError:
-        print(fail("Fetching token failed"))
-        return errno.EIO
-    mkdir(os.path.dirname(config_file))
-    conf = configobj.ConfigObj(config_file)
-    conf['token'] = [token.key, token.secret]
-    conf.write()
-    print(success("Token set!"))
+        usage_note("Talking to twitter failed.  Is twitter or your network down?")
+        raise
+    usage_note("Authentication request opened in default browser",
+               level=success)
+    time.sleep(3)
+
+    dialog = gtk.Dialog("bleeter authorisation", None, 0,
+                        (gtk.STOCK_OK, gtk.RESPONSE_OK,
+                         gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL))
+
+    hbox = gtk.HBox(False, 8)
+    hbox.set_border_width(8)
+    dialog.vbox.pack_start(hbox, False, False, 0)
+
+    icon = gtk.image_new_from_file(find_app_icon(uri=False))
+    hbox.pack_start(icon, False, False, 0)
+
+    table = gtk.Table(2, 1)
+    table.set_row_spacings(4)
+    table.set_col_spacings(4)
+    hbox.pack_start(table, True, True, 0)
+
+    label = gtk.Label("Twitter OAuth pin")
+    table.attach(label, 0, 1, 0, 1)
+    oauth_entry = gtk.Entry()
+    table.attach(oauth_entry, 1, 2, 0, 1)
+    label.set_mnemonic_widget(oauth_entry)
+
+    dialog.show_all()
+    response = dialog.run()
+    verifier = oauth_entry.get_text().strip()
+    dialog.destroy()
+
+    if response == gtk.RESPONSE_OK:
+        try:
+            token = auth.get_access_token(verifier)
+        except tweepy.TweepError:
+            usage_note("Fetching token failed")
+        return False
+
+    mkdir(os.path.dirname(token_file))
+    json.dump([token.key, token.secret], open(token_file, "w"), indent=4)
+
+    return token.key, token.secret
 
 
 def main(argv):
@@ -789,6 +813,7 @@ def main(argv):
     config_file = "%s/bleeter/config.ini" % glib.get_user_config_dir()
     options = process_command_line(config_file)
 
+    token_file = "%s/bleeter/oauth_token" % glib.get_user_data_dir()
     state_file = "%s/bleeter/state.db" % glib.get_user_data_dir()
     lock_file = "%s.lock" % state_file
 
@@ -802,17 +827,14 @@ def main(argv):
     atexit.register(os.unlink, lock_file)
 
     auth = tweepy.OAuthHandler(OAUTH_KEY, OAUTH_SECRET)
-    if options.get_token:
-        return get_token(auth, config_file)
-    elif not options.token or not all(options.token):
-        usage_note("Use `%prog --get-token' from the command line to set it",
-                   "No OAuth token for bleeter")
+    try:
+        token = get_token(auth, options.get_token, token_file)
+    except tweepy.TweepError:
+        return errno.EPERM
+    if not token:
+        return errno.EPERM
 
-    if not urlunshort and options.expand:
-        usage_note("Link expansion support requires the urlunshort module")
-        options.expand = False
-
-    auth.set_access_token(*options.token)
+    auth.set_access_token(*token)
     api = tweepy.API(auth)
 
     if os.path.exists(state_file):
@@ -835,6 +857,10 @@ def main(argv):
         # Show a "hello" message, as it can take some time the first real
         # notification
         usage_note("Started", level=success)
+
+    if not urlunshort and options.expand:
+        usage_note("Link expansion support requires the urlunshort module")
+        options.expand = False
 
     tweets = collections.deque(maxlen=options.frequency / (options.timeout + 1))
 
