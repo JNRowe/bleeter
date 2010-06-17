@@ -770,11 +770,15 @@ def get_token(auth, fetch, token_file):
     dialog.destroy()
 
     if response == gtk.RESPONSE_OK:
-        try:
-            token = auth.get_access_token(verifier)
-        except tweepy.TweepError:
+        for i in range(3):
+            try:
+                token = auth.get_access_token(verifier)
+                break
+            except tweepy.TweepError:
+                pass
+        else:
             usage_note("Fetching token failed")
-            raise
+            raise tweepy.TweepError("Fetching token failed")
 
     mkdir(os.path.dirname(token_file))
     json.dump([token.key, token.secret], open(token_file, "w"), indent=4)
