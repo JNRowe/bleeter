@@ -113,13 +113,13 @@ class State(object):
         >>> glib.get_user_data_dir = lambda: "test/xdg_data_home"
 
         >>> state = State()
-        >>> state.seen["fetched"]["self-status"]
+        >>> state.fetched["self-status"]
         16460438496
 
         # Test no config
         >>> glib.get_user_data_dir = lambda: "None"
         >>> state = State()
-        >>> state.seen["fetched"]["self-status"]
+        >>> state.fetched["self-status"]
         1
 
         # Unset mocks
@@ -131,13 +131,11 @@ class State(object):
         self.state_file = "%s/bleeter/state.db" % glib.get_user_data_dir()
         self.create_lock()
 
-        self.seen = {
-            "displayed": collections.defaultdict(lambda: 1),
-            "fetched": collections.defaultdict(lambda: 1),
-        }
-
+        self.displayed = collections.defaultdict(lambda: 1)
+        self.fetched = collections.defaultdict(lambda: 1)
         if os.path.exists(self.state_file):
-            self.seen.update(json.load(open(self.state_file)))
+            data = json.load(open(self.state_file))
+            self.fetched.update(data["fetched"])
         self.users = users if users else []
 
         atexit.register(self.save_state)
@@ -189,18 +187,17 @@ class State(object):
     def save_state(self):
         """Seen tweets state saver
 
-        :type seen: ``list``
-        :param seen: Already seen tweets
         :type users: ``list`` of ``str``
         :param users: Stealth follow user list
         """
-        # Reset displayed, so we don't miss pending tweets from a previous run
-        self.seen["fetched"]["self-status"] = self.seen["displayed"]["self-status"]
+        # Store displayed, not fetched, so we don't miss pending tweets from
+        # a previous run
+        data = {"fetched": {"self-status": self.displayed["self-status"]}}
         for user in self.users:
-            if user in self.seen["displayed"]:
-                self.seen["fetched"][user] = self.seen["displayed"][user]
+            if user in self.displayed:
+                data["fetched"][user] = self.displayed[user]
 
-        json.dump(self.seen, open(self.state_file, "w"), indent=4)
+        json.dump(data, open(self.state_file, "w"), indent=4)
 
 
 class Tweets(dict):
@@ -768,7 +765,7 @@ def update(tweets, api, state, ignore):
     :return: Timers must return a ``True`` value for timer to continue
     """
 
-    old_seen = state.seen["fetched"]["self-status"]
+    old_seen = state.fetched["self-status"]
     try:
         new_tweets = api.home_timeline(since_id=old_seen)
         new_tweets.extend(api.mentions(since_id=old_seen))
@@ -779,7 +776,7 @@ def update(tweets, api, state, ignore):
 
     if new_tweets:
         # We can use this shortcut because api.home_timeline() is first
-        state.seen["fetched"]["self-status"] = new_tweets[0].id
+        state.fetched["self-status"] = new_tweets[0].id
         tweets.add(filter(skip_check(ignore), new_tweets))
 
     return True
@@ -805,7 +802,7 @@ def update_stealth(tweets, api, state, ignore):
 
     user = state.get_user()
 
-    old_seen = state.seen["fetched"][user]
+    old_seen = state.fetched[user]
     try:
         new_tweets = api.user_timeline(user, since_id=old_seen)
     except tweepy.TweepError:
@@ -815,7 +812,7 @@ def update_stealth(tweets, api, state, ignore):
         return True
 
     if new_tweets:
-        state.seen["fetched"][user] = new_tweets[0].id
+        state.fetched[user] = new_tweets[0].id
         tweets.add(filter(skip_check(ignore), new_tweets))
 
     return True
@@ -880,9 +877,9 @@ def display(me, tweets, state, timeout, expand):
         # Fail hard at this point, recovery has little value.
         raise OSError("Notification failed to display!")
     if tweet.user.screen_name.lower() in state.users:
-        state.seen["displayed"][tweet.user.screen_name.lower()] = tweet.id
+        state.displayed[tweet.user.screen_name.lower()] = tweet.id
     else:
-        state.seen["displayed"]["self-status"] = tweet.id
+        state.displayed["self-status"] = tweet.id
     return True
 
 
