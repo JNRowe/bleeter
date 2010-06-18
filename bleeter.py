@@ -39,6 +39,7 @@ nothing more.
 """ % parseaddr(__author__)
 
 import atexit
+import collections
 import datetime
 import errno
 import hashlib
@@ -111,13 +112,13 @@ class State(object):
         self.state_file = "%s/bleeter/state.db" % glib.get_user_data_dir()
         self.create_lock()
 
+        self.seen = {
+            "displayed": collections.defaultdict(lambda: 1),
+            "fetched": collections.defaultdict(lambda: 1),
+        }
+
         if os.path.exists(self.state_file):
-            self.seen = json.load(open(self.state_file))
-        else:
-            self.seen = {
-                "displayed": {},
-                "fetched": {},
-            }
+            self.seen.update(json.load(open(self.state_file)))
         self.users = users
 
         atexit.register(self.save_state)
@@ -159,8 +160,7 @@ class State(object):
         :param users: Stealth follow user list
         """
         # Reset displayed, so we don't miss pending tweets from a previous run
-        self.seen["fetched"]["self-status"] = \
-                self.seen["displayed"].get("self-status", 1)
+        self.seen["fetched"]["self-status"] = self.seen["displayed"]["self-status"]
         for user in self.users:
             if user in self.seen["displayed"]:
                 self.seen["fetched"][user] = self.seen["displayed"][user]
@@ -714,7 +714,7 @@ def update(tweets, api, state, ignore):
 
     headers = {"User-Agent": USER_AGENT}
 
-    old_seen = state.seen["fetched"].get("self-status", 1)
+    old_seen = state.seen["fetched"]["self-status"]
     try:
         new_tweets = api.home_timeline(since_id=old_seen, headers=headers)
         new_tweets.extend(api.mentions(since_id=old_seen, headers=headers))
@@ -753,7 +753,7 @@ def update_stealth(tweets, api, state, ignore):
 
     user = state.get_user()
 
-    old_seen = state.seen["fetched"].get(user, 1)
+    old_seen = state.seen["fetched"][user]
     try:
         new_tweets = api.user_timeline(user, since_id=old_seen,
                                        headers=headers)
