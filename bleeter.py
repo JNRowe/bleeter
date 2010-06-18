@@ -270,6 +270,28 @@ def open_browser(url):
 def find_app_icon(uri=True):
     """Find suitable bleeter application icon
 
+    # Test mocks
+    >>> sys.prefix = ""
+    >>> sys.path[0] = "non-existent-path"
+    >>> glib.get_user_cache_dir = lambda: "test/xdg_cache_home"
+
+    >>> find_app_icon()
+    'file://test/xdg_cache_home/bleeter/bleeter.png'
+    >>> find_app_icon(False)
+    'test/xdg_cache_home/bleeter/bleeter.png'
+
+    # Test with no personal icon
+    >>> glib.get_user_cache_dir = lambda: "None"
+    >>> find_app_icon()
+    Traceback (most recent call last):
+        ...
+    EnvironmentError: Can't find application icon!
+
+    # Test with local icon
+    >>> sys.path[0] = ""
+    >>> find_app_icon() #doctest: +ELLIPSIS
+    'file://.../bleeter/bleeter.png'
+
     :type uri: ``bool``
     :param uri: Return a URI for the path
     :rtype: ``str``
@@ -280,7 +302,6 @@ def find_app_icon(uri=True):
         "%s/share/pixmaps/bleeter.png" % sys.prefix,
         "%s/bleeter/bleeter.png" % glib.get_user_cache_dir(),
         "%s/bleeter.png" % os.path.abspath(sys.path[0]),
-        None,
     ]
     for icon in icon_locations:
         if os.path.exists(icon):
