@@ -143,7 +143,23 @@ class State(object):
         atexit.register(self.save_state)
 
     def create_lock(self):
-        """Create lockfile handler"""
+        """Create lockfile handler
+
+        # Test mocks
+        >>> atexit.register = lambda *args: True
+        >>> glib.get_user_data_dir = lambda: "test/xdg_data_home"
+
+        >>> state = State()
+        >>> os.path.exists("%s.lock" % state.state_file)
+        True
+        >>> state = State()
+        Traceback (most recent call last):
+            ...
+        IOError: Another instance is running or
+        `test/xdg_data_home/bleeter/state.db.lock' is stale
+        >>> os.unlink("%s.lock" % state.state_file)
+
+        """
         lock_file = "%s.lock" % self.state_file
 
         # Create directory for state storage
