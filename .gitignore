@@ -1,2 +1,4 @@
+doc/.build/
+
 .coverage
 .noseids
