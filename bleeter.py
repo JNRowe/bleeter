@@ -103,6 +103,9 @@ USAGE = "\n".join(USAGE).replace("bleeter", "%prog")
 
 class State(object):
     """Bleeter state handling"""
+
+    _version = 1
+
     def __init__(self, users=None):
         """Initialise a new ``State`` object
 
@@ -192,7 +195,10 @@ class State(object):
         """
         # Store displayed, not fetched, so we don't miss pending tweets from
         # a previous run
-        data = {"fetched": {"self-status": self.displayed["self-status"]}}
+        data = {
+            "fetched": {"self-status": self.displayed["self-status"]},
+            "version": self._version,
+        }
         for user in self.users:
             if user in self.displayed:
                 data["fetched"][user] = self.displayed[user]
