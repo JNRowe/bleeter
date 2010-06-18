@@ -712,12 +712,10 @@ def update(tweets, api, state, ignore):
     :return: Timers must return a ``True`` value for timer to continue
     """
 
-    headers = {"User-Agent": USER_AGENT}
-
     old_seen = state.seen["fetched"]["self-status"]
     try:
-        new_tweets = api.home_timeline(since_id=old_seen, headers=headers)
-        new_tweets.extend(api.mentions(since_id=old_seen, headers=headers))
+        new_tweets = api.home_timeline(since_id=old_seen)
+        new_tweets.extend(api.mentions(since_id=old_seen))
     except tweepy.TweepError:
         usage_note("Fetching user data failed", level=fail)
         # Still return True, so we re-enter the loop
@@ -749,14 +747,11 @@ def update_stealth(tweets, api, state, ignore):
     :return: Timers must return a ``True`` value for timer to continue
     """
 
-    headers = {"User-Agent": USER_AGENT}
-
     user = state.get_user()
 
     old_seen = state.seen["fetched"][user]
     try:
-        new_tweets = api.user_timeline(user, since_id=old_seen,
-                                       headers=headers)
+        new_tweets = api.user_timeline(user, since_id=old_seen)
     except tweepy.TweepError:
         usage_note("Data for `%s' not available" % user,
                    "Fetching user data failed", fail)
