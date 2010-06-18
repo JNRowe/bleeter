@@ -103,8 +103,27 @@ USAGE = "\n".join(USAGE).replace("bleeter", "%prog")
 
 class State(object):
     """Bleeter state handling"""
-    def __init__(self, users):
+    def __init__(self, users=None):
         """Initialise a new ``State`` object
+
+        # Test mocks
+        >>> atexit.register = lambda *args: True
+        >>> State.orig_create_lock = State.create_lock
+        >>> State.create_lock = lambda x: True
+        >>> glib.get_user_data_dir = lambda: "test/xdg_data_home"
+
+        >>> state = State()
+        >>> state.seen["fetched"]["self-status"]
+        16460438496
+
+        # Test no config
+        >>> glib.get_user_data_dir = lambda: "None"
+        >>> state = State()
+        >>> state.seen["fetched"]["self-status"]
+        1
+
+        # Unset mocks
+        >>> State.create_lock = State.orig_create_lock
 
         :type users: ``list``
         :param users: Stealth users to watch
@@ -119,7 +138,7 @@ class State(object):
 
         if os.path.exists(self.state_file):
             self.seen.update(json.load(open(self.state_file)))
-        self.users = users
+        self.users = users if users else []
 
         atexit.register(self.save_state)
 
