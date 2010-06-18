@@ -39,11 +39,9 @@ nothing more.
 """ % parseaddr(__author__)
 
 import atexit
-import collections
 import datetime
 import errno
 import hashlib
-import operator
 import optparse
 import os
 import re
@@ -100,6 +98,32 @@ NOTIFY_SERVER_CAPS = []
 USAGE = __doc__[:__doc__.find('\n\n', 100)].splitlines()[2:]
 # Replace script name with optparse's substitution var, and rebuild string
 USAGE = "\n".join(USAGE).replace("bleeter", "%prog")
+
+
+class Tweets(dict):
+    """Object for holding tweets pending display
+
+    Using a dictionary subclass affords us a free ID-based duplicate filter
+    """
+    def popitem(self):
+        """Pop tweet with oldest ID
+
+        :rtype: ``tweepy.models.Status``
+        :return: Oldest tweet
+        :raise KeyError: Tweets is empty
+        """
+        if not self:
+            raise KeyError('popitem(): object is empty')
+        return self.pop(min(self.keys()))
+
+    def add(self, tweets):
+        """Add new tweets to the store
+
+        :type tweets: ``list``
+        :param tweets: Tweets to add store
+        """
+        for tweet in tweets:
+            self[tweet.id] = tweet
 
 
 def mkdir(directory):
@@ -294,6 +318,7 @@ def process_command_line(config_file):
         options.stealth = options.stealth.split(",")
     elif options.stealth is False:
         options.stealth = []
+    options.stealth = map(str.lower, options.stealth)
     if isinstance(options.ignore, basestring):
         options.ignore = options.ignore.split(",")
     if options.ignore is False:
@@ -596,10 +621,47 @@ def skip_check(ignore):
     return wrapper
 
 
-def update(tweets, api, seen, users, ignore):
-    """Fetch new tweets
+def update(tweets, api, seen, ignore):
+    """Fetch new tweets for the authenticated user
 
-    :type tweets: ``collections.deque``
+    :type tweets: ``Tweets``
+    :param tweets: Tweets awaiting display
+    :type api: ``tweepy.api.API``
+    :param api: Authenticated ``tweepy.api.API`` object
+    :type seen: ``dict``
+    :param seen: Last seen status
+    :type ignore: ``list`` of ``str``
+    :param ignore: List of words to trigger tweet skipping
+    :rtype: ``True``
+    :return: Timers must return a ``True`` value for timer to continue
+    """
+
+    headers = {"User-Agent": USER_AGENT}
+
+    old_seen = seen["fetched"].get("self-status", 1)
+    try:
+        new_tweets = api.home_timeline(since_id=old_seen, headers=headers)
+        new_tweets.extend(api.mentions(since_id=old_seen, headers=headers))
+    except tweepy.TweepError:
+        usage_note("Fetching user data failed", level=fail)
+        # Still return True, so we re-enter the loop
+        return True
+
+    if new_tweets:
+        # We can use this shortcut because api.home_timeline() is first
+        seen["fetched"]["self-status"] = new_tweets[0].id
+        tweets.add(filter(skip_check(ignore), new_tweets))
+
+    return True
+
+
+def update_stealth(tweets, api, seen, users, ignore):
+    """Fetch new tweets for a stealth watched user
+
+    We only fetch new tweets for a single user on each run, fetching each
+    stealth user continually is a waste of resources
+
+    :type tweets: ``Tweets``
     :param tweets: Tweets awaiting display
     :type api: ``tweepy.api.API``
     :param api: Authenticated ``tweepy.api.API`` object
@@ -615,43 +677,41 @@ def update(tweets, api, seen, users, ignore):
 
     headers = {"User-Agent": USER_AGENT}
 
-    old_seen = seen["fetched"]
+    # TODO: We should probably store this in the data file so later users
+    # eventually end up being checked if bleeter doesn't run for long
+    user = users[0]
+    # Rotate users list
+    users.append(users.pop(0))
+
+    old_seen = seen["fetched"].get(user, 1)
     try:
-        new_tweets = api.home_timeline(since_id=old_seen, headers=headers)
-        new_tweets.extend(api.mentions(since_id=old_seen, headers=headers))
+        new_tweets = api.user_timeline(user, since_id=old_seen,
+                                       headers=headers)
     except tweepy.TweepError:
-        usage_note("Fetching user data failed", level=fail)
+        usage_note("Data for `%s' not available" % user,
+                   "Fetching user data failed", fail)
         # Still return True, so we re-enter the loop
         return True
 
-    for user in users:
-        try:
-            new_tweets.extend(api.user_timeline(user, since_id=old_seen,
-                                                headers=headers))
-        except tweepy.TweepError:
-            usage_note("Data for `%s' not available" % user,
-                       "Fetching user data failed", fail)
-            # Still return True, so we re-enter the loop
-            return True
-
     if new_tweets:
-        new_tweets = sorted(new_tweets, key=operator.attrgetter("id"))
-        seen["fetched"] = new_tweets[-1].id
-        tweets.extend(filter(skip_check(ignore), new_tweets))
+        seen["fetched"][user] = new_tweets[0].id
+        tweets.add(filter(skip_check(ignore), new_tweets))
 
     return True
 
 
 NOTIFICATIONS = {}
-def display(me, tweets, seen, timeout, expand):
+def display(me, tweets, seen, users, timeout, expand):
     """Display notifications for new tweets
 
     :type me: ``tweepy.models.User``
     :param me: Authenticated user object
-    :type tweets: ``collections.deque``
+    :type tweets: ``Tweets``
     :param tweets: Tweets awaiting display
     :type seen: ``dict``
     :param seen: Last seen status
+    :type users: ``list`` of ``str``
+    :param users: Stealth follow user list
     :type timeout: ``tweepy.api.API``
     :param timeout: Timeout for notifications in seconds
     :type expand: ``bool``
@@ -662,13 +722,9 @@ def display(me, tweets, seen, timeout, expand):
     """
 
     try:
-        tweet = tweets.popleft()
-    except IndexError:
+        tweet = tweets.popitem()
+    except KeyError:
         # No tweets awaiting display
-        return True
-
-    # tweets are sorted at this point, so this is a simple duplicate filter
-    if tweet.id <= seen["displayed"]:
         return True
 
     note = pynotify.Notification("From %s %s"
@@ -699,7 +755,10 @@ def display(me, tweets, seen, timeout, expand):
     if not note.show():
         # Fail hard at this point, recovery has little value.
         raise OSError("Notification failed to display!")
-    seen["displayed"] = tweet.id
+    if tweet.user.screen_name.lower() in users:
+        seen["displayed"][tweet.user.screen_name.lower()] = tweet.id
+    else:
+        seen["displayed"]["self-status"] = tweet.id
     return True
 
 
@@ -708,7 +767,7 @@ def tooltip(icon, tweets):
 
     :type icon: ``gtk.StatusIcon``
     :param icon: Status icon to update
-    :type tweets: ``collections.deque``
+    :type tweets: ``Tweets``
     :param tweets: Tweets pending display
     """
 
@@ -829,19 +888,28 @@ def main(argv):
 
     if os.path.exists(state_file):
         seen = json.load(open(state_file))
-        # Reset displayed, so we don't miss pending tweets from a previous run
-        seen['fetched'] = seen["displayed"]
     else:
-        seen = {"displayed": 1, "fetched": 1}
+        seen = {
+            "displayed": {},
+            "fetched": {},
+        }
 
-    def save_state(seen):
+    def save_state(seen, users):
         """Seen tweets state saver
 
         :type seen: ``list``
         :param seen: Already seen tweets
+        :type users: ``list`` of ``str``
+        :param users: Stealth follow user list
         """
+        # Reset displayed, so we don't miss pending tweets from a previous run
+        seen["fetched"]["self-status"] = seen["displayed"].get("self-status", 1)
+        for user in users:
+            if user in seen["displayed"]:
+                seen["fetched"][user] = seen["displayed"][user]
+
         json.dump(seen, open(state_file, "w"), indent=4)
-    atexit.register(save_state, seen)
+    atexit.register(save_state, seen, options.stealth)
 
     if options.verbose or not options.tray:
         # Show a "hello" message, as it can take some time the first real
@@ -852,7 +920,7 @@ def main(argv):
         usage_note("Link expansion support requires the urlunshort module")
         options.expand = False
 
-    tweets = collections.deque(maxlen=options.frequency / (options.timeout + 1))
+    tweets = Tweets()
 
     loop = glib.MainLoop()
     if options.tray:
@@ -871,12 +939,17 @@ def main(argv):
         usage_note("Talking to twitter failed.  Is twitter or your network down?",
                    "Network error", fail)
         return errno.EIO
-    update(tweets, api, seen, options.stealth, options.ignore)
+    update(tweets, api, seen, options.ignore)
 
     glib.timeout_add_seconds(options.frequency, update, tweets, api, seen,
-                             options.stealth, options.ignore)
+                             options.ignore)
+    if options.stealth:
+        glib.timeout_add_seconds(options.frequency / len(options.stealth) * 10,
+                                 update_stealth, tweets, api, seen,
+                                 options.stealth, options.ignore)
+
     glib.timeout_add_seconds(options.timeout + 1, display, me, tweets, seen,
-                             options.timeout, options.expand)
+                             options.stealth, options.timeout, options.expand)
     if options.tray:
         glib.timeout_add_seconds(options.timeout // 2, tooltip, icon, tweets)
     loop.run()
