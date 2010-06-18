@@ -100,6 +100,73 @@ USAGE = __doc__[:__doc__.find('\n\n', 100)].splitlines()[2:]
 USAGE = "\n".join(USAGE).replace("bleeter", "%prog")
 
 
+class State(object):
+    """Bleeter state handling"""
+    def __init__(self, users):
+        """Initialise a new ``State`` object
+
+        :type users: ``list``
+        :param users: Stealth users to watch
+        """
+        self.state_file = "%s/bleeter/state.db" % glib.get_user_data_dir()
+        self.create_lock()
+
+        if os.path.exists(self.state_file):
+            self.seen = json.load(open(self.state_file))
+        else:
+            self.seen = {
+                "displayed": {},
+                "fetched": {},
+            }
+        self.users = users
+
+        atexit.register(self.save_state)
+
+    def create_lock(self):
+        """Create lockfile handler"""
+        lock_file = "%s.lock" % self.state_file
+
+        # Create directory for state storage
+        mkdir(os.path.dirname(lock_file))
+        if os.path.exists(lock_file):
+            message = "Another instance is running or `%s' is stale" % lock_file
+            usage_note(message)
+            raise IOError(message)
+        open(lock_file, "w").write(str(os.getpid()))
+        atexit.register(os.unlink, lock_file)
+
+    def get_user(self):
+        """Return next stealth user to update
+
+        :rtype: ``str``
+        :return: Next stealth user to update
+        :raise IndexError: When user list is empty
+        """
+        # TODO: We should probably store the current state on exit so later
+        # users eventually end up being checked if bleeter doesn't run for long
+        user = self.users[0]
+        # Rotate users list
+        self.users.append(self.users.pop(0))
+        return user
+
+    def save_state(self):
+        """Seen tweets state saver
+
+        :type seen: ``list``
+        :param seen: Already seen tweets
+        :type users: ``list`` of ``str``
+        :param users: Stealth follow user list
+        """
+        # Reset displayed, so we don't miss pending tweets from a previous run
+        self.seen["fetched"]["self-status"] = \
+                self.seen["displayed"].get("self-status", 1)
+        for user in self.users:
+            if user in self.seen["displayed"]:
+                self.seen["fetched"][user] = self.seen["displayed"][user]
+
+        json.dump(self.seen, open(self.state_file, "w"), indent=4)
+
+
 class Tweets(dict):
     """Object for holding tweets pending display
 
@@ -621,15 +688,15 @@ def skip_check(ignore):
     return wrapper
 
 
-def update(tweets, api, seen, ignore):
+def update(tweets, api, state, ignore):
     """Fetch new tweets for the authenticated user
 
     :type tweets: ``Tweets``
     :param tweets: Tweets awaiting display
     :type api: ``tweepy.api.API``
     :param api: Authenticated ``tweepy.api.API`` object
-    :type seen: ``dict``
-    :param seen: Last seen status
+    :type state: ``State``
+    :param state: Bleeter state
     :type ignore: ``list`` of ``str``
     :param ignore: List of words to trigger tweet skipping
     :rtype: ``True``
@@ -638,7 +705,7 @@ def update(tweets, api, seen, ignore):
 
     headers = {"User-Agent": USER_AGENT}
 
-    old_seen = seen["fetched"].get("self-status", 1)
+    old_seen = state.seen["fetched"].get("self-status", 1)
     try:
         new_tweets = api.home_timeline(since_id=old_seen, headers=headers)
         new_tweets.extend(api.mentions(since_id=old_seen, headers=headers))
@@ -649,13 +716,13 @@ def update(tweets, api, seen, ignore):
 
     if new_tweets:
         # We can use this shortcut because api.home_timeline() is first
-        seen["fetched"]["self-status"] = new_tweets[0].id
+        state.seen["fetched"]["self-status"] = new_tweets[0].id
         tweets.add(filter(skip_check(ignore), new_tweets))
 
     return True
 
 
-def update_stealth(tweets, api, seen, users, ignore):
+def update_stealth(tweets, api, state, ignore):
     """Fetch new tweets for a stealth watched user
 
     We only fetch new tweets for a single user on each run, fetching each
@@ -665,10 +732,8 @@ def update_stealth(tweets, api, seen, users, ignore):
     :param tweets: Tweets awaiting display
     :type api: ``tweepy.api.API``
     :param api: Authenticated ``tweepy.api.API`` object
-    :type seen: ``dict``
-    :param seen: Last seen status
-    :type users: ``list`` of ``str``
-    :param users: Stealth follow user list
+    :type state: ``State``
+    :param seen: Application state
     :type ignore: ``list`` of ``str``
     :param ignore: List of words to trigger tweet skipping
     :rtype: ``True``
@@ -677,13 +742,9 @@ def update_stealth(tweets, api, seen, users, ignore):
 
     headers = {"User-Agent": USER_AGENT}
 
-    # TODO: We should probably store this in the data file so later users
-    # eventually end up being checked if bleeter doesn't run for long
-    user = users[0]
-    # Rotate users list
-    users.append(users.pop(0))
+    user = state.get_user()
 
-    old_seen = seen["fetched"].get(user, 1)
+    old_seen = state.seen["fetched"].get(user, 1)
     try:
         new_tweets = api.user_timeline(user, since_id=old_seen,
                                        headers=headers)
@@ -694,24 +755,22 @@ def update_stealth(tweets, api, seen, users, ignore):
         return True
 
     if new_tweets:
-        seen["fetched"][user] = new_tweets[0].id
+        state.seen["fetched"][user] = new_tweets[0].id
         tweets.add(filter(skip_check(ignore), new_tweets))
 
     return True
 
 
 NOTIFICATIONS = {}
-def display(me, tweets, seen, users, timeout, expand):
+def display(me, tweets, state, timeout, expand):
     """Display notifications for new tweets
 
     :type me: ``tweepy.models.User``
     :param me: Authenticated user object
     :type tweets: ``Tweets``
     :param tweets: Tweets awaiting display
-    :type seen: ``dict``
-    :param seen: Last seen status
-    :type users: ``list`` of ``str``
-    :param users: Stealth follow user list
+    :type state: ``State``
+    :param seen: Application state
     :type timeout: ``tweepy.api.API``
     :param timeout: Timeout for notifications in seconds
     :type expand: ``bool``
@@ -756,10 +815,10 @@ def display(me, tweets, seen, users, timeout, expand):
     if not note.show():
         # Fail hard at this point, recovery has little value.
         raise OSError("Notification failed to display!")
-    if tweet.user.screen_name.lower() in users:
-        seen["displayed"][tweet.user.screen_name.lower()] = tweet.id
+    if tweet.user.screen_name.lower() in state.users:
+        state.seen["displayed"][tweet.user.screen_name.lower()] = tweet.id
     else:
-        seen["displayed"]["self-status"] = tweet.id
+        state.seen["displayed"]["self-status"] = tweet.id
     return True
 
 
@@ -864,17 +923,6 @@ def main(argv):
     options = process_command_line(config_file)
 
     token_file = "%s/bleeter/oauth_token" % glib.get_user_data_dir()
-    state_file = "%s/bleeter/state.db" % glib.get_user_data_dir()
-    lock_file = "%s.lock" % state_file
-
-    # Create directory for state storage
-    mkdir(os.path.dirname(lock_file))
-    if os.path.exists(lock_file):
-        usage_note("Another instance is running, or `%s' is stale" % lock_file,
-                   level=fail)
-        return errno.EBUSY
-    open(lock_file, "w").write(str(os.getpid()))
-    atexit.register(os.unlink, lock_file)
 
     auth = tweepy.OAuthHandler(OAUTH_KEY, OAUTH_SECRET)
     try:
@@ -887,30 +935,7 @@ def main(argv):
     auth.set_access_token(*token)
     api = tweepy.API(auth)
 
-    if os.path.exists(state_file):
-        seen = json.load(open(state_file))
-    else:
-        seen = {
-            "displayed": {},
-            "fetched": {},
-        }
-
-    def save_state(seen, users):
-        """Seen tweets state saver
-
-        :type seen: ``list``
-        :param seen: Already seen tweets
-        :type users: ``list`` of ``str``
-        :param users: Stealth follow user list
-        """
-        # Reset displayed, so we don't miss pending tweets from a previous run
-        seen["fetched"]["self-status"] = seen["displayed"].get("self-status", 1)
-        for user in users:
-            if user in seen["displayed"]:
-                seen["fetched"][user] = seen["displayed"][user]
-
-        json.dump(seen, open(state_file, "w"), indent=4)
-    atexit.register(save_state, seen, options.stealth)
+    state = State(options.stealth)
 
     if options.verbose or not options.tray:
         # Show a "hello" message, as it can take some time the first real
@@ -940,17 +965,17 @@ def main(argv):
         usage_note("Talking to twitter failed.  Is twitter or your network down?",
                    "Network error", fail)
         return errno.EIO
-    update(tweets, api, seen, options.ignore)
+    update(tweets, api, state, options.ignore)
 
-    glib.timeout_add_seconds(options.frequency, update, tweets, api, seen,
+    glib.timeout_add_seconds(options.frequency, update, tweets, api, state,
                              options.ignore)
     if options.stealth:
         glib.timeout_add_seconds(options.frequency / len(options.stealth) * 10,
-                                 update_stealth, tweets, api, seen,
-                                 options.stealth, options.ignore)
+                                 update_stealth, tweets, api, state,
+                                 options.ignore)
 
-    glib.timeout_add_seconds(options.timeout + 1, display, me, tweets, seen,
-                             options.stealth, options.timeout, options.expand)
+    glib.timeout_add_seconds(options.timeout + 1, display, me, tweets, state,
+                             options.timeout, options.expand)
     if options.tray:
         glib.timeout_add_seconds(options.timeout // 2, tooltip, icon, tweets)
     loop.run()
