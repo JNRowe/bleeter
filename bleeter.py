@@ -134,12 +134,16 @@ class State(object):
         self.state_file = "%s/bleeter/state.db" % glib.get_user_data_dir()
         self.create_lock()
 
+        self.users = users if users else []
+
         self.displayed = collections.defaultdict(lambda: 1)
         self.fetched = collections.defaultdict(lambda: 1)
         if os.path.exists(self.state_file):
             data = json.load(open(self.state_file))
             self.fetched.update(data["fetched"])
-        self.users = users if users else []
+            if "user" in data and data["user"] in self.users:
+                for i in range(self.users.index(data["user"])):
+                    self.get_user()
 
         atexit.register(self.save_state)
 
@@ -180,8 +184,6 @@ class State(object):
         :return: Next stealth user to update
         :raise IndexError: When user list is empty
         """
-        # TODO: We should probably store the current state on exit so later
-        # users eventually end up being checked if bleeter doesn't run for long
         user = self.users[0]
         # Rotate users list
         self.users.append(self.users.pop(0))
@@ -202,6 +204,8 @@ class State(object):
         for user in self.users:
             if user in self.displayed:
                 data["fetched"][user] = self.displayed[user]
+        if self.users:
+            data["user"] = self.get_user()
 
         json.dump(data, open(self.state_file, "w"), indent=4)
 
