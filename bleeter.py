@@ -688,7 +688,6 @@ def open_geo(tweet):
 
         latlon = ",".join(map(str, tweet.geo['coordinates']))
 
-        # TODO: Perhaps make the new tab, new window, etc configurable?
         open_browser("http://maps.google.com/maps?q=%s@%s&sll=%s&z=16"
                      % (tweet.user.screen_name, latlon, latlon))
     return show
