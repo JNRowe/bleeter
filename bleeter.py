@@ -67,7 +67,7 @@ pygtk.require('2.0')
 import gtk
 
 try:
-    import urlunshort
+    import urlunshort  # pylint: disable-msg=F0401
 except ImportError:  # pragma: no cover
     urlunshort = None  # pylint: disable-msg=C0103
 
@@ -129,7 +129,8 @@ class State(object):
         # Create directory for state storage
         mkdir(os.path.dirname(lock_file))
         if os.path.exists(lock_file):
-            message = "Another instance is running or `%s' is stale" % lock_file
+            message = "Another instance is running or `%s' is stale" \
+                % lock_file
             usage_note(message)
             raise IOError(message)
         open(lock_file, "w").write(str(os.getpid()))
@@ -236,12 +237,14 @@ def usage_note(message, title=None, level=warn, icon=None):
             icon = "stock_dialog-warning"
         elif level == fail:
             icon = "error"
+    # pylint: disable-msg=E1101
     note = pynotify.Notification(title, message, icon)
     if level == warn:
         note.set_urgency(pynotify.URGENCY_LOW)
     elif level == fail:
         note.set_urgency(pynotify.URGENCY_CRITICAL)
         note.set_timeout(pynotify.EXPIRES_NEVER)
+    # pylint: enable-msg=E1101
     if not note.show():
         raise OSError("Notification failed to display!")
     return errno.EPERM
@@ -355,7 +358,8 @@ def process_command_line(config_file):
     parser.add_option_group(user_opts)
     user_opts.add_option("-s", "--stealth", action="store",
                          metavar=",".join(config.get("stealth")),
-                         help="Users to watch without following(comma separated)")
+                         help="Users to watch without " \
+                            "following(comma separated)")
     user_opts.add_option("--no-stealth", action="store_false",
                          dest="stealth",
                          help="Don't check stealth users for updates")
@@ -428,21 +432,24 @@ def relative_time(timestamp):
     numstr = ". a two three four five six seven eight nine ten".split()
 
     matches = [
-        (60 * 60 * 24 * 365, "year"),
-        (60 * 60 * 24 * 28, "month"),
-        (60 * 60 * 24 * 7, "week"),
-        (60 * 60 * 24, "day"),
-        (60 * 60, "hour"),
-        (60, "minute"),
-        (1, "second"),
+        60 * 60 * 24 * 365,
+        60 * 60 * 24 * 28,
+        60 * 60 * 24 * 7,
+        60 * 60 * 24,
+        60 * 60,
+        60,
+        1,
     ]
+    match_names = ["year", "month", "week", "day", "hour", "minute", "second"]
 
     delta = datetime.datetime.utcnow() - timestamp
     seconds = delta.days * 86400 + delta.seconds
-    for scale, name in matches:
+    for scale in matches:
         i = seconds // scale
         if i:
+            name = match_names[matches.index(scale)]
             break
+
     if i == 1 and name in ("year", "month", "week"):
         result = "last %s" % name
     elif i == 1 and name == "day":
@@ -500,8 +507,8 @@ def format_tweet(text, expand=False):
     'b123 <a href="https://example.com/dunMgV">https://example.com/dunMgV</a>'
     >>> format_tweet("A list @someone/list")
     'A list @<a href="http://twitter.com/someone/list">someone/list</a>'
-    >>> format_tweet("See http://example.com/url-hyphen?and=parms")
-    'See <a href="http://example.com/url-hyphen?and=parms">http://example.com/url-hyphen?and=parms</a>'
+    >>> format_tweet("See http://url-hyphen/?and=parm")
+    'See <a href="http://url-hyphen/?and=parm">http://url-hyphen/?and=parm</a>'
     >>> format_tweet("Handle ampersands & win")
     'Handle ampersands &amp; win'
     >>> format_tweet("entity test, & \\" ' < >")
@@ -524,15 +531,17 @@ def format_tweet(text, expand=False):
     user_match = re.compile(r'@(\w+(/\w+)?)')
     hashtag_match = re.compile(r'(#\w+)')
 
+    base = "http://twitter.com"
+
     if "body-markup" in NOTIFY_SERVER_CAPS:
         if "body-hyperlinks" in NOTIFY_SERVER_CAPS:
             if expand:
                 text = url_match.sub(url_expand, text)
             else:
                 text = url_match.sub(r'<a href="\1">\1</a>', text)
-            text = user_match.sub(r'@<a href="http://twitter.com/\1">\1</a>',
+            text = user_match.sub(r'@<a href="%s/\1">\1</a>' % base,
                                   text)
-            text = hashtag_match.sub(r'<a href="http://twitter.com/search?q=\1">\1</a>',
+            text = hashtag_match.sub(r'<a href="%s/search?q=\1">\1</a>' % base,
                                      text)
         else:
             text = url_match.sub(r'<u>\1</u>', text)
@@ -786,11 +795,13 @@ def display(me, tweets, state, timeout, expand):
         # No tweets awaiting display
         return True
 
+    # pylint: disable-msg=E1101
     note = pynotify.Notification("From %s %s"
                                  % (tweet.user.name,
                                     relative_time(tweet.created_at)),
                                  format_tweet(tweet.text, expand),
                                  get_user_icon(tweet.user))
+    # pylint: enable-msg=E1101
     if "actions" in NOTIFY_SERVER_CAPS:
         note.add_action("default", " ", open_tweet(tweet))
         if not tweet.user.protected:
@@ -807,11 +818,13 @@ def display(me, tweets, state, timeout, expand):
         note.connect_object("closed", NOTIFICATIONS.pop, hash(note))
     note.set_timeout(timeout * 1000)
     note.set_category("im.received")
+    # pylint: disable-msg=E1101
     if me.screen_name.lower() in tweet.text.lower():
         note.set_urgency(pynotify.URGENCY_CRITICAL)
     if tweet.text.lower().startswith(("@%s" % me.screen_name.lower(),
                                       ".@%s" % me.screen_name.lower())):
         note.set_timeout(pynotify.EXPIRES_NEVER)
+    # pylint: enable-msg=E1101
     if not note.show():
         # Fail hard at this point, recovery has little value.
         raise OSError("Notification failed to display!")
@@ -855,7 +868,9 @@ def get_token(auth, fetch, token_file):
     try:
         open_browser(auth.get_authorization_url())
     except tweepy.TweepError:
-        usage_note("Talking to twitter failed.  Is twitter or your network down?")
+        usage_note("Talking to twitter failed. "
+                   "Is twitter or your network down?",
+                   "Network error", fail)
         raise
     usage_note("Authentication request opened in default browser",
                level=success)
@@ -867,7 +882,7 @@ def get_token(auth, fetch, token_file):
 
     hbox = gtk.HBox(False, 8)
     hbox.set_border_width(8)
-    dialog.vbox.pack_start(hbox, False, False, 0)
+    dialog.vbox.pack_start(hbox, False, False, 0)  # pylint: disable-msg=E1101
 
     icon = gtk.image_new_from_file(find_app_icon(uri=False))
     hbox.pack_start(icon, False, False, 0)
@@ -889,7 +904,7 @@ def get_token(auth, fetch, token_file):
     dialog.destroy()
 
     if response == gtk.RESPONSE_OK:
-        for i in range(3):
+        for i in range(3):  # pylint: disable-msg=W0612
             try:
                 token = auth.get_access_token(verifier)
                 break
@@ -914,10 +929,12 @@ def main(argv):
     :return: Shell return value
     """
 
+    # pylint: disable-msg=E1101
     if not pynotify.init(argv[0]):
         print(fail("Unable to initialise pynotify!"))
         return errno.EIO
     NOTIFY_SERVER_CAPS.extend(pynotify.get_server_caps())
+    # pylint: enable-msg=E1101
 
     config_file = "%s/bleeter/config.ini" % glib.get_user_config_dir()
     options = process_command_line(config_file)
@@ -932,7 +949,7 @@ def main(argv):
     if not token:
         return errno.EPERM
 
-    auth.set_access_token(*token)
+    auth.set_access_token(*token)  # pylint: disable-msg=W0142
     api = tweepy.API(auth)
 
     state = State(options.stealth)
@@ -962,7 +979,8 @@ def main(argv):
     try:
         me = api.me()
     except tweepy.TweepError:
-        usage_note("Talking to twitter failed.  Is twitter or your network down?",
+        usage_note("Talking to twitter failed. "
+                   "Is twitter or your network down?",
                    "Network error", fail)
         return errno.EIO
     update(tweets, api, state, options.ignore)
