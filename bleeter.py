@@ -154,6 +154,10 @@ class State(object):
         >>> atexit.register = lambda *args: True
         >>> glib.get_user_data_dir = lambda: "test/xdg_data_home"
 
+        # Make sure there isn't a stale lock from a previous run
+        >>> if os.path.exists("%s/state.db.lock" % glib.get_user_data_dir()):
+        ...     os.unlink("%s/state.db.lock" % glib.get_user_data_dir())
+
         >>> state = State()
         >>> os.path.exists("%s.lock" % state.state_file)
         True
