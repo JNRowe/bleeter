@@ -27,19 +27,19 @@ If you wish to use the URL expansion option for shortened links, you will need
 urlunshort_.
 
 No significant effort has been put in to making ``bleeter`` work with Python 3,
-as a few of the dependencies aren't ported yet.
+as few of the dependencies are ported yet.
 
 Configuration
 -------------
 
 The first time you run ``bleeter`` it will open an authentication link in your
 default web browser and prompt you for the twitter provided PIN.  Should you
-wish, or need to generate a new authentication token you can use the
+wish, or need to generate a new authentication token, you can use the
 ``--get-token`` option.
 
 It is possible to include tweets from users you are not directly following by
 adding them to the configuration file, which should be placed in
-``${XDG_CONFIG_HOME}/bleeter/config.ini``.  Its format should be::
+``${XDG_CONFIG_HOME:-~/.config}/bleeter/config.ini``.  Its format should be::
 
     stealth = NotThatInteresting,Boring
 
@@ -85,16 +85,17 @@ guidelines however, and as such can be broken if the need arises or you just
 want to convince me that your style is better.
 
   * `PEP 8`_, the style guide, should be followed where possible.
-  * While support for Python versions prior to v2.5 may be added in the future
-    if such a need were to arise, you are encouraged to use v2.5 features now.
-  * All new classes and methods should be accompanied by new ``doctest``
-    examples and reStructuredText_ formatted descriptions.
-  * Tests *must not* span network boundaries, see ``test.mock`` for workarounds.
+  * While support for Python versions prior to v2.6 may be added in the future
+    if such a need were to arise, you are encouraged to use v2.6 features now.
+  * All new classes, methods and functions should be accompanied by new
+    ``doctest`` examples and reStructuredText_ formatted descriptions.
+  * Tests *must not* span network boundaries, use of a mocking framework is
+    acceptable.
   * ``doctest`` tests in modules are only for unit testing in general, and
     should not rely on any modules that aren't in Python's standard library.
   * Functional tests should be in the ``doc`` directory in reStructuredText_
     formatted files, with actual tests in ``doctest`` blocks.  Functional tests
-    can depend on external modules, but they must be Open Source.
+    can depend on external modules, but those modules must be Open Source.
 
 New examples for the ``doc`` directory are as appreciated as code changes.
 
@@ -106,8 +107,8 @@ drop me a mail_ or file an issue_.  Locally bugs are managed with ditz_, so if
 you're working with a clone of the repository you can report, list and fix bugs
 using ``ditz``.
 
-If you've found please attempt to include a minimal testcase so I can reproduce
-the problem, or even better a patch!
+If you've found a problem please attempt to include a minimal testcase so I can
+reproduce the problem, or even better a patch!
 
 .. _PEP 8: http://www.python.org/dev/peps/pep-0008/
 .. _reStructuredText: http://docutils.sourceforge.net/rst.html
