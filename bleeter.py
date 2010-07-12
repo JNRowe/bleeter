@@ -110,7 +110,7 @@ class State(object):
         """Initialise a new ``State`` object
 
         # Test mocks
-        >>> atexit.register = lambda *args: True
+        >>> atexit.register = lambda *args, **kwargs: True
         >>> State.orig_create_lock = State.create_lock
         >>> State.create_lock = lambda x: True
         >>> glib.get_user_data_dir = lambda: "test/xdg_data_home"
@@ -136,22 +136,26 @@ class State(object):
 
         self.users = users if users else []
 
+        # Hold previous state, for save handling
+        self._data = {}
+
         self.displayed = collections.defaultdict(lambda: 1)
         self.fetched = collections.defaultdict(lambda: 1)
         if os.path.exists(self.state_file):
             data = json.load(open(self.state_file))
             self.fetched.update(data["fetched"])
+            self.displayed.update(data["fetched"])
             if "user" in data and data["user"] in self.users:
                 for i in range(self.users.index(data["user"])):
                     self.get_user()
 
-        atexit.register(self.save_state)
+        atexit.register(self.save_state, force=True)
 
     def create_lock(self):
         """Create lockfile handler
 
         # Test mocks
-        >>> atexit.register = lambda *args: True
+        >>> atexit.register = lambda *args, **kwargs: True
         >>> glib.get_user_data_dir = lambda: "test/xdg_data_home"
 
         # Make sure there isn't a stale lock from a previous run
@@ -193,11 +197,12 @@ class State(object):
         self.users.append(self.users.pop(0))
         return user
 
-    def save_state(self):
+    def save_state(self, force=False):
         """Seen tweets state saver
 
-        :type users: ``list`` of ``str``
-        :param users: Stealth follow user list
+        :type force: ``bool``
+        :param force: Force update, even if data hasn't changed for mtime
+            promotion
         """
         # Store displayed, not fetched, so we don't miss pending tweets from
         # a previous run
@@ -211,7 +216,9 @@ class State(object):
         if self.users:
             data["user"] = self.get_user()
 
-        json.dump(data, open(self.state_file, "w"), indent=4)
+        if force or not data == self._data:
+            json.dump(data, open(self.state_file, "w"), indent=4)
+        self._data = data
 
 
 class Tweets(dict):
@@ -1057,6 +1064,8 @@ def main(argv):
                              options.timeout, options.expand)
     if options.tray:
         glib.timeout_add_seconds(options.timeout // 2, tooltip, icon, tweets)
+
+    glib.timeout_add_seconds(options.frequency * 2, lambda: state.save_state())
     loop.run()
 
 if __name__ == "__main__":
