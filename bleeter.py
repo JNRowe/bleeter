@@ -456,7 +456,7 @@ def process_command_line(config_file):
         options.stealth = options.stealth.split(",")
     elif options.stealth is False:
         options.stealth = []
-    options.stealth = map(str.lower, options.stealth)
+    options.stealth = sorted(map(str.lower, options.stealth))
     if isinstance(options.ignore, basestring):
         options.ignore = options.ignore.split(",")
     if options.ignore is False:
