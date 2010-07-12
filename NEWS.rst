@@ -6,6 +6,18 @@ User-visible changes
 
 .. contents::
 
+0.6.0 - 2010-07-12
+------------------
+
+    * OAuth_ authentication is now handled inline
+    * pygtk_ is now required
+    * Python_ v2.6, or later release from the v2 branch, is required
+    * URL matching has been improved
+    * Stealth user tweet fetching has been improved, meaning less hits to twitter_
+
+.. _pygtk: http://www.pygtk.org/
+.. _python: http://www.python.org/
+
 0.5.0 - 2010-05-16
 ------------------
 
