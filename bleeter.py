@@ -997,15 +997,16 @@ def main(argv):
     :return: Shell return value
     """
 
+    # Must be ahead of setup, for non-X environments to run --help|--version
+    config_file = "%s/bleeter/config.ini" % glib.get_user_config_dir()
+    options = process_command_line(config_file)
+
     # pylint: disable-msg=E1101
     if not pynotify.init(argv[0]):
         print(fail("Unable to initialise pynotify!"))
         return errno.EIO
     NOTIFY_SERVER_CAPS.extend(pynotify.get_server_caps())
     # pylint: enable-msg=E1101
-
-    config_file = "%s/bleeter/config.ini" % glib.get_user_config_dir()
-    options = process_command_line(config_file)
 
     token_file = "%s/bleeter/oauth_token" % glib.get_user_data_dir()
 
