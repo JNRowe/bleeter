@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -12,12 +14,13 @@
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
         VERSION:     '0.6.0',
-        COLLAPSE_MODINDEX: false,
+        COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
       };
     </script>
     <script type="text/javascript" src="static/jquery.js"></script>
+    <script type="text/javascript" src="static/underscore.js"></script>
     <script type="text/javascript" src="static/doctools.js"></script>
     <link rel="top" title="bleeter v0.6.0 documentation" href="index.html" />
     <link rel="next" title="Configuration" href="configuration.html" />
@@ -39,8 +42,8 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="modindex.html" title="Global Module Index"
-             accesskey="M">modules</a> |</li>
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
         <li class="right" >
           <a href="configuration.html" title="Configuration"
              accesskey="N">next</a> |</li>
@@ -80,7 +83,7 @@ phone, with IRC proxies and an always on server connection to feed it.  It is
 definitely a very cool project though, and I suspect it would quickly become my
 client of choice if I started to &#8220;use&#8221; <a class="reference external" href="http://twitter.com">twitter</a> a lot.</p>
 <p>The obvious answer to all this was to just make a little script to do exactly
-what I wanted... and <a title="Nasty little twitter viewer" class="reference external" href="index.html#module-bleeter"><tt class="xref docutils literal"><span class="pre">bleeter</span></tt></a> was born.  It isn&#8217;t pretty, it isn&#8217;t clean,
+what I wanted... and <a class="reference internal" href="index.html#module-bleeter" title="Nasty little twitter viewer"><tt class="xref py py-mod docutils literal"><span class="pre">bleeter</span></tt></a> was born.  It isn&#8217;t pretty, it isn&#8217;t clean,
 it isn&#8217;t even that useful but it Works For Me™.</p>
 </div>
 
@@ -90,25 +93,25 @@ it isn&#8217;t even that useful but it Works For Me™.</p>
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
-            <h4>Previous topic</h4>
-            <p class="topless"><a href="index.html"
-                                  title="previous chapter"><tt class="docutils literal"><span class="pre">bleeter</span></tt></a></p>
-            <h4>Next topic</h4>
-            <p class="topless"><a href="configuration.html"
-                                  title="next chapter">Configuration</a></p>
-          <div id="searchbox" style="display: none">
-            <h3>Quick search</h3>
-              <form class="search" action="search.html" method="get">
-                <input type="text" name="q" size="18" />
-                <input type="submit" value="Go" />
-                <input type="hidden" name="check_keywords" value="yes" />
-                <input type="hidden" name="area" value="default" />
-              </form>
-              <p class="searchtip" style="font-size: 90%">
-              Enter search terms or a module, class or function name.
-              </p>
-          </div>
-          <script type="text/javascript">$('#searchbox').show(0);</script>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter"><tt class="docutils literal"><span class="pre">bleeter</span></tt></a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="configuration.html"
+                        title="next chapter">Configuration</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -120,7 +123,7 @@ it isn&#8217;t even that useful but it Works For Me™.</p>
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="modindex.html" title="Global Module Index"
+          <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
           <a href="configuration.html" title="Configuration"
@@ -132,8 +135,8 @@ it isn&#8217;t even that useful but it Works For Me™.</p>
       </ul>
     </div>
     <div class="footer">
-      &copy; Copyright 2010, James Rowe.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.7.
+        &copy; Copyright 2010, James Rowe.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.
     </div>
   </body>
 </html>

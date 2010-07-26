@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -12,12 +14,13 @@
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
         VERSION:     '0.6.0',
-        COLLAPSE_MODINDEX: false,
+        COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
       };
     </script>
     <script type="text/javascript" src="static/jquery.js"></script>
+    <script type="text/javascript" src="static/underscore.js"></script>
     <script type="text/javascript" src="static/doctools.js"></script>
     <link rel="top" title="bleeter v0.6.0 documentation" href="index.html" />
     <link rel="next" title="Usage" href="usage.html" />
@@ -39,8 +42,8 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="modindex.html" title="Global Module Index"
-             accesskey="M">modules</a> |</li>
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
         <li class="right" >
           <a href="usage.html" title="Usage"
              accesskey="N">next</a> |</li>
@@ -58,8 +61,8 @@
             
   <div class="section" id="configuration">
 <h1>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h1>
-<p><strong>bleeter</strong> stores its configuration in
-<tt class="docutils literal"><span class="pre">$</span><em><span class="pre">XDG_CONFIG_HOME</span></em><span class="pre">/bleeter/config.ini</span></tt> <a class="footnote-reference" href="#id2" id="id1">[1]</a>.</p>
+<p><strong class="program">bleeter</strong> stores its configuration in
+<tt class="file docutils literal"><span class="pre">$</span><em><span class="pre">XDG_CONFIG_HOME</span></em><span class="pre">/bleeter/config.ini</span></tt> <a class="footnote-reference" href="#id2" id="id1">[1]</a>.</p>
 <p>The configuration file is a simple <tt class="docutils literal"><span class="pre">INI</span></tt> format file,   The file is processed
 with the <a class="reference external" href="http://www.voidspace.org.uk/python/configobj.html">configobj</a> module, the documentation for which will describe some of
 the advanced features available within the configuration file.</p>
@@ -119,36 +122,36 @@ see <a class="reference external" href="http://standards.freedesktop.org/basedir
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
-            <h3><a href="index.html">Table Of Contents</a></h3>
-            <ul>
-<li><a class="reference external" href="#">Configuration</a><ul>
-<li><a class="reference external" href="#frequency-option"><tt class="docutils literal"><span class="pre">frequency</span></tt> option</a></li>
-<li><a class="reference external" href="#timeout-option"><tt class="docutils literal"><span class="pre">timeout</span></tt> option</a></li>
-<li><a class="reference external" href="#stealth-option"><tt class="docutils literal"><span class="pre">stealth</span></tt> option</a></li>
-<li><a class="reference external" href="#ignore-option"><tt class="docutils literal"><span class="pre">ignore</span></tt> option</a></li>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Configuration</a><ul>
+<li><a class="reference internal" href="#frequency-option"><tt class="docutils literal"><span class="pre">frequency</span></tt> option</a></li>
+<li><a class="reference internal" href="#timeout-option"><tt class="docutils literal"><span class="pre">timeout</span></tt> option</a></li>
+<li><a class="reference internal" href="#stealth-option"><tt class="docutils literal"><span class="pre">stealth</span></tt> option</a></li>
+<li><a class="reference internal" href="#ignore-option"><tt class="docutils literal"><span class="pre">ignore</span></tt> option</a></li>
 </ul>
 </li>
 </ul>
 
-            <h4>Previous topic</h4>
-            <p class="topless"><a href="background.html"
-                                  title="previous chapter">Background</a></p>
-            <h4>Next topic</h4>
-            <p class="topless"><a href="usage.html"
-                                  title="next chapter">Usage</a></p>
-          <div id="searchbox" style="display: none">
-            <h3>Quick search</h3>
-              <form class="search" action="search.html" method="get">
-                <input type="text" name="q" size="18" />
-                <input type="submit" value="Go" />
-                <input type="hidden" name="check_keywords" value="yes" />
-                <input type="hidden" name="area" value="default" />
-              </form>
-              <p class="searchtip" style="font-size: 90%">
-              Enter search terms or a module, class or function name.
-              </p>
-          </div>
-          <script type="text/javascript">$('#searchbox').show(0);</script>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="background.html"
+                        title="previous chapter">Background</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="usage.html"
+                        title="next chapter">Usage</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -160,7 +163,7 @@ see <a class="reference external" href="http://standards.freedesktop.org/basedir
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="modindex.html" title="Global Module Index"
+          <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
           <a href="usage.html" title="Usage"
@@ -172,8 +175,8 @@ see <a class="reference external" href="http://standards.freedesktop.org/basedir
       </ul>
     </div>
     <div class="footer">
-      &copy; Copyright 2010, James Rowe.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.7.
+        &copy; Copyright 2010, James Rowe.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.
     </div>
   </body>
 </html>

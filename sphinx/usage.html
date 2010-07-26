@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -12,12 +14,13 @@
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
         VERSION:     '0.6.0',
-        COLLAPSE_MODINDEX: false,
+        COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
       };
     </script>
     <script type="text/javascript" src="static/jquery.js"></script>
+    <script type="text/javascript" src="static/underscore.js"></script>
     <script type="text/javascript" src="static/doctools.js"></script>
     <link rel="top" title="bleeter v0.6.0 documentation" href="index.html" />
     <link rel="next" title="bleeter.py" href="bleeter.1.html" />
@@ -39,8 +42,8 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="modindex.html" title="Global Module Index"
-             accesskey="M">modules</a> |</li>
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
         <li class="right" >
           <a href="bleeter.1.html" title="bleeter.py"
              accesskey="N">next</a> |</li>
@@ -58,11 +61,11 @@
             
   <div class="section" id="usage">
 <h1>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h1>
-<p><strong>bleeter.py</strong> will seek authorisation when initially run.  As <a class="reference external" href="http://twitter.com/">twitter</a>
+<p><strong class="program">bleeter.py</strong> will seek authorisation when initially run.  As <a class="reference external" href="http://twitter.com/">twitter</a>
 uses <a class="reference external" href="http://oauth.net/">OAuth</a> this process is a little more cumbersome than it should be.</p>
 <ul class="simple">
 <li>An authentication link will be opened in your default browser, allowing you to
-sign in to <a class="reference external" href="http://twitter.com/">twitter</a> and declare that you want <strong>bleeter</strong> to have
+sign in to <a class="reference external" href="http://twitter.com/">twitter</a> and declare that you want <strong class="program">bleeter</strong> to have
 access to your account.</li>
 <li>A small dialog window will pop up where you can enter the PIN given to you by
 <a class="reference external" href="http://twitter.com/">twitter</a>.</li>
@@ -77,72 +80,86 @@ $ rm ${XDG_DATA_HOME:-~/.local}/bleeter/oauth_token</pre>
 <dl class="cmdoption">
 <dt id="cmdoption-bleeter.py--version">
 <tt class="descname">--version</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-bleeter.py--version" title="Permalink to this definition">¶</a></dt>
-<dd>show program&#8217;s version number and exit</dd></dl>
+<dd><p>show program&#8217;s version number and exit</p>
+</dd></dl>
 
 <dl class="cmdoption">
 <dt id="cmdoption-bleeter.py-h">
 <tt class="descname">-h</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--help</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-bleeter.py-h" title="Permalink to this definition">¶</a></dt>
-<dd>show this help message and exit</dd></dl>
+<dd><p>show this help message and exit</p>
+</dd></dl>
 
 <dl class="cmdoption">
 <dt id="cmdoption-bleeter.py-t">
 <tt class="descname">-t</tt><tt class="descclassname"> &lt;n&gt;</tt><tt class="descclassname">, </tt><tt class="descname">--timeout</tt><tt class="descclassname">=&lt;n&gt;</tt><a class="headerlink" href="#cmdoption-bleeter.py-t" title="Permalink to this definition">¶</a></dt>
-<dd>timeout for notification popups in seconds</dd></dl>
+<dd><p>timeout for notification popups in seconds</p>
+</dd></dl>
 
 <dl class="cmdoption">
 <dt id="cmdoption-bleeter.py-f">
 <tt class="descname">-f</tt><tt class="descclassname"> &lt;n&gt;</tt><tt class="descclassname">, </tt><tt class="descname">--frequency</tt><tt class="descclassname">=&lt;n&gt;</tt><a class="headerlink" href="#cmdoption-bleeter.py-f" title="Permalink to this definition">¶</a></dt>
-<dd>update frequency in in seconds</dd></dl>
+<dd><p>update frequency in in seconds</p>
+</dd></dl>
 
 <dl class="cmdoption">
 <dt id="cmdoption-bleeter.py-g">
 <tt class="descname">-g</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--get-token</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-bleeter.py-g" title="Permalink to this definition">¶</a></dt>
-<dd>generate a new OAuth token for twitter</dd></dl>
+<dd><p>generate a new OAuth token for twitter</p>
+</dd></dl>
 
 <dl class="cmdoption">
 <dt id="cmdoption-bleeter.py-s">
 <tt class="descname">-s</tt><tt class="descclassname"> ewornj</tt><tt class="descclassname">, </tt><tt class="descname">--stealth</tt><tt class="descclassname">=ewornj</tt><a class="headerlink" href="#cmdoption-bleeter.py-s" title="Permalink to this definition">¶</a></dt>
-<dd>users to watch without following(comma separated)</dd></dl>
+<dd><p>users to watch without following(comma separated)</p>
+</dd></dl>
 
 <dl class="cmdoption">
 <dt id="cmdoption-bleeter.py--no-stealth">
 <tt class="descname">--no-stealth</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-bleeter.py--no-stealth" title="Permalink to this definition">¶</a></dt>
-<dd>don&#8217;t check stealth users for updates</dd></dl>
+<dd><p>don&#8217;t check stealth users for updates</p>
+</dd></dl>
 
 <dl class="cmdoption">
 <dt id="cmdoption-bleeter.py-i">
 <tt class="descname">-i</tt><tt class="descclassname"> &quot;#nowplaying&quot;</tt><tt class="descclassname">, </tt><tt class="descname">--ignore</tt><tt class="descclassname"> &quot;#nowplaying&quot;</tt><a class="headerlink" href="#cmdoption-bleeter.py-i" title="Permalink to this definition">¶</a></dt>
-<dd>keywords to ignore in tweets(comma separated)</dd></dl>
+<dd><p>keywords to ignore in tweets(comma separated)</p>
+</dd></dl>
 
 <dl class="cmdoption">
 <dt id="cmdoption-bleeter.py--no-ignore">
 <tt class="descname">--no-ignore</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-bleeter.py--no-ignore" title="Permalink to this definition">¶</a></dt>
-<dd>don&#8217;t test for ignore keywords</dd></dl>
+<dd><p>don&#8217;t test for ignore keywords</p>
+</dd></dl>
 
 <dl class="cmdoption">
 <dt id="cmdoption-bleeter.py--no-tray">
 <tt class="descname">--no-tray</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-bleeter.py--no-tray" title="Permalink to this definition">¶</a></dt>
-<dd>disable the system tray icon</dd></dl>
+<dd><p>disable the system tray icon</p>
+</dd></dl>
 
 <dl class="cmdoption">
 <dt id="cmdoption-bleeter.py-e">
 <tt class="descname">-e</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--expand</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-bleeter.py-e" title="Permalink to this definition">¶</a></dt>
-<dd>expand links in tweets</dd></dl>
+<dd><p>expand links in tweets</p>
+</dd></dl>
 
 <dl class="cmdoption">
 <dt id="cmdoption-bleeter.py--no-expand">
 <tt class="descname">--no-expand</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-bleeter.py--no-expand" title="Permalink to this definition">¶</a></dt>
-<dd>don&#8217;t expand links in tweets</dd></dl>
+<dd><p>don&#8217;t expand links in tweets</p>
+</dd></dl>
 
 <dl class="cmdoption">
 <dt id="cmdoption-bleeter.py-v">
 <tt class="descname">-v</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--verbose</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-bleeter.py-v" title="Permalink to this definition">¶</a></dt>
-<dd>produce verbose output</dd></dl>
+<dd><p>produce verbose output</p>
+</dd></dl>
 
 <dl class="cmdoption">
 <dt id="cmdoption-bleeter.py-q">
 <tt class="descname">-q</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--quiet</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-bleeter.py-q" title="Permalink to this definition">¶</a></dt>
-<dd>output only results and errors</dd></dl>
+<dd><p>output only results and errors</p>
+</dd></dl>
 
 </div>
 </div>
@@ -153,33 +170,33 @@ $ rm ${XDG_DATA_HOME:-~/.local}/bleeter/oauth_token</pre>
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
-            <h3><a href="index.html">Table Of Contents</a></h3>
-            <ul>
-<li><a class="reference external" href="#">Usage</a><ul>
-<li><a class="reference external" href="#options">Options</a></li>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Usage</a><ul>
+<li><a class="reference internal" href="#options">Options</a></li>
 </ul>
 </li>
 </ul>
 
-            <h4>Previous topic</h4>
-            <p class="topless"><a href="configuration.html"
-                                  title="previous chapter">Configuration</a></p>
-            <h4>Next topic</h4>
-            <p class="topless"><a href="bleeter.1.html"
-                                  title="next chapter">bleeter.py</a></p>
-          <div id="searchbox" style="display: none">
-            <h3>Quick search</h3>
-              <form class="search" action="search.html" method="get">
-                <input type="text" name="q" size="18" />
-                <input type="submit" value="Go" />
-                <input type="hidden" name="check_keywords" value="yes" />
-                <input type="hidden" name="area" value="default" />
-              </form>
-              <p class="searchtip" style="font-size: 90%">
-              Enter search terms or a module, class or function name.
-              </p>
-          </div>
-          <script type="text/javascript">$('#searchbox').show(0);</script>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="configuration.html"
+                        title="previous chapter">Configuration</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="bleeter.1.html"
+                        title="next chapter">bleeter.py</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -191,7 +208,7 @@ $ rm ${XDG_DATA_HOME:-~/.local}/bleeter/oauth_token</pre>
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="modindex.html" title="Global Module Index"
+          <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
           <a href="bleeter.1.html" title="bleeter.py"
@@ -203,8 +220,8 @@ $ rm ${XDG_DATA_HOME:-~/.local}/bleeter/oauth_token</pre>
       </ul>
     </div>
     <div class="footer">
-      &copy; Copyright 2010, James Rowe.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.7.
+        &copy; Copyright 2010, James Rowe.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.
     </div>
   </body>
 </html>

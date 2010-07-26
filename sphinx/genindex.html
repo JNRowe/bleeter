@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -12,12 +14,13 @@
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
         VERSION:     '0.6.0',
-        COLLAPSE_MODINDEX: false,
+        COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
       };
     </script>
     <script type="text/javascript" src="static/jquery.js"></script>
+    <script type="text/javascript" src="static/underscore.js"></script>
     <script type="text/javascript" src="static/doctools.js"></script>
     <link rel="top" title="bleeter v0.6.0 documentation" href="index.html" />
     <style type="text/css">
@@ -37,8 +40,8 @@
           <a href="#" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="modindex.html" title="Global Module Index"
-             accesskey="M">modules</a> |</li>
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
         <li><a href="index.html">bleeter v0.6.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
@@ -51,96 +54,98 @@
 
    <h1 id="index">Index</h1>
 
+   <div class="genindex-jumpbox">
    <a href="#Symbols"><strong>Symbols</strong></a> | <a href="#B"><strong>B</strong></a> 
-
-   <hr />
-
-   
+   </div>
 <h2 id="Symbols">Symbols</h2>
-<table width="100%" class="indextable"><tr><td width="33%" valign="top">
-<dl>
-
-<dt>--no-expand</dt>
-  <dd><dl>
-    <dt><a href="usage.html#cmdoption-bleeter.py--no-expand">bleeter.py command line option</a></dt>
+<table width="100%" class="indextable genindextable"><tr>
+  <td width="33%" valign="top"><dl>
+    <dt>--no-expand</dt>
+    <dd><dl>
+      <dt><a href="usage.html#cmdoption-bleeter.py--no-expand">bleeter.py command line option</a></dt>
   </dl></dd>
-<dt>--no-ignore</dt>
-  <dd><dl>
-    <dt><a href="usage.html#cmdoption-bleeter.py--no-ignore">bleeter.py command line option</a></dt>
+    <dt>--no-ignore</dt>
+    <dd><dl>
+      <dt><a href="usage.html#cmdoption-bleeter.py--no-ignore">bleeter.py command line option</a></dt>
   </dl></dd>
-<dt>--no-stealth</dt>
-  <dd><dl>
-    <dt><a href="usage.html#cmdoption-bleeter.py--no-stealth">bleeter.py command line option</a></dt>
+    <dt>--no-stealth</dt>
+    <dd><dl>
+      <dt><a href="usage.html#cmdoption-bleeter.py--no-stealth">bleeter.py command line option</a></dt>
   </dl></dd>
-<dt>--no-tray</dt>
-  <dd><dl>
-    <dt><a href="usage.html#cmdoption-bleeter.py--no-tray">bleeter.py command line option</a></dt>
+    <dt>--no-tray</dt>
+    <dd><dl>
+      <dt><a href="usage.html#cmdoption-bleeter.py--no-tray">bleeter.py command line option</a></dt>
   </dl></dd>
-<dt>--version</dt>
-  <dd><dl>
-    <dt><a href="usage.html#cmdoption-bleeter.py--version">bleeter.py command line option</a></dt>
+    <dt>--version</dt>
+    <dd><dl>
+      <dt><a href="usage.html#cmdoption-bleeter.py--version">bleeter.py command line option</a></dt>
   </dl></dd>
-<dt>-e, --expand</dt>
-  <dd><dl>
-    <dt><a href="usage.html#cmdoption-bleeter.py-e">bleeter.py command line option</a></dt>
+    <dt>-e, --expand</dt>
+    <dd><dl>
+      <dt><a href="usage.html#cmdoption-bleeter.py-e">bleeter.py command line option</a></dt>
   </dl></dd>
-<dt>-f &lt;n&gt;, --frequency=&lt;n&gt;</dt>
-  <dd><dl>
-    <dt><a href="usage.html#cmdoption-bleeter.py-f">bleeter.py command line option</a></dt>
+    <dt>-f &lt;n&gt;, --frequency=&lt;n&gt;</dt>
+    <dd><dl>
+      <dt><a href="usage.html#cmdoption-bleeter.py-f">bleeter.py command line option</a></dt>
   </dl></dd>
-<dt>-g, --get-token</dt>
-  <dd><dl>
-    <dt><a href="usage.html#cmdoption-bleeter.py-g">bleeter.py command line option</a></dt>
-  </dl></dd></dl></td><td width="33%" valign="top"><dl>
-<dt>-h, --help</dt>
-  <dd><dl>
-    <dt><a href="usage.html#cmdoption-bleeter.py-h">bleeter.py command line option</a></dt>
+</dl></td>
+  <td width="33%" valign="top"><dl>
+    <dt>-g, --get-token</dt>
+    <dd><dl>
+      <dt><a href="usage.html#cmdoption-bleeter.py-g">bleeter.py command line option</a></dt>
   </dl></dd>
-<dt>-i &#34;#nowplaying&#34;, --ignore &#34;#nowplaying&#34;</dt>
-  <dd><dl>
-    <dt><a href="usage.html#cmdoption-bleeter.py-i">bleeter.py command line option</a></dt>
+    <dt>-h, --help</dt>
+    <dd><dl>
+      <dt><a href="usage.html#cmdoption-bleeter.py-h">bleeter.py command line option</a></dt>
   </dl></dd>
-<dt>-q, --quiet</dt>
-  <dd><dl>
-    <dt><a href="usage.html#cmdoption-bleeter.py-q">bleeter.py command line option</a></dt>
+    <dt>-i &#34;#nowplaying&#34;, --ignore &#34;#nowplaying&#34;</dt>
+    <dd><dl>
+      <dt><a href="usage.html#cmdoption-bleeter.py-i">bleeter.py command line option</a></dt>
   </dl></dd>
-<dt>-s ewornj, --stealth=ewornj</dt>
-  <dd><dl>
-    <dt><a href="usage.html#cmdoption-bleeter.py-s">bleeter.py command line option</a></dt>
+    <dt>-q, --quiet</dt>
+    <dd><dl>
+      <dt><a href="usage.html#cmdoption-bleeter.py-q">bleeter.py command line option</a></dt>
   </dl></dd>
-<dt>-t &lt;n&gt;, --timeout=&lt;n&gt;</dt>
-  <dd><dl>
-    <dt><a href="usage.html#cmdoption-bleeter.py-t">bleeter.py command line option</a></dt>
+    <dt>-s ewornj, --stealth=ewornj</dt>
+    <dd><dl>
+      <dt><a href="usage.html#cmdoption-bleeter.py-s">bleeter.py command line option</a></dt>
   </dl></dd>
-<dt>-v, --verbose</dt>
-  <dd><dl>
-    <dt><a href="usage.html#cmdoption-bleeter.py-v">bleeter.py command line option</a></dt>
+    <dt>-t &lt;n&gt;, --timeout=&lt;n&gt;</dt>
+    <dd><dl>
+      <dt><a href="usage.html#cmdoption-bleeter.py-t">bleeter.py command line option</a></dt>
   </dl></dd>
-</dl></td></tr></table>
+    <dt>-v, --verbose</dt>
+    <dd><dl>
+      <dt><a href="usage.html#cmdoption-bleeter.py-v">bleeter.py command line option</a></dt>
+  </dl></dd>
+</dl></td>
+</tr></table>
 
 <h2 id="B">B</h2>
-<table width="100%" class="indextable"><tr><td width="33%" valign="top">
-<dl>
-
-<dt><a href="index.html#module-bleeter">bleeter (module)</a></dt>
-<dt>bleeter.py command line option</dt>
-  <dd><dl>
-    <dt><a href="usage.html#cmdoption-bleeter.py--no-expand">--no-expand</a></dt>
-    <dt><a href="usage.html#cmdoption-bleeter.py--no-ignore">--no-ignore</a></dt>
-    <dt><a href="usage.html#cmdoption-bleeter.py--no-stealth">--no-stealth</a></dt>
-    <dt><a href="usage.html#cmdoption-bleeter.py--no-tray">--no-tray</a></dt>
-    <dt><a href="usage.html#cmdoption-bleeter.py--version">--version</a></dt>
-    <dt><a href="usage.html#cmdoption-bleeter.py-e">-e, --expand</a></dt>
-    <dt><a href="usage.html#cmdoption-bleeter.py-f">-f &lt;n&gt;, --frequency=&lt;n&gt;</a></dt>
-    <dt><a href="usage.html#cmdoption-bleeter.py-g">-g, --get-token</a></dt>
-    <dt><a href="usage.html#cmdoption-bleeter.py-h">-h, --help</a></dt>
-    <dt><a href="usage.html#cmdoption-bleeter.py-i">-i &#34;#nowplaying&#34;, --ignore &#34;#nowplaying&#34;</a></dt>
-    <dt><a href="usage.html#cmdoption-bleeter.py-q">-q, --quiet</a></dt>
-    <dt><a href="usage.html#cmdoption-bleeter.py-s">-s ewornj, --stealth=ewornj</a></dt>
-    <dt><a href="usage.html#cmdoption-bleeter.py-t">-t &lt;n&gt;, --timeout=&lt;n&gt;</a></dt>
-    <dt><a href="usage.html#cmdoption-bleeter.py-v">-v, --verbose</a></dt>
-  </dl></dd></dl></td><td width="33%" valign="top"><dl>
-</dl></td></tr></table>
+<table width="100%" class="indextable genindextable"><tr>
+  <td width="33%" valign="top"><dl>
+    <dt><a href="index.html#module-bleeter">bleeter (module)</a></dt>
+</dl></td>
+  <td width="33%" valign="top"><dl>
+    <dt>bleeter.py command line option</dt>
+    <dd><dl>
+      <dt><a href="usage.html#cmdoption-bleeter.py--no-expand">--no-expand</a></dt>
+      <dt><a href="usage.html#cmdoption-bleeter.py--no-ignore">--no-ignore</a></dt>
+      <dt><a href="usage.html#cmdoption-bleeter.py--no-stealth">--no-stealth</a></dt>
+      <dt><a href="usage.html#cmdoption-bleeter.py--no-tray">--no-tray</a></dt>
+      <dt><a href="usage.html#cmdoption-bleeter.py--version">--version</a></dt>
+      <dt><a href="usage.html#cmdoption-bleeter.py-e">-e, --expand</a></dt>
+      <dt><a href="usage.html#cmdoption-bleeter.py-f">-f &lt;n&gt;, --frequency=&lt;n&gt;</a></dt>
+      <dt><a href="usage.html#cmdoption-bleeter.py-g">-g, --get-token</a></dt>
+      <dt><a href="usage.html#cmdoption-bleeter.py-h">-h, --help</a></dt>
+      <dt><a href="usage.html#cmdoption-bleeter.py-i">-i &#34;#nowplaying&#34;, --ignore &#34;#nowplaying&#34;</a></dt>
+      <dt><a href="usage.html#cmdoption-bleeter.py-q">-q, --quiet</a></dt>
+      <dt><a href="usage.html#cmdoption-bleeter.py-s">-s ewornj, --stealth=ewornj</a></dt>
+      <dt><a href="usage.html#cmdoption-bleeter.py-t">-t &lt;n&gt;, --timeout=&lt;n&gt;</a></dt>
+      <dt><a href="usage.html#cmdoption-bleeter.py-v">-v, --verbose</a></dt>
+  </dl></dd>
+</dl></td>
+</tr></table>
 
 
 
@@ -152,19 +157,19 @@
 
    
 
-          <div id="searchbox" style="display: none">
-            <h3>Quick search</h3>
-              <form class="search" action="search.html" method="get">
-                <input type="text" name="q" size="18" />
-                <input type="submit" value="Go" />
-                <input type="hidden" name="check_keywords" value="yes" />
-                <input type="hidden" name="area" value="default" />
-              </form>
-              <p class="searchtip" style="font-size: 90%">
-              Enter search terms or a module, class or function name.
-              </p>
-          </div>
-          <script type="text/javascript">$('#searchbox').show(0);</script>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -176,14 +181,14 @@
           <a href="#" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="modindex.html" title="Global Module Index"
+          <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li><a href="index.html">bleeter v0.6.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-      &copy; Copyright 2010, James Rowe.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.7.
+        &copy; Copyright 2010, James Rowe.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.
     </div>
   </body>
 </html>
