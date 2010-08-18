@@ -92,3 +92,12 @@ releases:
     - James Rowe <jnrowe@gmail.com>
     - created
     - ""
+- !ditz.rubyforge.org,2008-03-06/release 
+  name: bluesky
+  status: :unreleased
+  release_time: 
+  log_events: 
+  - - 2010-08-18 19:05:07.799737 Z
+    - James Rowe <jnrowe@gmail.com>
+    - created
+    - Things that would perhaps be nice to have at some point.
