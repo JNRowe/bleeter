@@ -1,0 +1,22 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: Maximum tweets fetched by twitter limited to 200.
+desc: |-
+  See http://dev.twitter.com/doc/get/statuses/home_timeline for official twitter
+  docs.
+type: :bugfix
+component: bleeter
+release: 
+reporter: "Leal H\xC3\xA9tu"
+status: :unstarted
+disposition: 
+creation_time: 2010-08-27 23:52:57.971811 Z
+references: []
+
+id: eb59bc841c46e960f9f8b30b09b107f8160b3087
+log_events: 
+- - 2010-08-27 23:52:57.971811 Z
+  - "Leal H\xC3\xA9tu"
+  - created
+  - ""
+claimer: 
+git_branch: 
