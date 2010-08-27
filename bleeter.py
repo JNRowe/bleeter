@@ -820,7 +820,7 @@ def update_stealth(tweets, api, state, count, ignore):
     :type api: ``tweepy.api.API``
     :param api: Authenticated ``tweepy.api.API`` object
     :type state: ``State``
-    :param seen: Application state
+    :param state: Application state
     :type count: ``int``
     :param count: Number of new tweets to fetch
     :type ignore: ``list`` of ``str``
