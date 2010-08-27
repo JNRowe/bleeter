@@ -54,7 +54,6 @@ OPTIONS
     keywords to ignore in tweets(comma separated)
 
 --no-ignore
-
     don't test for ignore keywords
 
 --no-tray
