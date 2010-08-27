@@ -66,6 +66,9 @@ OPTIONS
 --no-expand
     don't expand links in tweets
 
+--count **n**
+    maximum number of tweets to fetch
+
 -v, --verbose
     produce verbose output
 

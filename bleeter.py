@@ -380,7 +380,7 @@ def process_command_line(config_file):
             if value < 60:
                 raise optparse.OptionValueError("%s must be at least 60"
                                                 % opt_str)
-        elif option.dest == "timeout":
+        elif option.dest in ("count", "timeout"):
             if value < 1:
                 raise optparse.OptionValueError("%s must be at least 1"
                                                 % opt_str)
@@ -395,6 +395,7 @@ def process_command_line(config_file):
         "ignore = list(default=list('#nowplaying'))",
         "tray = boolean(default=True)",
         "expand = boolean(default=False)",
+        "count = integer(min=1, default=20)",
     ]
     config = configobj.ConfigObj(config_file, configspec=config_spec)
     results = config.validate(validate.Validator())
@@ -412,7 +413,8 @@ def process_command_line(config_file):
                         stealth=config.get("stealth"),
                         ignore=config.get("ignore"),
                         tray=config.get("tray"),
-                        expand=config.get("expand"))
+                        expand=config.get("expand"),
+                        count=config.get("count"))
 
     parser.add_option("-t", "--timeout", action="callback", type="int",
                       metavar=config["timeout"],
@@ -449,6 +451,9 @@ def process_command_line(config_file):
                           help="Expand links in tweets")
     tweet_opts.add_option("--no-expand", action="store_false",
                           dest="expand", help="Don't expand links in tweets")
+    tweet_opts.add_option("--count", action="callback", type="int",
+                          metavar=config["count"], callback=check_value,
+                          help="Maximum number of tweets to fetch")
 
     parser.add_option("--no-tray", action="store_false",
                       dest="tray", help="Disable systray icon")
@@ -770,7 +775,7 @@ def skip_check(ignore):
     return wrapper
 
 
-def update(tweets, api, state, ignore):
+def update(tweets, api, state, count, ignore):
     """Fetch new tweets for the authenticated user
 
     :type tweets: ``Tweets``
@@ -779,6 +784,8 @@ def update(tweets, api, state, ignore):
     :param api: Authenticated ``tweepy.api.API`` object
     :type state: ``State``
     :param state: Bleeter state
+    :type count: ``int``
+    :param count: Number of new tweets to fetch
     :type ignore: ``list`` of ``str``
     :param ignore: List of words to trigger tweet skipping
     :rtype: ``True``
@@ -787,8 +794,8 @@ def update(tweets, api, state, ignore):
 
     old_seen = state.fetched["self-status"]
     try:
-        new_tweets = api.home_timeline(since_id=old_seen)
-        new_tweets.extend(api.mentions(since_id=old_seen))
+        new_tweets = api.home_timeline(since_id=old_seen, count=count)
+        new_tweets.extend(api.mentions(since_id=old_seen, count=count))
     except tweepy.TweepError:
         usage_note("Fetching user data failed", level=fail)
         # Still return True, so we re-enter the loop
@@ -802,7 +809,7 @@ def update(tweets, api, state, ignore):
     return True
 
 
-def update_stealth(tweets, api, state, ignore):
+def update_stealth(tweets, api, state, count, ignore):
     """Fetch new tweets for a stealth watched user
 
     We only fetch new tweets for a single user on each run, fetching each
@@ -814,6 +821,8 @@ def update_stealth(tweets, api, state, ignore):
     :param api: Authenticated ``tweepy.api.API`` object
     :type state: ``State``
     :param seen: Application state
+    :type count: ``int``
+    :param count: Number of new tweets to fetch
     :type ignore: ``list`` of ``str``
     :param ignore: List of words to trigger tweet skipping
     :rtype: ``True``
@@ -824,7 +833,7 @@ def update_stealth(tweets, api, state, ignore):
 
     old_seen = state.fetched[user]
     try:
-        new_tweets = api.user_timeline(user, since_id=old_seen)
+        new_tweets = api.user_timeline(user, since_id=old_seen, count=count)
     except tweepy.TweepError:
         usage_note("Data for `%s' not available" % user,
                    "Fetching user data failed", fail)
@@ -1052,14 +1061,14 @@ def main(argv):
                    "Is twitter or your network down?",
                    "Network error", fail)
         return errno.EIO
-    update(tweets, api, state, options.ignore)
+    update(tweets, api, state, options.count, options.ignore)
 
     glib.timeout_add_seconds(options.frequency, update, tweets, api, state,
-                             options.ignore)
+                             options.count, options.ignore)
     if options.stealth:
         glib.timeout_add_seconds(options.frequency / len(options.stealth) * 10,
                                  update_stealth, tweets, api, state,
-                                 options.ignore)
+                                 options.count, options.ignore)
 
     glib.timeout_add_seconds(options.timeout + 1, display, me, tweets, state,
                              options.timeout, options.expand)

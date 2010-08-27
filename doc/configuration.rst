@@ -58,9 +58,20 @@ people like to produce.
 The entries should be comma separated, and must be quoted if they contain '#'
 to match hashtags.
 
+``count`` option
+''''''''''''''''
+
+The ``count`` option allows you to specify the maximum number of new statuses to
+fetch when updating.  Only new tweets are fetched, so specifying large values
+here only affects initial runs and users who do not run ``bleeter`` very often.
+
+By default twitter_ returns 20 new statuses, and this is also the default setting
+for ``bleeter``
+
 .. [#] The default value for ``${XDG_CONFIG_HOME}`` is system dependent, but
        likely to be ``~/.config`` if you haven't set it.  For more information
        see `XDG base directory specification`_.
 
 .. _configobj: http://www.voidspace.org.uk/python/configobj.html
 .. _XDG base directory specification: http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
+.. _twitter: http://twitter.com/

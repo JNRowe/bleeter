@@ -69,6 +69,10 @@ Options
 
    don't expand links in tweets
 
+.. cmdoption:: --count
+
+   maximum number of tweets to fetch
+
 .. cmdoption:: -v, --verbose
 
    produce verbose output
