@@ -66,7 +66,7 @@ fetch when updating.  Only new tweets are fetched, so specifying large values
 here only affects initial runs and users who do not run ``bleeter`` very often.
 
 By default twitter_ returns 20 new statuses, and this is also the default setting
-for ``bleeter``
+for ``bleeter``.  twitter_ sets a limit of 200 statuses.
 
 .. [#] The default value for ``${XDG_CONFIG_HOME}`` is system dependent, but
        likely to be ``~/.config`` if you haven't set it.  For more information

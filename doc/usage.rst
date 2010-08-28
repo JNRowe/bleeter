@@ -71,7 +71,7 @@ Options
 
 .. cmdoption:: --count
 
-   maximum number of tweets to fetch
+   maximum number of tweets to fetch(max 200)
 
 .. cmdoption:: -v, --verbose
 

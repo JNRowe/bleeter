@@ -384,6 +384,10 @@ def process_command_line(config_file):
             if value < 1:
                 raise optparse.OptionValueError("%s must be at least 1"
                                                 % opt_str)
+        elif option.dest == "count":
+            if value > 200:
+                raise optparse.OptionValueError("%s must be less than 200"
+                                                % opt_str)
         else:
             raise optparse.BadOptionError("%s unknown option to check"
                                           % opt_str)
@@ -395,7 +399,7 @@ def process_command_line(config_file):
         "ignore = list(default=list('#nowplaying'))",
         "tray = boolean(default=True)",
         "expand = boolean(default=False)",
-        "count = integer(min=1, default=20)",
+        "count = integer(min=1, max=200, default=20)",
     ]
     config = configobj.ConfigObj(config_file, configspec=config_spec)
     results = config.validate(validate.Validator())

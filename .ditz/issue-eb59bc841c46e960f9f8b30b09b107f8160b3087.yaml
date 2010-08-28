@@ -5,10 +5,10 @@ desc: |-
   docs.
 type: :bugfix
 component: bleeter
-release: 
+release: 0.7.0
 reporter: "Leal H\xC3\xA9tu"
-status: :unstarted
-disposition: 
+status: :closed
+disposition: :fixed
 creation_time: 2010-08-27 23:52:57.971811 Z
 references: []
 
@@ -18,5 +18,17 @@ log_events:
   - "Leal H\xC3\xA9tu"
   - created
   - ""
-claimer: 
+- - 2010-08-28 00:01:32.895893 Z
+  - James Rowe <jnrowe@gmail.com>
+  - changed status from unstarted to in_progress
+  - ""
+- - 2010-08-28 00:01:35.487910 Z
+  - James Rowe <jnrowe@gmail.com>
+  - issue claimed
+  - ""
+- - 2010-08-28 00:06:04.915846 Z
+  - James Rowe <jnrowe@gmail.com>
+  - closed with disposition fixed
+  - ""
+claimer: James Rowe <jnrowe@gmail.com>
 git_branch: 

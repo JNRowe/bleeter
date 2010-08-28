@@ -64,6 +64,7 @@ I'd like to thank the following people who have contributed to ``bleeter``.
 Bug reports
 '''''''''''
 
+* Leal Hétu
 * Leon Bird
 * Matt Leighy
 * Rachel Holmes
