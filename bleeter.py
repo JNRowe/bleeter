@@ -977,6 +977,9 @@ def display(me, tweets, state, timeout, expand):
         note.connect_object("closed", NOTIFICATIONS.pop, hash(note))
     note.set_timeout(timeout * 1000)
     note.set_category("im.received")
+    # If we cared about these users they'd be followed, not listed
+    if hasattr(tweet, "from_list"):
+        note.set_urgency(pynotify.URGENCY_LOW)
     # pylint: disable-msg=E1101
     if me.screen_name.lower() in tweet.text.lower():
         note.set_urgency(pynotify.URGENCY_CRITICAL)
