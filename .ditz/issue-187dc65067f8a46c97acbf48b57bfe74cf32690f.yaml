@@ -1,0 +1,22 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: Refuse to load unsupported state file formats.
+desc: |-
+  Equally importantly this will stop bleeter overwriting newer state files, with
+  the older format.
+type: :bugfix
+component: bleeter
+release: 0.7.0
+reporter: James Rowe <jnrowe@gmail.com>
+status: :unstarted
+disposition: 
+creation_time: 2010-08-29 05:39:03.823892 Z
+references: []
+
+id: 187dc65067f8a46c97acbf48b57bfe74cf32690f
+log_events: 
+- - 2010-08-29 05:39:04.343777 Z
+  - James Rowe <jnrowe@gmail.com>
+  - created
+  - ""
+claimer: 
+git_branch: 
