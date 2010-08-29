@@ -411,11 +411,14 @@ def process_command_line(config_file):
             if value < 60:
                 raise optparse.OptionValueError("%s must be at least 60"
                                                 % opt_str)
-        elif option.dest in ("count", "timeout"):
+        elif option.dest in "timeout":
             if value < 1:
                 raise optparse.OptionValueError("%s must be at least 1"
                                                 % opt_str)
         elif option.dest == "count":
+            if value < 1:
+                raise optparse.OptionValueError("%s must be at least 1"
+                                                % opt_str)
             if value > 200:
                 raise optparse.OptionValueError("%s must be less than 200"
                                                 % opt_str)
