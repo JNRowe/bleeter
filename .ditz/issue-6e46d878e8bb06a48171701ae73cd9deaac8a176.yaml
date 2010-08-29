@@ -1,0 +1,30 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: Dump state to a new file, and rename if successful.
+desc: |-
+  The current state dumping code will leave a partially written, and therefore
+  unreadable, state 
+  
+  Check for TypeError, for JSON dumping problems.
+type: :bugfix
+component: bleeter
+release: 0.7.0
+reporter: James Rowe <jnrowe@gmail.com>
+status: :unstarted
+disposition: 
+creation_time: 2010-08-29 05:49:55.167860 Z
+references: []
+
+id: 6e46d878e8bb06a48171701ae73cd9deaac8a176
+log_events: 
+- - 2010-08-29 05:49:56.807777 Z
+  - James Rowe <jnrowe@gmail.com>
+  - created
+  - ""
+- - 2010-08-29 05:51:07.161767 Z
+  - James Rowe <jnrowe@gmail.com>
+  - commented
+  - |-
+    Or possibly dump to stream first, and then write.  The dump and rename isn't
+    necessary.
+claimer: 
+git_branch: 
