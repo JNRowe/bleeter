@@ -73,6 +73,14 @@ Options
 
    maximum number of tweets to fetch(max 200)
 
+.. cmdoption:: --lists
+
+   fetch user's lists
+
+.. cmdoption:: --no-lists
+
+   don't fetch user's lists
+
 .. cmdoption:: -v, --verbose
 
    produce verbose output
