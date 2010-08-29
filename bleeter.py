@@ -239,8 +239,9 @@ class State(object):
             data["user"] = self.get_user()
 
         for list_ in self.lists:
-            if list_.name in self.displayed:
-                data["fetched"]["list-%s" % list_.name] = self.displayed["user"]
+            name = "list-%s" % list_.name
+            if name in self.displayed:
+                data["fetched"][name] = self.displayed[name]
         if self.lists:
             data["list"] = self.get_list().name
 
