@@ -245,7 +245,9 @@ class State(object):
             data["list"] = self.get_list().name
 
         if force or not data == self._data:
-            json.dump(data, open(self.state_file, "w"), indent=4)
+            state_dump = json.dumps(data, indent=4)
+            open(self.state_file, "w").write(state_dump)
+
         self._data = data
 
 
