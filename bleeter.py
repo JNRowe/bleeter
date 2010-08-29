@@ -147,14 +147,17 @@ class State(object):
         self.fetched = collections.defaultdict(lambda: 1)
         if os.path.exists(self.state_file):
             data = json.load(open(self.state_file))
-            self.fetched.update(data["fetched"])
-            self.displayed.update(data["fetched"])
-            if "user" in data and data["user"] in self.users:
-                for i in range(self.users.index(data["user"])):
-                    self.get_user()
-            if "list" in data and data["list"] in self.lists:
-                for i in range(self.lists.index(data["list"])):
-                    self.get_list()
+            if data.get("version", 1) == 1:
+                self.fetched.update(data["fetched"])
+                self.displayed.update(data["fetched"])
+                if "user" in data and data["user"] in self.users:
+                    for i in range(self.users.index(data["user"])):
+                        self.get_user()
+                if "list" in data and data["list"] in self.lists:
+                    for i in range(self.lists.index(data["list"])):
+                        self.get_list()
+            else:
+                raise NotImplementedError("Unsupported state file format")
 
         atexit.register(self.save_state, force=True)
 
