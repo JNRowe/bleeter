@@ -1,0 +1,22 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: Make list fetching optional.
+desc: |-
+  The display of lists can massively increase the amount of notifications, and
+  should be optional.
+type: :feature
+component: bleeter
+release: 0.7.0
+reporter: James Rowe <jnrowe@gmail.com>
+status: :unstarted
+disposition: 
+creation_time: 2010-08-29 06:01:24.343889 Z
+references: []
+
+id: 032c2f46d33f40af6e69be73da510f6d657b6819
+log_events: 
+- - 2010-08-29 06:01:24.687788 Z
+  - James Rowe <jnrowe@gmail.com>
+  - created
+  - ""
+claimer: 
+git_branch: 
