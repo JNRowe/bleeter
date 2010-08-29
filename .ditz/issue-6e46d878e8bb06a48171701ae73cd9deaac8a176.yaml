@@ -9,8 +9,8 @@ type: :bugfix
 component: bleeter
 release: 0.7.0
 reporter: James Rowe <jnrowe@gmail.com>
-status: :unstarted
-disposition: 
+status: :closed
+disposition: :fixed
 creation_time: 2010-08-29 05:49:55.167860 Z
 references: []
 
@@ -26,5 +26,19 @@ log_events:
   - |-
     Or possibly dump to stream first, and then write.  The dump and rename isn't
     necessary.
-claimer: 
+- - 2010-08-29 06:38:48.503843 Z
+  - James Rowe <jnrowe@gmail.com>
+  - issue claimed
+  - ""
+- - 2010-08-29 06:38:48.904029 Z
+  - James Rowe <jnrowe@gmail.com>
+  - changed status from unstarted to in_progress
+  - ""
+- - 2010-08-29 06:42:07.389430 Z
+  - James Rowe <jnrowe@gmail.com>
+  - closed with disposition fixed
+  - |-
+    The state is now dumped to a string before writing.  This stops the problems
+    caused by JSON serialisation bugs leaving half-written state files.
+claimer: James Rowe <jnrowe@gmail.com>
 git_branch: 
