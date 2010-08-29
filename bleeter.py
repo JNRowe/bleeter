@@ -425,6 +425,7 @@ def process_command_line(config_file):
         "tray = boolean(default=True)",
         "expand = boolean(default=False)",
         "count = integer(min=1, max=200, default=20)",
+        "lists = boolean(default=False)",
     ]
     config = configobj.ConfigObj(config_file, configspec=config_spec)
     results = config.validate(validate.Validator())
@@ -443,7 +444,8 @@ def process_command_line(config_file):
                         ignore=config.get("ignore"),
                         tray=config.get("tray"),
                         expand=config.get("expand"),
-                        count=config.get("count"))
+                        count=config.get("count"),
+                        lists=config.get("lists"))
 
     parser.add_option("-t", "--timeout", action="callback", type="int",
                       metavar=config["timeout"],
@@ -483,6 +485,10 @@ def process_command_line(config_file):
     tweet_opts.add_option("--count", action="callback", type="int",
                           metavar=config["count"], callback=check_value,
                           help="Maximum number of tweets to fetch")
+    tweet_opts.add_option("--lists", action="store_true",
+                          help="Fetch user's lists")
+    tweet_opts.add_option("--no-lists", action="store_false",
+                          dest="lists", help="Don't fetch user's lists")
 
     parser.add_option("--no-tray", action="store_false",
                       dest="tray", help="Disable systray icon")
@@ -1134,10 +1140,12 @@ def main(argv):
                    "Network error", fail)
         return errno.EIO
 
-    try:
-        lists = api.lists()[0]
-    except IndexError:
-        lists = []
+    lists = []
+    if options.lists:
+        try:
+            lists = api.lists()[0]
+        except IndexError:
+            pass
 
     state = State(options.stealth, lists)
 

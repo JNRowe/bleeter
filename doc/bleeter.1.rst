@@ -68,6 +68,12 @@ OPTIONS
 --count **n**
     maximum number of tweets to fetch(max 200)
 
+--lists
+    fetch user's lists
+
+--no-lists
+    don't fetch user's lists
+
 -v, --verbose
     produce verbose output
 
