@@ -1,0 +1,22 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: Display list name in displayed tweets.
+desc: |-
+  Currently all tweets are displayed the same, it would be nice if tweets from
+  lists were marked as such.
+type: :feature
+component: bleeter
+release: 0.7.0
+reporter: James Rowe <jnrowe@gmail.com>
+status: :unstarted
+disposition: 
+creation_time: 2010-08-29 05:40:08.559893 Z
+references: []
+
+id: 32d8ab6eae379957023bc0b6c23e5a55408070c6
+log_events: 
+- - 2010-08-29 05:40:08.975779 Z
+  - James Rowe <jnrowe@gmail.com>
+  - created
+  - ""
+claimer: 
+git_branch: 
