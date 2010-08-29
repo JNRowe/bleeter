@@ -43,6 +43,7 @@ import collections
 import datetime
 import errno
 import hashlib
+import operator
 import optparse
 import os
 import re
@@ -106,7 +107,7 @@ class State(object):
 
     _version = 1
 
-    def __init__(self, users=None):
+    def __init__(self, users=None, lists=None):
         """Initialise a new ``State`` object
 
         # Test mocks
@@ -130,11 +131,14 @@ class State(object):
 
         :type users: ``list``
         :param users: Stealth users to watch
+        :type lists: ``list``
+        :param lists: Authenticated user's lists
         """
         self.state_file = "%s/bleeter/state.db" % glib.get_user_data_dir()
         self.create_lock()
 
         self.users = users if users else []
+        self.lists =lists if lists else []
 
         # Hold previous state, for save handling
         self._data = {}
@@ -148,6 +152,9 @@ class State(object):
             if "user" in data and data["user"] in self.users:
                 for i in range(self.users.index(data["user"])):
                     self.get_user()
+            if "list" in data and data["list"] in self.lists:
+                for i in range(self.lists.index(data["list"])):
+                    self.get_list()
 
         atexit.register(self.save_state, force=True)
 
@@ -197,6 +204,18 @@ class State(object):
         self.users.append(self.users.pop(0))
         return user
 
+    def get_list(self):
+        """Return next list to update
+
+        :rtype: ``tweepy.models.List``
+        :return: Next list to update
+        :raise IndexError: When user lists are empty
+        """
+        list_ = self.lists[0]
+        # Rotate user's lists
+        self.lists.append(self.lists.pop(0))
+        return list_
+
     def save_state(self, force=False):
         """Seen tweets state saver
 
@@ -215,6 +234,12 @@ class State(object):
                 data["fetched"][user] = self.displayed[user]
         if self.users:
             data["user"] = self.get_user()
+
+        for list_ in self.lists:
+            if list_.name in self.displayed:
+                data["fetched"]["list-%s" % list_.name] = self.displayed["user"]
+        if self.lists:
+            data["list"] = self.get_list().name
 
         if force or not data == self._data:
             json.dump(data, open(self.state_file, "w"), indent=4)
@@ -851,6 +876,49 @@ def update_stealth(tweets, api, state, count, ignore):
     return True
 
 
+def update_lists(tweets, api, state, count, ignore):
+    """Fetch new tweets for a list
+
+    We only fetch new tweets for a single list on each run, fetching each
+    list continually is a waste of resources
+
+    :type tweets: ``Tweets``
+    :param tweets: Tweets awaiting display
+    :type api: ``tweepy.api.API``
+    :param api: Authenticated ``tweepy.api.API`` object
+    :type state: ``State``
+    :param state: Application state
+    :type count: ``int``
+    :param count: Number of new tweets to fetch
+    :type ignore: ``list`` of ``str``
+    :param ignore: List of words to trigger tweet skipping
+    :rtype: ``True``
+    :return: Timers must return a ``True`` value for timer to continue
+    """
+
+    list_ = state.get_list()
+
+    old_seen = state.fetched["list-%s" % list_.name]
+    try:
+        # list timelines unfortunately silently ignore the count attribute, but
+        # hopefully that will change soon.
+        new_tweets = list_.timeline(since_id=old_seen, count=count)
+    except tweepy.TweepError:
+        usage_note("Data for `%s' list not available" % list_.name,
+                   "Fetching list data failed", fail)
+        # Still return True, so we re-enter the loop
+        return True
+
+    if new_tweets:
+        state.fetched["list-%s" % list_.name] = new_tweets[0].id
+        # Add identifier for display() use, and state storage.
+        for tweet in new_tweets:
+            tweet.from_list = list_.name
+        tweets.add(filter(skip_check(ignore), new_tweets))
+
+    return True
+
+
 NOTIFICATIONS = {}
 def display(me, tweets, state, timeout, expand):
     """Display notifications for new tweets
@@ -911,6 +979,8 @@ def display(me, tweets, state, timeout, expand):
         raise OSError("Notification failed to display!")
     if tweet.user.screen_name.lower() in state.users:
         state.displayed[tweet.user.screen_name.lower()] = tweet.id
+    elif hasattr(tweet, "from_list"):
+        state.displayed["list-%s" % tweet.from_list] = tweet.id
     else:
         state.displayed["self-status"] = tweet.id
     return True
@@ -1034,8 +1104,6 @@ def main(argv):
     auth.set_access_token(*token)  # pylint: disable-msg=W0142
     api = tweepy.API(auth)
 
-    state = State(options.stealth)
-
     if options.verbose or not options.tray:
         # Show a "hello" message, as it can take some time the first real
         # notification
@@ -1065,6 +1133,14 @@ def main(argv):
                    "Is twitter or your network down?",
                    "Network error", fail)
         return errno.EIO
+
+    try:
+        lists = api.lists()[0]
+    except IndexError:
+        lists = []
+
+    state = State(options.stealth, lists)
+
     update(tweets, api, state, options.count, options.ignore)
 
     glib.timeout_add_seconds(options.frequency, update, tweets, api, state,
@@ -1072,6 +1148,11 @@ def main(argv):
     if options.stealth:
         glib.timeout_add_seconds(options.frequency / len(options.stealth) * 10,
                                  update_stealth, tweets, api, state,
+                                 options.count, options.ignore)
+
+    if lists:
+        glib.timeout_add_seconds(options.frequency / len(lists) * 10,
+                                 update_lists, tweets, api, state,
                                  options.count, options.ignore)
 
     glib.timeout_add_seconds(options.timeout + 1, display, me, tweets, state,
