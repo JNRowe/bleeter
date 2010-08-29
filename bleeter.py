@@ -950,11 +950,12 @@ def display(me, tweets, state, timeout, expand):
         # No tweets awaiting display
         return True
 
+    title = "From %s %s" % (tweet.user.name, relative_time(tweet.created_at))
+    if hasattr(tweet, "from_list"):
+        title += " on %s list" % tweet.from_list
+
     # pylint: disable-msg=E1101
-    note = pynotify.Notification("From %s %s"
-                                 % (tweet.user.name,
-                                    relative_time(tweet.created_at)),
-                                 format_tweet(tweet.text, expand),
+    note = pynotify.Notification(title, format_tweet(tweet.text, expand),
                                  get_user_icon(tweet.user))
     # pylint: enable-msg=E1101
     if "actions" in NOTIFY_SERVER_CAPS:
