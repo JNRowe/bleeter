@@ -43,7 +43,6 @@ import collections
 import datetime
 import errno
 import hashlib
-import operator
 import optparse
 import os
 import re
