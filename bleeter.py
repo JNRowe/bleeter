@@ -1156,7 +1156,8 @@ def main(argv):
     lists = []
     if options.lists:
         try:
-            lists = api.lists()[0]
+            # Sort lists based on their name, they're returned sorted on ID
+            lists = sorted(api.lists()[0], key=lambda l: l.name.lower())
         except IndexError:
             pass
 
