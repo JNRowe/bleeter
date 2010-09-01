@@ -686,8 +686,8 @@ def get_user_icon(user):
 
     cache_dir = "%s/bleeter" % glib.get_user_cache_dir()
     mkdir(cache_dir)
-    filename = "%s/%s" % (cache_dir,
-                          hashlib.md5(user.profile_image_url).hexdigest())
+    md5 = hashlib.md5(user.profile_image_url) # pylint: disable-msg=E1101
+    filename = "%s/%s" % (cache_dir, md5.hexdigest())
     if not os.path.exists(filename):
         try:
             urllib.urlretrieve(user.profile_image_url, filename)
@@ -983,9 +983,9 @@ def display(me, tweets, state, timeout, expand):
     note.set_timeout(timeout * 1000)
     note.set_category("im.received")
     # If we cared about these users they'd be followed, not listed
+    # pylint: disable-msg=E1101
     if hasattr(tweet, "from_list"):
         note.set_urgency(pynotify.URGENCY_LOW)
-    # pylint: disable-msg=E1101
     if me.screen_name.lower() in tweet.text.lower():
         note.set_urgency(pynotify.URGENCY_CRITICAL)
     if tweet.text.lower().startswith(("@%s" % me.screen_name.lower(),
