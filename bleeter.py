@@ -159,6 +159,9 @@ class State(object):
                 raise NotImplementedError("Unsupported state file format")
 
         atexit.register(self.save_state, force=True)
+        # Shutdown can take a long time, especially with lots of lists or
+        # stealth follows.
+        atexit.register(sys.stderr.write, warn("Shutting down\n"))
 
     def create_lock(self):
         """Create lockfile handler
