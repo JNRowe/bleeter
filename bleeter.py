@@ -1184,7 +1184,7 @@ def main(argv):
     if options.tray:
         glib.timeout_add_seconds(options.timeout // 2, tooltip, icon, tweets)
 
-    glib.timeout_add_seconds(options.frequency * 2, lambda: state.save_state())
+    glib.timeout_add_seconds(options.frequency * 2, state.save_state)
     loop.run()
 
 if __name__ == "__main__":
