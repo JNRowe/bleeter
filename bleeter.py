@@ -138,7 +138,7 @@ class State(object):
         self.create_lock()
 
         self.users = users if users else []
-        self.lists =lists if lists else []
+        self.lists = lists if lists else []
 
         # Hold previous state, for save handling
         self._data = {}
