@@ -821,50 +821,21 @@ def skip_check(ignore):
     return wrapper
 
 
-def update(tweets, api, state, count, ignore):
-    """Fetch new tweets for the authenticated user
+def update(ftype, tweets, api, me, state, count, ignore):
+    """Fetch new tweets and queue them for display
 
+    For stealth and list fetches we only fetch a single user or list on each
+    run, fetching the full timeline for each element on each run is a waste of
+    resources
+
+    :type ftype: ``str``
+    :param ftype: Type of update to perform
     :type tweets: ``Tweets``
     :param tweets: Tweets awaiting display
     :type api: ``tweepy.api.API``
     :param api: Authenticated ``tweepy.api.API`` object
-    :type state: ``State``
-    :param state: Bleeter state
-    :type count: ``int``
-    :param count: Number of new tweets to fetch
-    :type ignore: ``list`` of ``str``
-    :param ignore: List of words to trigger tweet skipping
-    :rtype: ``True``
-    :return: Timers must return a ``True`` value for timer to continue
-    """
-
-    old_seen = state.fetched["self-status"]
-    try:
-        new_tweets = api.home_timeline(since_id=old_seen, count=count)
-        new_tweets.extend(api.mentions(since_id=old_seen, count=count))
-    except tweepy.TweepError:
-        usage_note("Fetching user data failed", level=fail)
-        # Still return True, so we re-enter the loop
-        return True
-
-    if new_tweets:
-        # We can use this shortcut because api.home_timeline() is first
-        state.fetched["self-status"] = new_tweets[0].id
-        tweets.add(filter(skip_check(ignore), new_tweets))
-
-    return True
-
-
-def update_stealth(tweets, api, state, count, ignore):
-    """Fetch new tweets for a stealth watched user
-
-    We only fetch new tweets for a single user on each run, fetching each
-    stealth user continually is a waste of resources
-
-    :type tweets: ``Tweets``
-    :param tweets: Tweets awaiting display
-    :type api: ``tweepy.api.API``
-    :param api: Authenticated ``tweepy.api.API`` object
+    :type me: ``tweepy.models.User``
+    :param me: Authenticated user's user data
     :type state: ``State``
     :param state: Application state
     :type count: ``int``
@@ -875,62 +846,50 @@ def update_stealth(tweets, api, state, count, ignore):
     :return: Timers must return a ``True`` value for timer to continue
     """
 
-    user = state.get_user()
+    kwargs = {"count": count}
 
-    old_seen = state.fetched[user]
+    if ftype == "user":
+        fetch_ref = "self-status"
+        kwargs["since_id"] = state.fetched["self-status"]
+        methods = [("home_timeline", []), ("mentions", [])]
+    elif ftype == "stealth":
+        user = state.get_user()
+        fetch_ref = user
+        kwargs["since_id"] = state.fetched[fetch_ref]
+        methods = [("user_timeline", [user, ])]
+    elif ftype == "list":
+        list_ = state.get_list()
+        fetch_ref = "list-%s" % list_.name
+        kwargs["since_id"] = state.fetched[fetch_ref]
+        methods = [("list_timeline", [me.screen_name, list_.slug])]
+    else:
+        raise ValueError("Unknown fetch type `%s'" % ftype)
+
     try:
-        new_tweets = api.user_timeline(user, since_id=old_seen, count=count)
+        new_tweets = []
+        for method, args in methods:
+            new_tweets.extend(getattr(api, method)(*args, **kwargs))
     except tweepy.TweepError:
-        usage_note("Data for `%s' not available" % user,
-                   "Fetching user data failed", fail)
+        if ftype == "user":
+            msg = "Fetching user data failed"
+            title = None
+        elif ftype == "stealth":
+            msg = "Data for `%s' not available" % user
+            title = "Fetching user data failed"
+        else:
+            msg = "Data for `%s' list not available" % list_.name
+            title = "Fetching list data failed"
+        usage_note(msg, title, fail)
         # Still return True, so we re-enter the loop
         return True
 
     if new_tweets:
-        state.fetched[user] = new_tweets[0].id
-        tweets.add(filter(skip_check(ignore), new_tweets))
+        state.fetched[fetch_ref] = new_tweets[0].id
 
-    return True
-
-
-def update_lists(tweets, api, state, count, ignore):
-    """Fetch new tweets for a list
-
-    We only fetch new tweets for a single list on each run, fetching each
-    list continually is a waste of resources
-
-    :type tweets: ``Tweets``
-    :param tweets: Tweets awaiting display
-    :type api: ``tweepy.api.API``
-    :param api: Authenticated ``tweepy.api.API`` object
-    :type state: ``State``
-    :param state: Application state
-    :type count: ``int``
-    :param count: Number of new tweets to fetch
-    :type ignore: ``list`` of ``str``
-    :param ignore: List of words to trigger tweet skipping
-    :rtype: ``True``
-    :return: Timers must return a ``True`` value for timer to continue
-    """
-
-    list_ = state.get_list()
-
-    old_seen = state.fetched["list-%s" % list_.name]
-    try:
-        # list timelines unfortunately silently ignore the count attribute, but
-        # hopefully that will change soon.
-        new_tweets = list_.timeline(since_id=old_seen, count=count)
-    except tweepy.TweepError:
-        usage_note("Data for `%s' list not available" % list_.name,
-                   "Fetching list data failed", fail)
-        # Still return True, so we re-enter the loop
-        return True
-
-    if new_tweets:
-        state.fetched["list-%s" % list_.name] = new_tweets[0].id
-        # Add identifier for display() use, and state storage.
-        for tweet in new_tweets:
-            tweet.from_list = list_.name
+        if ftype == "list":
+            # Add identifier for display() use, and state storage.
+            for tweet in new_tweets:
+                tweet.from_list = list_.name
         tweets.add(filter(skip_check(ignore), new_tweets))
 
     return True
@@ -1165,18 +1124,18 @@ def main(argv):
 
     state = State(options.stealth, lists)
 
-    update(tweets, api, state, options.count, options.ignore)
+    update("user", tweets, api, me, state, options.count, options.ignore)
 
-    glib.timeout_add_seconds(options.frequency, update, tweets, api, state,
-                             options.count, options.ignore)
+    glib.timeout_add_seconds(options.frequency, update, "user", tweets, api,
+                             me, state, options.count, options.ignore)
     if options.stealth:
         glib.timeout_add_seconds(options.frequency / len(options.stealth) * 10,
-                                 update_stealth, tweets, api, state,
+                                 update, "stealth", tweets, api, me, state,
                                  options.count, options.ignore)
 
     if lists:
         glib.timeout_add_seconds(options.frequency / len(lists) * 10,
-                                 update_lists, tweets, api, state,
+                                 update, "list", tweets, api, me, state,
                                  options.count, options.ignore)
 
     glib.timeout_add_seconds(options.timeout + 1, display, me, tweets, state,
