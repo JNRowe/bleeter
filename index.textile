@@ -60,8 +60,6 @@ h3. Other resources
 
 The "Sphinx":http://sphinx.pocoo.org/ generated documentation can be read "online":sphinx/.
 
-You can view the "current bug status":ditz/ without installing "ditz":http://ditz.rubyforge.org/.
-
 h2. Licence
 
 @bleeter@ is licensed under the "GNU General Public License v3":http://www.gnu.org/licenses/gpl-3.0.html.
