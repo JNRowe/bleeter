@@ -5,6 +5,13 @@
    :synopsis: Nasty little twitter viewer
 .. moduleauthor:: James Rowe <jnrowe@gmail.com>
 
+.. ifconfig:: release.endswith("-git")
+
+   .. warning::
+      This documentation was built from a Git tree, and may not correspond
+      directly to *any* released version.  Check the release tarballs for
+      documentation for a particular version of ``bleeter``.
+
 :mod:`bleeter`  is a nasty little viewer for twitter_, currently very much in
 a *Works For Me* state.  It isn't intended to be used by others, but perhaps
 others will find it useful.
