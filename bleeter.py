@@ -428,6 +428,7 @@ def process_command_line(config_file):
     config_spec = [
         "timeout = integer(min=1, default=10)",
         "frequency = integer(min=60, default=300)",
+        "secure = boolean(default=False)",
         "stealth = list(default=list('ewornj'))",
         "ignore = list(default=list('#nowplaying'))",
         "tray = boolean(default=True)",
@@ -448,6 +449,7 @@ def process_command_line(config_file):
 
     parser.set_defaults(timeout=config["timeout"],
                         frequency=config["frequency"],
+                        secure=config.get("secure"),
                         stealth=config.get("stealth"),
                         ignore=config.get("ignore"),
                         tray=config.get("tray"),
@@ -468,6 +470,11 @@ def process_command_line(config_file):
     parser.add_option_group(auth_opts)
     auth_opts.add_option("-g", "--get-token", action="store_true",
                          help="Generate a new OAuth token for twitter")
+    auth_opts.add_option("--secure", action="store_true",
+                         help="Use SSL to connect to twitter")
+    auth_opts.add_option("--no-secure", action="store_false",
+                         dest="secure",
+                         help="Don't use SSL to connect to twitter")
 
     user_opts = optparse.OptionGroup(parser, "User options")
     parser.add_option_group(user_opts)
@@ -1087,7 +1094,7 @@ def main(argv):
         return errno.EPERM
 
     auth.set_access_token(*token)  # pylint: disable-msg=W0142
-    api = tweepy.API(auth)
+    api = tweepy.API(auth, secure=options.secure)
 
     if options.verbose or not options.tray:
         # Show a "hello" message, as it can take some time the first real

@@ -41,6 +41,14 @@ Options
 
    generate a new OAuth token for twitter
 
+.. cmdoption:: --secure
+
+   use SSL to connect to twitter
+
+.. cmdoption:: --no-secure
+
+   don't use SSL to connect to twitter
+
 .. cmdoption:: -s ewornj, --stealth=ewornj
 
    users to watch without following(comma separated)

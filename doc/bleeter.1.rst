@@ -41,6 +41,12 @@ OPTIONS
 -g, --get-token
     generate a new OAuth token for twitter
 
+--secure
+    use SSL to connect to twitter
+
+--no-secure
+    don't use SSL to connect to twitter
+
 -s, --stealth **user**
     users to watch without following(comma separated)
 
