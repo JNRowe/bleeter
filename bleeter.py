@@ -435,6 +435,7 @@ def process_command_line(config_file):
         "expand = boolean(default=False)",
         "count = integer(min=1, max=200, default=20)",
         "lists = boolean(default=False)",
+        "cache = boolean(default=True)",
     ]
     config = configobj.ConfigObj(config_file, configspec=config_spec)
     results = config.validate(validate.Validator())
@@ -455,7 +456,8 @@ def process_command_line(config_file):
                         tray=config.get("tray"),
                         expand=config.get("expand"),
                         count=config.get("count"),
-                        lists=config.get("lists"))
+                        lists=config.get("lists"),
+                        cache=config.get("cache"))
 
     parser.add_option("-t", "--timeout", action="callback", type="int",
                       metavar=config["timeout"],
@@ -505,6 +507,9 @@ def process_command_line(config_file):
     tweet_opts.add_option("--no-lists", action="store_false",
                           dest="lists", help="Don't fetch user's lists")
 
+    parser.add_option("--no-cache", action="store_false",
+                      dest="cache",
+                      help="Don't cache twitter communications")
     parser.add_option("--no-tray", action="store_false",
                       dest="tray", help="Disable systray icon")
     parser.add_option("-v", "--verbose", action="store_true",
@@ -1093,8 +1098,15 @@ def main(argv):
     if not token:
         return errno.EPERM
 
+    if options.cache:
+        cachedir = "%s/bleeter/http_cache" % glib.get_user_cache_dir()
+        mkdir(cachedir)
+        cache = tweepy.FileCache(cachedir)
+    else:
+        cache = None
+
     auth.set_access_token(*token)  # pylint: disable-msg=W0142
-    api = tweepy.API(auth, secure=options.secure)
+    api = tweepy.API(auth, cache=cache, secure=options.secure)
 
     if options.verbose or not options.tray:
         # Show a "hello" message, as it can take some time the first real

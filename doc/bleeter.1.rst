@@ -77,6 +77,9 @@ OPTIONS
 --no-lists
     don't fetch user's lists
 
+--no-cache
+    don't cache twitter communications
+
 -v, --verbose
     produce verbose output
 

@@ -89,6 +89,10 @@ Options
 
    don't fetch user's lists
 
+.. cmdoption:: --no-cache
+
+   don't cache twitter communications
+
 .. cmdoption:: -v, --verbose
 
    produce verbose output
