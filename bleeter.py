@@ -861,6 +861,10 @@ def update(ftype, tweets, api, me, state, count, ignore):
         fetch_ref = "self-status"
         kwargs["since_id"] = state.fetched["self-status"]
         methods = [("home_timeline", []), ("mentions", [])]
+    elif ftype == "direct":
+        fetch_ref = "self-direct"
+        kwargs["since_id"] = state.fetched[fetch_ref]
+        methods = [("direct_messages", [])]
     elif ftype == "stealth":
         user = state.get_user()
         fetch_ref = user
@@ -882,6 +886,9 @@ def update(ftype, tweets, api, me, state, count, ignore):
         if ftype == "user":
             msg = "Fetching user data failed"
             title = None
+        elif ftype == "direct":
+            msg = "Fetching direct messages failed"
+            title = None
         elif ftype == "stealth":
             msg = "Data for `%s' not available" % user
             title = "Fetching user data failed"
@@ -899,6 +906,8 @@ def update(ftype, tweets, api, me, state, count, ignore):
         for tweet in new_tweets:
             if ftype == "user":
                 tweet.from_timeline = True
+            elif ftype == "direct":
+                tweet.from_direct = True
             elif ftype == "stealth":
                 tweet.from_stealth = user
             elif ftype == "list":
@@ -934,19 +943,27 @@ def display(me, tweets, state, timeout, expand):
         # No tweets awaiting display
         return True
 
-    # Don't re-display already seen tweets
-    if tweet.id <= state.displayed[tweet.user.screen_name.lower()]:
-        return True
+    if hasattr(tweet, "from_direct"):
+        title = "From %s %s" % (tweet.sender.name,
+                                relative_time(tweet.created_at))
+        icon = get_user_icon(tweet.sender)
+    else:
+        # Don't re-display already seen tweets
+        if tweet.id <= state.displayed[tweet.user.screen_name.lower()]:
+            return True
+        title = "From %s %s" % (tweet.user.name,
+                                relative_time(tweet.created_at))
+        icon = get_user_icon(tweet.user)
 
-    title = "From %s %s" % (tweet.user.name, relative_time(tweet.created_at))
     if hasattr(tweet, "from_list"):
         title += " on %s list" % tweet.from_list
+    elif hasattr(tweet, "from_direct"):
+        title += " in direct message"
 
     # pylint: disable-msg=E1101
-    note = pynotify.Notification(title, format_tweet(tweet.text, expand),
-                                 get_user_icon(tweet.user))
+    note = pynotify.Notification(title, format_tweet(tweet.text, expand), icon)
     # pylint: enable-msg=E1101
-    if "actions" in NOTIFY_SERVER_CAPS:
+    if not hasattr(tweet, "from_direct") and "actions" in NOTIFY_SERVER_CAPS:
         note.add_action("default", " ", open_tweet(tweet))
         if not tweet.user.protected:
             note.add_action("mail-forward", "retweet",
@@ -971,13 +988,19 @@ def display(me, tweets, state, timeout, expand):
     if tweet.text.lower().startswith(("@%s" % me.screen_name.lower(),
                                       ".@%s" % me.screen_name.lower())):
         note.set_timeout(pynotify.EXPIRES_NEVER)
+    if hasattr(tweet, "from_direct"):
+        note.set_urgency(pynotify.URGENCY_CRITICAL)
+        note.set_timeout(pynotify.EXPIRES_NEVER)
     # pylint: enable-msg=E1101
     if not note.show():
         # Fail hard at this point, recovery has little value.
         raise OSError("Notification failed to display!")
-    state.displayed[tweet.user.screen_name.lower()] = tweet.id
+    if not hasattr(tweet, "from_direct"):
+        state.displayed[tweet.user.screen_name.lower()] = tweet.id
     if hasattr(tweet, "from_timeline"):
         state.displayed["self-status"] = tweet.id
+    elif hasattr(tweet, "from_direct"):
+        state.displayed["self-direct"] = tweet.id
     elif hasattr(tweet, "from_list"):
         state.displayed["list-%s" % tweet.from_list] = tweet.id
     return True
@@ -1152,6 +1175,8 @@ def main(argv):
 
     glib.timeout_add_seconds(options.frequency, update, "user", tweets, api,
                              me, state, options.count, options.ignore)
+    glib.timeout_add_seconds(options.frequency * 10, update, "direct", tweets,
+                             api, me, state, options.count, options.ignore)
     if options.stealth:
         glib.timeout_add_seconds(options.frequency / len(options.stealth) * 10,
                                  update, "stealth", tweets, api, me, state,
