@@ -105,6 +105,19 @@ use as ignore filters for tweets you receive.  Keywords can be normal words,
 people like to produce.</p>
 <p>The entries should be comma separated, and must be quoted if they contain &#8216;#&#8217;
 to match hashtags.</p>
+</div>
+<div class="section" id="count-option">
+<h2><tt class="docutils literal"><span class="pre">count</span></tt> option<a class="headerlink" href="#count-option" title="Permalink to this headline">¶</a></h2>
+<p>The <tt class="docutils literal"><span class="pre">count</span></tt> option allows you to specify the maximum number of new statuses to
+fetch when updating.  Only new tweets are fetched, so specifying large values
+here only affects initial runs and users who do not run <tt class="docutils literal"><span class="pre">bleeter</span></tt> very often.</p>
+<p>By default <a class="reference external" href="http://twitter.com/">twitter</a> returns 20 new statuses, and this is also the default setting
+for <tt class="docutils literal"><span class="pre">bleeter</span></tt>.  <a class="reference external" href="http://twitter.com/">twitter</a> sets a limit of 200 statuses.</p>
+</div>
+<div class="section" id="lists-option">
+<h2><tt class="docutils literal"><span class="pre">lists</span></tt> option<a class="headerlink" href="#lists-option" title="Permalink to this headline">¶</a></h2>
+<p>The <tt class="docutils literal"><span class="pre">lists</span></tt> option enables fetching of user&#8217;s lists, in addition to the
+standard behaviour of fetching user&#8217;s timeline and mentions.</p>
 <table class="docutils footnote" frame="void" id="id2" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
@@ -129,6 +142,8 @@ see <a class="reference external" href="http://standards.freedesktop.org/basedir
 <li><a class="reference internal" href="#timeout-option"><tt class="docutils literal"><span class="pre">timeout</span></tt> option</a></li>
 <li><a class="reference internal" href="#stealth-option"><tt class="docutils literal"><span class="pre">stealth</span></tt> option</a></li>
 <li><a class="reference internal" href="#ignore-option"><tt class="docutils literal"><span class="pre">ignore</span></tt> option</a></li>
+<li><a class="reference internal" href="#count-option"><tt class="docutils literal"><span class="pre">count</span></tt> option</a></li>
+<li><a class="reference internal" href="#lists-option"><tt class="docutils literal"><span class="pre">lists</span></tt> option</a></li>
 </ul>
 </li>
 </ul>
@@ -176,7 +191,7 @@ see <a class="reference external" href="http://standards.freedesktop.org/basedir
     </div>
     <div class="footer">
         &copy; Copyright 2010, James Rowe.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
     </div>
   </body>
 </html>

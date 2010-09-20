@@ -106,8 +106,6 @@ on the popup.</p>
 <dd>timeout for notification popups in seconds</dd>
 <dt>-f, &#8211;frequency <strong>n</strong></dt>
 <dd>update frequency in in seconds</dd>
-<dt>-r, &#8211;token <strong>key</strong>,**secret**</dt>
-<dd>OAuth token for twitter(mostly used for testing)</dd>
 </dl>
 <table class="docutils option-list" frame="void" rules="none">
 <col class="option" />
@@ -117,6 +115,12 @@ on the popup.</p>
 <kbd><span class="option">-g</span>, <span class="option">--get-token</span></kbd></td>
 </tr>
 <tr><td>&nbsp;</td><td>generate a new OAuth token for twitter</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">--secure</span></kbd></td>
+<td>use SSL to connect to twitter</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">--no-secure</span></kbd></td>
+<td>don&#8217;t use SSL to connect to twitter</td></tr>
 </tbody>
 </table>
 <dl class="docutils">
@@ -152,6 +156,22 @@ on the popup.</p>
 <tr><td class="option-group">
 <kbd><span class="option">--no-expand</span></kbd></td>
 <td>don&#8217;t expand links in tweets</td></tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt>&#8211;count <strong>n</strong></dt>
+<dd>maximum number of tweets to fetch(max 200)</dd>
+</dl>
+<table class="docutils option-list" frame="void" rules="none">
+<col class="option" />
+<col class="description" />
+<tbody valign="top">
+<tr><td class="option-group">
+<kbd><span class="option">--lists</span></kbd></td>
+<td>fetch user&#8217;s lists</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">--no-lists</span></kbd></td>
+<td>don&#8217;t fetch user&#8217;s lists</td></tr>
 <tr><td class="option-group">
 <kbd><span class="option">-v</span>, <span class="option">--verbose</span></kbd></td>
 <td>produce verbose output</td></tr>
@@ -259,7 +279,7 @@ option) any later version.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2010, James Rowe.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
     </div>
   </body>
 </html>
