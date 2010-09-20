@@ -39,6 +39,7 @@ nothing more.
 """ % parseaddr(__author__)
 
 import atexit
+import copy
 import collections
 import datetime
 import errno
@@ -234,18 +235,10 @@ class State(object):
         :param force: Force update, even if data hasn't changed for mtime
             promotion
         """
-        data = self._data
-        data["fetched"]["self-status"] = self.displayed["self-status"]
-        for user in self.users:
-            if user in self.displayed:
-                data["fetched"][user] = self.displayed[user]
+        data = copy.deepcopy(self._data)
+        data["fetched"].update(self.displayed)
         if self.users:
             data["user"] = self.get_user()
-
-        for list_ in self.lists:
-            name = "list-%s" % list_.name
-            if name in self.displayed:
-                data["fetched"][name] = self.displayed[name]
         if self.lists:
             data["list"] = self.get_list().name
 
@@ -890,10 +883,15 @@ def update(ftype, tweets, api, me, state, count, ignore):
     if new_tweets:
         state.fetched[fetch_ref] = new_tweets[0].id
 
-        if ftype == "list":
-            # Add identifier for display() use, and state storage.
-            for tweet in new_tweets:
+        # Add identifier for display() use, and state storage.
+        for tweet in new_tweets:
+            if ftype == "user":
+                tweet.from_timeline = True
+            elif ftype == "stealth":
+                tweet.from_stealth = user
+            elif ftype == "list":
                 tweet.from_list = list_.name
+
         tweets.add(filter(skip_check(ignore), new_tweets))
 
     return True
@@ -922,6 +920,10 @@ def display(me, tweets, state, timeout, expand):
         tweet = tweets.popitem()
     except KeyError:
         # No tweets awaiting display
+        return True
+
+    # Don't re-display already seen tweets
+    if tweet.id <= state.displayed[tweet.user.screen_name.lower()]:
         return True
 
     title = "From %s %s" % (tweet.user.name, relative_time(tweet.created_at))
@@ -961,12 +963,11 @@ def display(me, tweets, state, timeout, expand):
     if not note.show():
         # Fail hard at this point, recovery has little value.
         raise OSError("Notification failed to display!")
-    if tweet.user.screen_name.lower() in state.users:
-        state.displayed[tweet.user.screen_name.lower()] = tweet.id
+    state.displayed[tweet.user.screen_name.lower()] = tweet.id
+    if hasattr(tweet, "from_timeline"):
+        state.displayed["self-status"] = tweet.id
     elif hasattr(tweet, "from_list"):
         state.displayed["list-%s" % tweet.from_list] = tweet.id
-    else:
-        state.displayed["self-status"] = tweet.id
     return True
 
 
