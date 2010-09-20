@@ -38,9 +38,6 @@ OPTIONS
 -f, --frequency **n**
     update frequency in in seconds
 
--r, --token **key**,**secret**
-    OAuth token for twitter(mostly used for testing)
-
 -g, --get-token
     generate a new OAuth token for twitter
 
