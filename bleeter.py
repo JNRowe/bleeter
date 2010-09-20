@@ -140,12 +140,15 @@ class State(object):
         self.lists = lists if lists else []
 
         # Hold previous state, for save handling
-        self._data = {}
+        self._data = {"fetched": {}}
 
         self.displayed = collections.defaultdict(lambda: 1)
         self.fetched = collections.defaultdict(lambda: 1)
         if os.path.exists(self.state_file):
             data = json.load(open(self.state_file))
+            # Keep loaded data, this keeps state data we're not using on this
+            # run
+            self._data = data
             if data.get("version", 1) == 1:
                 self.fetched.update(data["fetched"])
                 self.displayed.update(data["fetched"])
@@ -224,16 +227,15 @@ class State(object):
     def save_state(self, force=False):
         """Seen tweets state saver
 
+        We store displayed, not fetched, info so we don't miss pending tweets
+        from a previous run
+
         :type force: ``bool``
         :param force: Force update, even if data hasn't changed for mtime
             promotion
         """
-        # Store displayed, not fetched, so we don't miss pending tweets from
-        # a previous run
-        data = {
-            "fetched": {"self-status": self.displayed["self-status"]},
-            "version": self._version,
-        }
+        data = self._data
+        data["fetched"]["self-status"] = self.displayed["self-status"]
         for user in self.users:
             if user in self.displayed:
                 data["fetched"][user] = self.displayed[user]
@@ -247,6 +249,8 @@ class State(object):
         if self.lists:
             data["list"] = self.get_list().name
 
+        # Store state version
+        data["version"] = self._version
         if force or not data == self._data:
             state_dump = json.dumps(data, indent=4)
             open(self.state_file, "w").write(state_dump)
