@@ -940,16 +940,11 @@ def update(ftype, tweets, api, me, state, count, ignore):
 
         # Add identifier for display() use, and state storage.
         for tweet in new_tweets:
-            if ftype == "user":
-                tweet.from_timeline = True
-            elif ftype == "direct":
-                tweet.from_direct = True
-            elif ftype == "stealth":
-                tweet.from_stealth = user
-            elif ftype == "list":
-                tweet.from_list = list_.name
+            tweet.from_type = ftype
+            if ftype == "list":
+                tweet.from_arg = list_.name
             elif ftype == "search":
-                tweet.from_search = search.name
+                tweet.from_arg = search.name
 
         tweets.add(filter(skip_check(ignore), new_tweets))
 
@@ -981,34 +976,33 @@ def display(me, tweets, state, timeout, expand):
         # No tweets awaiting display
         return True
 
-    if hasattr(tweet, "from_direct"):
+    if tweet.from_type == "direct":
         title = "From %s %s" % (tweet.sender.name,
                                 relative_time(tweet.created_at))
         icon = get_user_icon(tweet.sender)
-    elif hasattr(tweet, "from_search"):
+    elif tweet.from_type == "search":
         title = "From %s %s" % (tweet.from_user,
                                 relative_time(tweet.created_at))
         icon = get_user_icon(tweet)
     else:
         # Don't re-display already seen tweets
         if tweet.id <= state.displayed[tweet.user.screen_name.lower()]:
-            print(warn("skipped %s" % tweet.id))
             return True
         title = "From %s %s" % (tweet.user.name,
                                 relative_time(tweet.created_at))
         icon = get_user_icon(tweet.user)
 
-    if hasattr(tweet, "from_list"):
-        title += " on %s list" % tweet.from_list
-    elif hasattr(tweet, "from_direct"):
+    if tweet.from_type == "list":
+        title += " on %s list" % tweet.from_arg
+    elif tweet.from_type == "direct":
         title += " in direct message"
-    elif hasattr(tweet, "from_search"):
-        title += " in %s search" % tweet.from_search
+    elif tweet.from_type == "search":
+        title += " in %s search" % tweet.from_arg
 
     # pylint: disable-msg=E1101
     note = pynotify.Notification(title, format_tweet(tweet.text, expand), icon)
     # pylint: enable-msg=E1101
-    if not hasattr(tweet, "from_direct") and not hasattr(tweet, "from_search"):
+    if not tweet.from_type in ("direct", "search"):
         if "actions" in NOTIFY_SERVER_CAPS:
             note.add_action("default", " ", open_tweet(tweet))
             if not tweet.user.protected:
@@ -1028,30 +1022,30 @@ def display(me, tweets, state, timeout, expand):
     # pylint: disable-msg=E1101
     # For lists: If we cared about these users they'd be followed, not listed
     # For searches: These are always low priority
-    if hasattr(tweet, "from_list") or hasattr(tweet, "from_search"):
+    if tweet.from_type in ("list", "search"):
         note.set_urgency(pynotify.URGENCY_LOW)
     if me.screen_name.lower() in tweet.text.lower():
         note.set_urgency(pynotify.URGENCY_CRITICAL)
     if tweet.text.lower().startswith(("@%s" % me.screen_name.lower(),
                                       ".@%s" % me.screen_name.lower())):
         note.set_timeout(pynotify.EXPIRES_NEVER)
-    if hasattr(tweet, "from_direct"):
+    if tweet.from_type == "direct":
         note.set_urgency(pynotify.URGENCY_CRITICAL)
         note.set_timeout(pynotify.EXPIRES_NEVER)
     # pylint: enable-msg=E1101
     if not note.show():
         # Fail hard at this point, recovery has little value.
         raise OSError("Notification failed to display!")
-    if not hasattr(tweet, "from_direct") and not hasattr(tweet, "from_search"):
+    if not tweet.from_type in ("direct", "search"):
         state.displayed[tweet.user.screen_name.lower()] = tweet.id
-    if hasattr(tweet, "from_timeline"):
+    if tweet.from_type == "timeline":
         state.displayed["self-status"] = tweet.id
-    elif hasattr(tweet, "from_direct"):
+    elif tweet.from_type == "direct":
         state.displayed["self-direct"] = tweet.id
-    elif hasattr(tweet, "from_list"):
-        state.displayed["list-%s" % tweet.from_list] = tweet.id
-    elif hasattr(tweet, "from_search"):
-        state.displayed["search-%s" % tweet.from_search] = tweet.id
+    elif tweet.from_type == "list":
+        state.displayed["list-%s" % tweet.from_arg] = tweet.id
+    elif tweet.from_type == "search":
+        state.displayed["search-%s" % tweet.from_arg] = tweet.id
     return True
 
 
