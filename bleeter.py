@@ -531,7 +531,8 @@ def process_command_line(config_file):
     tweet_opts.add_option("--searches", action="store_true",
                           help="Fetch user's saved searches")
     tweet_opts.add_option("--no-searches", action="store_false",
-                          dest="lists", help="Don't fetch user's saved searches")
+                          dest="searches",
+                          help="Don't fetch user's saved searches")
 
     parser.add_option("--no-cache", action="store_false",
                       dest="cache",
