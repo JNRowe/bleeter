@@ -112,8 +112,6 @@ class State(object):
 
         # Test mocks
         >>> atexit.register = lambda *args, **kwargs: True
-        >>> State.orig_create_lock = State.create_lock
-        >>> State.create_lock = lambda x: True
         >>> glib.get_user_data_dir = lambda: "test/xdg_data_home"
 
         >>> state = State()
@@ -126,9 +124,6 @@ class State(object):
         >>> state.fetched["self-status"]
         1
 
-        # Unset mocks
-        >>> State.create_lock = State.orig_create_lock
-
         :type users: ``list``
         :param users: Stealth users to watch
         :type lists: ``list``
@@ -137,7 +132,6 @@ class State(object):
         :param lists: Authenticated user's saved searches
         """
         self.state_file = "%s/bleeter/state.db" % glib.get_user_data_dir()
-        self.create_lock()
 
         self.users = users if users else []
         self.lists = lists if lists else []
@@ -172,41 +166,6 @@ class State(object):
         # Shutdown can take a long time, especially with lots of lists or
         # stealth follows.
         atexit.register(sys.stderr.write, warn("Shutting down\n"))
-
-    def create_lock(self):
-        """Create lockfile handler
-
-        # Test mocks
-        >>> atexit.register = lambda *args, **kwargs: True
-        >>> glib.get_user_data_dir = lambda: "test/xdg_data_home"
-
-        # Make sure there isn't a stale lock from a previous run
-        >>> if os.path.exists("%s/state.db.lock" % glib.get_user_data_dir()):
-        ...     os.unlink("%s/state.db.lock" % glib.get_user_data_dir())
-
-        >>> state = State()
-        >>> os.path.exists("%s.lock" % state.state_file)
-        True
-        >>> state = State()
-        Traceback (most recent call last):
-            ...
-        IOError: Another instance is running or
-        `test/xdg_data_home/bleeter/state.db.lock' is stale
-        >>> os.unlink("%s.lock" % state.state_file)
-
-        """
-        lock_file = "%s.lock" % self.state_file
-
-        # Create directory for state storage
-        mkdir(os.path.dirname(lock_file))
-        if os.path.exists(lock_file):
-            message = "Another instance is running or `%s' is stale" \
-                % lock_file
-            usage_note(message)
-            raise IOError(message)
-        open(lock_file, "w").write(str(os.getpid()))
-        atexit.register(os.unlink, lock_file)
-
     def get_user(self):
         """Return next stealth user to update
 
@@ -313,6 +272,41 @@ def mkdir(directory):
             pass
         else:
             raise
+
+
+def create_lockfile():
+    """Create lockfile handler
+
+    # Test mocks
+    >>> atexit.register = lambda *args, **kwargs: True
+    >>> glib.get_user_data_dir = lambda: "test/xdg_data_home"
+
+    # Make sure there isn't a stale lock from a previous run
+    >>> if os.path.exists("%s/bleeter/lock" % glib.get_user_data_dir()):
+    ...     os.unlink("%s/bleeter/lock" % glib.get_user_data_dir())
+
+    >>> create_lockfile()
+    >>> os.path.exists("%s/bleeter/lock" % glib.get_user_data_dir())
+    True
+    >>> try:
+    ...     create_lockfile()
+    ... except IOError:
+    ...     pass
+    Another instance is running or `test/xdg_data_home/bleeter/lock' is stale
+    >>> os.unlink("%s/bleeter/lock" % glib.get_user_data_dir())
+
+    """
+    lock_file = "%s/bleeter/lock" % glib.get_user_data_dir()
+
+    # Create directory for state storage
+    mkdir(os.path.dirname(lock_file))
+    if os.path.exists(lock_file):
+        message = "Another instance is running or `%s' is stale" \
+            % lock_file
+        usage_note(message)
+        raise IOError(message)
+    open(lock_file, "w").write(str(os.getpid()))
+    atexit.register(os.unlink, lock_file)
 
 
 def usage_note(message, title=None, level=warn, icon=None):
@@ -1154,6 +1148,11 @@ def main(argv):
         return errno.EIO
     NOTIFY_SERVER_CAPS.extend(pynotify.get_server_caps())
     # pylint: enable-msg=E1101
+
+    try:
+        create_lockfile()
+    except IOError:
+        return errno.EIO
 
     token_file = "%s/bleeter/oauth_token" % glib.get_user_data_dir()
 
