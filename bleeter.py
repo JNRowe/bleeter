@@ -725,7 +725,7 @@ def get_user_icon(user):
 
     cache_dir = "%s/bleeter" % glib.get_user_cache_dir()
     mkdir(cache_dir)
-    md5 = hashlib.md5(user.profile_image_url) # pylint: disable-msg=E1101
+    md5 = hashlib.md5(user.profile_image_url)  # pylint: disable-msg=E1101
     filename = "%s/%s" % (cache_dir, md5.hexdigest())
     if not os.path.exists(filename):
         try:
