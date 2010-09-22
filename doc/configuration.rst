@@ -74,6 +74,13 @@ for ``bleeter``.  twitter_ sets a limit of 200 statuses.
 The ``lists`` option enables fetching of user's lists, in addition to the
 standard behaviour of fetching user's timeline and mentions.
 
+``searches`` option
+''''''''''''''''
+
+The ``searches`` option enables fetching of user's saved searches, in
+addition to the standard behaviour of fetching user's timeline and
+mentions.
+
 .. [#] The default value for ``${XDG_CONFIG_HOME}`` is system dependent, but
        likely to be ``~/.config`` if you haven't set it.  For more information
        see `XDG base directory specification`_.

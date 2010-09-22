@@ -107,7 +107,7 @@ class State(object):
 
     _version = 1
 
-    def __init__(self, users=None, lists=None):
+    def __init__(self, users=None, lists=None, searches=None):
         """Initialise a new ``State`` object
 
         # Test mocks
@@ -133,12 +133,15 @@ class State(object):
         :param users: Stealth users to watch
         :type lists: ``list``
         :param lists: Authenticated user's lists
+        :type searches: ``list``
+        :param lists: Authenticated user's saved searches
         """
         self.state_file = "%s/bleeter/state.db" % glib.get_user_data_dir()
         self.create_lock()
 
         self.users = users if users else []
         self.lists = lists if lists else []
+        self.searches = searches if searches else []
 
         # Hold previous state, for save handling
         self._data = {"fetched": {}}
@@ -159,6 +162,9 @@ class State(object):
                 if "list" in data and data["list"] in self.lists:
                     for i in range(self.lists.index(data["list"])):
                         self.get_list()
+                if "search" in data and data["search"] in self.searches:
+                    for i in range(self.searches.index(data["search"])):
+                        self.get_search()
             else:
                 raise NotImplementedError("Unsupported state file format")
 
@@ -225,6 +231,18 @@ class State(object):
         self.lists.append(self.lists.pop(0))
         return list_
 
+    def get_search(self):
+        """Return next saved search to update
+
+        :rtype: ``tweepy.models.SavedSearch``
+        :return: Next saved search to update
+        :raise IndexError: When user's saved searches are empty
+        """
+        search = self.searches[0]
+        # Rotate user's lists
+        self.searches.append(self.searches.pop(0))
+        return search
+
     def save_state(self, force=False):
         """Seen tweets state saver
 
@@ -241,6 +259,8 @@ class State(object):
             data["user"] = self.get_user()
         if self.lists:
             data["list"] = self.get_list().name
+        if self.searches:
+            data["search"] = self.get_search().name
 
         # Store state version
         data["version"] = self._version
@@ -435,6 +455,7 @@ def process_command_line(config_file):
         "expand = boolean(default=False)",
         "count = integer(min=1, max=200, default=20)",
         "lists = boolean(default=False)",
+        "searches = boolean(default=False)",
         "cache = boolean(default=True)",
     ]
     config = configobj.ConfigObj(config_file, configspec=config_spec)
@@ -457,6 +478,7 @@ def process_command_line(config_file):
                         expand=config.get("expand"),
                         count=config.get("count"),
                         lists=config.get("lists"),
+                        searches=config.get("searches"),
                         cache=config.get("cache"))
 
     parser.add_option("-t", "--timeout", action="callback", type="int",
@@ -506,6 +528,10 @@ def process_command_line(config_file):
                           help="Fetch user's lists")
     tweet_opts.add_option("--no-lists", action="store_false",
                           dest="lists", help="Don't fetch user's lists")
+    tweet_opts.add_option("--searches", action="store_true",
+                          help="Fetch user's saved searches")
+    tweet_opts.add_option("--no-searches", action="store_false",
+                          dest="lists", help="Don't fetch user's saved searches")
 
     parser.add_option("--no-cache", action="store_false",
                       dest="cache",
@@ -833,9 +859,9 @@ def skip_check(ignore):
 def update(ftype, tweets, api, me, state, count, ignore):
     """Fetch new tweets and queue them for display
 
-    For stealth and list fetches we only fetch a single user or list on each
-    run, fetching the full timeline for each element on each run is a waste of
-    resources
+    For stealth, list and search fetches we only fetch a single user, list or
+    search on each run, fetching the full timeline for each element on each run
+    is a waste of resources
 
     :type ftype: ``str``
     :param ftype: Type of update to perform
@@ -875,6 +901,13 @@ def update(ftype, tweets, api, me, state, count, ignore):
         fetch_ref = "list-%s" % list_.name
         kwargs["since_id"] = state.fetched[fetch_ref]
         methods = [("list_timeline", [me.screen_name, list_.slug])]
+    elif ftype == "search":
+        search = state.get_search()
+        fetch_ref = "search-%s" % search.name
+        kwargs["since_id"] = state.fetched[fetch_ref]
+        # API is stupidly incompatible for searches
+        kwargs["rpp"] = count
+        methods = [("search", [search.query, ])]
     else:
         raise ValueError("Unknown fetch type `%s'" % ftype)
 
@@ -892,9 +925,12 @@ def update(ftype, tweets, api, me, state, count, ignore):
         elif ftype == "stealth":
             msg = "Data for `%s' not available" % user
             title = "Fetching user data failed"
-        else:
+        elif ftype == "list":
             msg = "Data for `%s' list not available" % list_.name
             title = "Fetching list data failed"
+        elif ftype == "search":
+            msg = "Data for `%s' search not available" % search.name
+            title = "Fetching search data failed"
         usage_note(msg, title, fail)
         # Still return True, so we re-enter the loop
         return True
@@ -912,6 +948,8 @@ def update(ftype, tweets, api, me, state, count, ignore):
                 tweet.from_stealth = user
             elif ftype == "list":
                 tweet.from_list = list_.name
+            elif ftype == "search":
+                tweet.from_search = search.name
 
         tweets.add(filter(skip_check(ignore), new_tweets))
 
@@ -947,9 +985,14 @@ def display(me, tweets, state, timeout, expand):
         title = "From %s %s" % (tweet.sender.name,
                                 relative_time(tweet.created_at))
         icon = get_user_icon(tweet.sender)
+    elif hasattr(tweet, "from_search"):
+        title = "From %s %s" % (tweet.from_user,
+                                relative_time(tweet.created_at))
+        icon = get_user_icon(tweet)
     else:
         # Don't re-display already seen tweets
         if tweet.id <= state.displayed[tweet.user.screen_name.lower()]:
+            print(warn("skipped %s" % tweet.id))
             return True
         title = "From %s %s" % (tweet.user.name,
                                 relative_time(tweet.created_at))
@@ -959,29 +1002,33 @@ def display(me, tweets, state, timeout, expand):
         title += " on %s list" % tweet.from_list
     elif hasattr(tweet, "from_direct"):
         title += " in direct message"
+    elif hasattr(tweet, "from_search"):
+        title += " in %s search" % tweet.from_search
 
     # pylint: disable-msg=E1101
     note = pynotify.Notification(title, format_tweet(tweet.text, expand), icon)
     # pylint: enable-msg=E1101
-    if not hasattr(tweet, "from_direct") and "actions" in NOTIFY_SERVER_CAPS:
-        note.add_action("default", " ", open_tweet(tweet))
-        if not tweet.user.protected:
-            note.add_action("mail-forward", "retweet",
-                            method_tweet(tweet, "retweet"))
-        # In case this has been seen in another client
-        if not tweet.favorited:
-            note.add_action("bookmark", "Fave",
-                            method_tweet(tweet, "favorite"))
-        if tweet.geo:
-            note.add_action("find", "Geo", open_geo(tweet))
-        # Keep a reference for handling the action.
-        NOTIFICATIONS[hash(note)] = note
-        note.connect_object("closed", NOTIFICATIONS.pop, hash(note))
+    if not hasattr(tweet, "from_direct") and not hasattr(tweet, "from_search"):
+        if "actions" in NOTIFY_SERVER_CAPS:
+            note.add_action("default", " ", open_tweet(tweet))
+            if not tweet.user.protected:
+                note.add_action("mail-forward", "retweet",
+                                method_tweet(tweet, "retweet"))
+            # In case this has been seen in another client
+            if not tweet.favorited:
+                note.add_action("bookmark", "Fave",
+                                method_tweet(tweet, "favorite"))
+            if tweet.geo:
+                note.add_action("find", "Geo", open_geo(tweet))
+            # Keep a reference for handling the action.
+            NOTIFICATIONS[hash(note)] = note
+            note.connect_object("closed", NOTIFICATIONS.pop, hash(note))
     note.set_timeout(timeout * 1000)
     note.set_category("im.received")
-    # If we cared about these users they'd be followed, not listed
     # pylint: disable-msg=E1101
-    if hasattr(tweet, "from_list"):
+    # For lists: If we cared about these users they'd be followed, not listed
+    # For searches: These are always low priority
+    if hasattr(tweet, "from_list") or hasattr(tweet, "from_search"):
         note.set_urgency(pynotify.URGENCY_LOW)
     if me.screen_name.lower() in tweet.text.lower():
         note.set_urgency(pynotify.URGENCY_CRITICAL)
@@ -995,7 +1042,7 @@ def display(me, tweets, state, timeout, expand):
     if not note.show():
         # Fail hard at this point, recovery has little value.
         raise OSError("Notification failed to display!")
-    if not hasattr(tweet, "from_direct"):
+    if not hasattr(tweet, "from_direct") and not hasattr(tweet, "from_search"):
         state.displayed[tweet.user.screen_name.lower()] = tweet.id
     if hasattr(tweet, "from_timeline"):
         state.displayed["self-status"] = tweet.id
@@ -1003,6 +1050,8 @@ def display(me, tweets, state, timeout, expand):
         state.displayed["self-direct"] = tweet.id
     elif hasattr(tweet, "from_list"):
         state.displayed["list-%s" % tweet.from_list] = tweet.id
+    elif hasattr(tweet, "from_search"):
+        state.displayed["search-%s" % tweet.from_search] = tweet.id
     return True
 
 
@@ -1168,8 +1217,11 @@ def main(argv):
             lists = sorted(api.lists()[0], key=lambda l: l.name.lower())
         except IndexError:
             pass
+    searches = []
+    if options.searches:
+        searches = sorted(api.saved_searches(), key=lambda s: s.name.lower())
 
-    state = State(options.stealth, lists)
+    state = State(options.stealth, lists, searches)
 
     update("user", tweets, api, me, state, options.count, options.ignore)
 
@@ -1185,6 +1237,11 @@ def main(argv):
     if lists:
         glib.timeout_add_seconds(options.frequency / len(lists) * 10,
                                  update, "list", tweets, api, me, state,
+                                 options.count, options.ignore)
+
+    if searches:
+        glib.timeout_add_seconds(options.frequency / len(searches) * 10,
+                                 update, "search", tweets, api, me, state,
                                  options.count, options.ignore)
 
     glib.timeout_add_seconds(options.timeout + 1, display, me, tweets, state,

@@ -89,6 +89,14 @@ Options
 
    don't fetch user's lists
 
+.. cmdoption:: --searches
+
+   fetch user's saved searches
+
+.. cmdoption:: --no-searches
+
+   don't fetch user's saved searches
+
 .. cmdoption:: --no-cache
 
    don't cache twitter communications

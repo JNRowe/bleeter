@@ -77,6 +77,12 @@ OPTIONS
 --no-lists
     don't fetch user's lists
 
+--searches
+    fetch user's saved searches
+
+--no-searches
+   don't fetch user's saved searches
+
 --no-cache
     don't cache twitter communications
 
