@@ -755,8 +755,12 @@ def open_tweet(tweet):
         :param action: Calling action name
         """
 
+        if tweet.from_type == "search":
+            name= tweet.from_user
+        else:
+            name = tweet.user.screen_name
         open_browser("http://twitter.com/%s/status/%s"
-                     % (tweet.user.screen_name, tweet.id))
+                     % (name, tweet.id))
     return show
 
 
