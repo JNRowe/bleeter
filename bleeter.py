@@ -855,21 +855,19 @@ def skip_check(ignore):
     return wrapper
 
 
-def update(ftype, tweets, api, me, state, count, ignore):
+def update(api, ftype, tweets, state, count, ignore):
     """Fetch new tweets and queue them for display
 
     For stealth, list and search fetches we only fetch a single user, list or
     search on each run, fetching the full timeline for each element on each run
     is a waste of resources
 
+    :type api: ``tweepy.api.API``
+    :param api: Authenticated ``tweepy.api.API`` object
     :type ftype: ``str``
     :param ftype: Type of update to perform
     :type tweets: ``Tweets``
     :param tweets: Tweets awaiting display
-    :type api: ``tweepy.api.API``
-    :param api: Authenticated ``tweepy.api.API`` object
-    :type me: ``tweepy.models.User``
-    :param me: Authenticated user's user data
     :type state: ``State``
     :param state: Application state
     :type count: ``int``
@@ -895,7 +893,7 @@ def update(ftype, tweets, api, me, state, count, ignore):
     elif ftype == "list":
         list_ = state.get_list()
         fetch_ref = "list-%s" % list_.name
-        methods = [("list_timeline", [me.screen_name, list_.slug])]
+        methods = [("list_timeline", [api.me().screen_name, list_.slug])]
     elif ftype == "search":
         search = state.get_search()
         fetch_ref = "search-%s" % search.name
@@ -947,11 +945,11 @@ def update(ftype, tweets, api, me, state, count, ignore):
 
 
 NOTIFICATIONS = {}
-def display(me, tweets, state, timeout, expand):
+def display(api, tweets, state, timeout, expand):
     """Display notifications for new tweets
 
-    :type me: ``tweepy.models.User``
-    :param me: Authenticated user object
+    :type api: ``tweepy.api.API``
+    :param api: Authenticated ``tweepy.api.API`` object
     :type tweets: ``Tweets``
     :param tweets: Tweets awaiting display
     :type state: ``State``
@@ -1019,10 +1017,10 @@ def display(me, tweets, state, timeout, expand):
     # For searches: These are always low priority
     if tweet.from_type in ("list", "search"):
         note.set_urgency(pynotify.URGENCY_LOW)
-    if me.screen_name.lower() in tweet.text.lower():
+    if api.me().screen_name.lower() in tweet.text.lower():
         note.set_urgency(pynotify.URGENCY_CRITICAL)
-    if tweet.text.lower().startswith(("@%s" % me.screen_name.lower(),
-                                      ".@%s" % me.screen_name.lower())):
+    if tweet.text.lower().startswith(("@%s" % api.me().screen_name.lower(),
+                                      ".@%s" % api.me().screen_name.lower())):
         note.set_timeout(pynotify.EXPIRES_NEVER)
     if tweet.from_type == "direct":
         note.set_urgency(pynotify.URGENCY_CRITICAL)
@@ -1203,6 +1201,8 @@ def main(argv):
                    "Is twitter or your network down?",
                    "Network error", fail)
         return errno.EIO
+    # Make calls to api.me() just return the response directly.
+    api.me = lambda: me
 
     lists = []
     if options.lists:
@@ -1217,28 +1217,28 @@ def main(argv):
 
     state = State(options.stealth, lists, searches)
 
-    update("user", tweets, api, me, state, options.count, options.ignore)
+    update(api, "user", tweets, state, options.count, options.ignore)
 
-    glib.timeout_add_seconds(options.frequency, update, "user", tweets, api,
-                             me, state, options.count, options.ignore)
-    glib.timeout_add_seconds(options.frequency * 10, update, "direct", tweets,
-                             api, me, state, options.count, options.ignore)
+    glib.timeout_add_seconds(options.frequency, update, api, "user", tweets,
+                             state, options.count, options.ignore)
+    glib.timeout_add_seconds(options.frequency * 10, update, api, "direct",
+                             tweets, state, options.count, options.ignore)
     if options.stealth:
         glib.timeout_add_seconds(options.frequency / len(options.stealth) * 10,
-                                 update, "stealth", tweets, api, me, state,
+                                 update, api, "stealth", tweets, state,
                                  options.count, options.ignore)
 
     if lists:
         glib.timeout_add_seconds(options.frequency / len(lists) * 10,
-                                 update, "list", tweets, api, me, state,
+                                 update, api, "list", tweets, state,
                                  options.count, options.ignore)
 
     if searches:
         glib.timeout_add_seconds(options.frequency / len(searches) * 10,
-                                 update, "search", tweets, api, me, state,
+                                 update, api, "search", tweets, state,
                                  options.count, options.ignore)
 
-    glib.timeout_add_seconds(options.timeout + 1, display, me, tweets, state,
+    glib.timeout_add_seconds(options.timeout + 1, display, api, tweets, state,
                              options.timeout, options.expand)
     if options.tray:
         glib.timeout_add_seconds(options.timeout // 2, tooltip, icon, tweets)
