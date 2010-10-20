@@ -755,37 +755,18 @@ def open_tweet(tweet):
         :param action: Calling action name
         """
 
-        if tweet.from_type == "search":
-            name= tweet.from_user
+        if action == "find":
+            latlon = ",".join(map(str, tweet.geo['coordinates']))
+
+            url = "http://maps.google.com/maps?q=%s@%s&sll=%s&z=16" \
+                    % (tweet.user.screen_name, latlon, latlon)
         else:
-            name = tweet.user.screen_name
-        open_browser("http://twitter.com/%s/status/%s"
-                     % (name, tweet.id))
-    return show
-
-
-def open_geo(tweet):
-    """"Create tweet opening function for location
-
-    :type tweet: ``tweepy.models.Status``
-    :param tweet: Twitter status message to open
-    :rtype: ``FunctionType``
-    :return: Wrapper to open tweet location in browser
-    """
-
-    def show(notification, action):  # pylint: disable-msg=W0613
-        """Open tweet location in browser
-
-        :type notification: ``pynotify.Notification``
-        :param notification: Calling notification instance
-        :type action: ``str``
-        :param action: Calling action name
-        """
-
-        latlon = ",".join(map(str, tweet.geo['coordinates']))
-
-        open_browser("http://maps.google.com/maps?q=%s@%s&sll=%s&z=16"
-                     % (tweet.user.screen_name, latlon, latlon))
+            if tweet.from_type == "search":
+                name = tweet.from_user
+            else:
+                name = tweet.user.screen_name
+            url = "http://twitter.com/%s/status/%s" % (name, tweet.id)
+        open_browser(url)
     return show
 
 
@@ -982,7 +963,7 @@ def display(api, tweets, state, timeout, expand):
                 note.add_action("bookmark", "Fave",
                                 lambda n, a: api.create_favorite(tweet.id))
             if tweet.geo:
-                note.add_action("find", "Geo", open_geo(tweet))
+                note.add_action("find", "Geo", open_tweet(tweet))
             # Keep a reference for handling the action.
             NOTIFICATIONS[hash(note)] = note
             note.connect_object("closed", NOTIFICATIONS.pop, hash(note))
