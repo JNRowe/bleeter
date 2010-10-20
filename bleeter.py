@@ -1031,7 +1031,7 @@ def display(api, tweets, state, timeout, expand):
         raise OSError("Notification failed to display!")
     if not tweet.from_type in ("direct", "search"):
         state.displayed[tweet.user.screen_name.lower()] = tweet.id
-    if tweet.from_type == "timeline":
+    if tweet.from_type == "user":
         state.displayed["self-status"] = tweet.id
     elif tweet.from_type == "direct":
         state.displayed["self-direct"] = tweet.id
