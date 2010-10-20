@@ -884,31 +884,27 @@ def update(ftype, tweets, api, me, state, count, ignore):
 
     if ftype == "user":
         fetch_ref = "self-status"
-        kwargs["since_id"] = state.fetched["self-status"]
         methods = [("home_timeline", []), ("mentions", [])]
     elif ftype == "direct":
         fetch_ref = "self-direct"
-        kwargs["since_id"] = state.fetched[fetch_ref]
         methods = [("direct_messages", [])]
     elif ftype == "stealth":
         user = state.get_user()
         fetch_ref = user
-        kwargs["since_id"] = state.fetched[fetch_ref]
         methods = [("user_timeline", [user, ])]
     elif ftype == "list":
         list_ = state.get_list()
         fetch_ref = "list-%s" % list_.name
-        kwargs["since_id"] = state.fetched[fetch_ref]
         methods = [("list_timeline", [me.screen_name, list_.slug])]
     elif ftype == "search":
         search = state.get_search()
         fetch_ref = "search-%s" % search.name
-        kwargs["since_id"] = state.fetched[fetch_ref]
         # API is stupidly incompatible for searches
         kwargs["rpp"] = count
         methods = [("search", [search.query, ])]
     else:
         raise ValueError("Unknown fetch type `%s'" % ftype)
+    kwargs["since_id"] = state.fetched[fetch_ref]
 
     try:
         new_tweets = []
