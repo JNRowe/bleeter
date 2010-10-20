@@ -789,30 +789,6 @@ def open_geo(tweet):
     return show
 
 
-def method_tweet(tweet, method):
-    """"Create Status method wrapper function
-
-    :type tweet: ``tweepy.models.Status``
-    :param tweet: Twitter status message to favourite
-    :type method: ``str``
-    :param method: Method to wrap
-    :rtype: ``FunctionType``
-    :return: Wrapper to tweet method
-    """
-
-    def wrapper(notification, action):  # pylint: disable-msg=W0613
-        """Mark tweet as favourite
-
-        :type notification: ``pynotify.Notification``
-        :param notification: Calling notification instance
-        :type action: ``str``
-        :param action: Calling action name
-        """
-
-        getattr(tweet, method)()
-    return wrapper
-
-
 def skip_check(ignore):
     """"Create tweet skip testing wrapper function
 
@@ -1000,11 +976,11 @@ def display(api, tweets, state, timeout, expand):
             note.add_action("default", " ", open_tweet(tweet))
             if tweet.from_type == "search" or not tweet.user.protected:
                 note.add_action("mail-forward", "retweet",
-                                method_tweet(tweet, "retweet"))
+                                lambda n, a: api.retweet(tweet.id))
             # In case this has been seen in another client
             if tweet.from_type == "search" or not tweet.favorited:
                 note.add_action("bookmark", "Fave",
-                                method_tweet(tweet, "favorite"))
+                                lambda n, a: api.create_favorite(tweet.id))
             if tweet.geo:
                 note.add_action("find", "Geo", open_geo(tweet))
             # Keep a reference for handling the action.
