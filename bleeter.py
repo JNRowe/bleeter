@@ -995,14 +995,14 @@ def display(api, tweets, state, timeout, expand):
     # pylint: disable-msg=E1101
     note = pynotify.Notification(title, format_tweet(tweet.text, expand), icon)
     # pylint: enable-msg=E1101
-    if not tweet.from_type in ("direct", "search"):
+    if not tweet.from_type == "direct":
         if "actions" in NOTIFY_SERVER_CAPS:
             note.add_action("default", " ", open_tweet(tweet))
-            if not tweet.user.protected:
+            if tweet.from_type == "search" or not tweet.user.protected:
                 note.add_action("mail-forward", "retweet",
                                 method_tweet(tweet, "retweet"))
             # In case this has been seen in another client
-            if not tweet.favorited:
+            if tweet.from_type == "search" or not tweet.favorited:
                 note.add_action("bookmark", "Fave",
                                 method_tweet(tweet, "favorite"))
             if tweet.geo:
