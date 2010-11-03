@@ -79,7 +79,19 @@ Options
 
 .. cmdoption:: --count
 
-   maximum number of tweets to fetch(max 200)
+   maximum number of timeline tweets to fetch(max 200)
+
+.. cmdoption:: --stealth-count
+
+   maximum number of stealth tweets to fetch
+
+.. cmdoption:: --search-count
+
+   maximum number of tweets to fetch for searches
+
+.. cmdoption:: --list-count
+
+   maximum number of tweets to fetch for lists
 
 .. cmdoption:: --lists
 

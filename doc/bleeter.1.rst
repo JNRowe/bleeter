@@ -69,7 +69,19 @@ OPTIONS
     don't expand links in tweets
 
 --count **n**
-    maximum number of tweets to fetch(max 200)
+    maximum number of timeline tweets to fetch(max 200)
+
+--stealth-count **n**
+
+   maximum number of stealth tweets to fetch
+
+--search-count **n**
+
+   maximum number of tweets to fetch for searches
+
+--list-count **n**
+
+   maximum number of tweets to fetch for lists
 
 --lists
     fetch user's lists

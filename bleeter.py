@@ -448,6 +448,9 @@ def process_command_line(config_file):
         "tray = boolean(default=True)",
         "expand = boolean(default=False)",
         "count = integer(min=1, max=200, default=20)",
+        "stealth_count = integer(min=1, max=200, default=20)",
+        "search_count = integer(min=1, max=200, default=20)",
+        "list_count = integer(min=1, max=200, default=20)",
         "lists = boolean(default=False)",
         "searches = boolean(default=False)",
         "cache = boolean(default=True)",
@@ -471,6 +474,9 @@ def process_command_line(config_file):
                         tray=config.get("tray"),
                         expand=config.get("expand"),
                         count=config.get("count"),
+                        stealth_count=config.get("stealth_count"),
+                        search_count=config.get("search_count"),
+                        list_count=config.get("list_count"),
                         lists=config.get("lists"),
                         searches=config.get("searches"),
                         cache=config.get("cache"))
@@ -517,7 +523,16 @@ def process_command_line(config_file):
                           dest="expand", help="Don't expand links in tweets")
     tweet_opts.add_option("--count", action="callback", type="int",
                           metavar=config["count"], callback=check_value,
-                          help="Maximum number of tweets to fetch")
+                          help="Maximum number of timeline tweets to fetch")
+    tweet_opts.add_option("--stealth-count", action="callback", type="int",
+                          metavar=config["stealth_count"], callback=check_value,
+                          help="Maximum number of stealth tweets to fetch")
+    tweet_opts.add_option("--search-count", action="callback", type="int",
+                          metavar=config["search_count"], callback=check_value,
+                          help="Maximum number of tweets to fetch for searches")
+    tweet_opts.add_option("--list-count", action="callback", type="int",
+                          metavar=config["list_count"], callback=check_value,
+                          help="Maximum number of tweets to fetch for lists")
     tweet_opts.add_option("--lists", action="store_true",
                           help="Fetch user's lists")
     tweet_opts.add_option("--no-lists", action="store_false",
@@ -1183,17 +1198,17 @@ def main(argv):
     if options.stealth:
         glib.timeout_add_seconds(options.frequency / len(options.stealth) * 10,
                                  update, api, "stealth", tweets, state,
-                                 options.count, options.ignore)
+                                 options.stealth_count, options.ignore)
 
     if lists:
         glib.timeout_add_seconds(options.frequency / len(lists) * 10,
                                  update, api, "list", tweets, state,
-                                 options.count, options.ignore)
+                                 options.list_count, options.ignore)
 
     if searches:
         glib.timeout_add_seconds(options.frequency / len(searches) * 10,
                                  update, api, "search", tweets, state,
-                                 options.count, options.ignore)
+                                 options.search_count, options.ignore)
 
     glib.timeout_add_seconds(options.timeout + 1, display, api, tweets, state,
                              options.timeout, options.expand)

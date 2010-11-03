@@ -34,6 +34,8 @@ The ``timeout`` option allows you to specify the default notification timeout,
 Its value is specified in seconds.  Not all notification daemons support setting
 this value, and some daemons may simply ignore it.
 
+.. _stealth-label:
+
 ``stealth`` option
 ''''''''''''''''''
 
@@ -58,15 +60,22 @@ people like to produce.
 The entries should be comma separated, and must be quoted if they contain '#'
 to match hashtags.
 
-``count`` option
-''''''''''''''''
+``count`` options
+''''''''''''''''''
 
-The ``count`` option allows you to specify the maximum number of new statuses to
-fetch when updating.  Only new tweets are fetched, so specifying large values
-here only affects initial runs and users who do not run ``bleeter`` very often.
+The ``count`` option allows you to specify the maximum number of new statuses
+from your timeline to fetch when updating.  Only new tweets are fetched, so
+specifying large values here only affects initial runs and users who do not run
+``bleeter`` very often.
 
-By default twitter_ returns 20 new statuses, and this is also the default setting
-for ``bleeter``.  twitter_ sets a limit of 200 statuses.
+By default twitter_ returns 20 new statuses, and this is also the default
+setting for ``bleeter``.  twitter_ sets a limit of 200 statuses.
+
+The ``search_count`` and ``list_count`` options perform the same task for search
+results and list timelines respectively.
+
+The ``stealth_count`` option performs the same task for stealth follows, see
+:ref:`stealth-label`.
 
 ``lists`` option
 ''''''''''''''''
