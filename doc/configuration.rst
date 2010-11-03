@@ -84,7 +84,7 @@ The ``lists`` option enables fetching of user's lists, in addition to the
 standard behaviour of fetching user's timeline and mentions.
 
 ``searches`` option
-''''''''''''''''
+'''''''''''''''''''
 
 The ``searches`` option enables fetching of user's saved searches, in
 addition to the standard behaviour of fetching user's timeline and
