@@ -74,17 +74,15 @@ except ImportError:  # pragma: no cover
     urlunshort = None  # pylint: disable-msg=C0103
 
 try:
-    import termstyle
+    from fabulous import color as fab_color
 except ImportError:  # pragma: no cover
-    termstyle = None  # pylint: disable-msg=C0103
+    fab_color = None  # pylint: disable-msg=C0103
 
 # Select colours if terminal is a tty
-if termstyle:
-    # pylint: disable-msg=C0103
-    termstyle.auto()
-    success = termstyle.green
-    fail = termstyle.red
-    warn = termstyle.yellow
+if fab_color and sys.stdout.isatty():
+    success = fab_color.green
+    fail = fab_color.red
+    warn = fab_color.yellow
 else:  # pragma: no cover
     # pylint: disable-msg=C0103
     success = fail = warn = str
