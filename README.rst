@@ -26,6 +26,9 @@ tweepy_ packages.
 If you wish to use the URL expansion option for shortened links, you will need
 urlunshort_.
 
+If you would like coloured terminal output for debugging information, then you
+will need termcolor_.
+
 No significant effort has been put in to making ``bleeter`` work with Python 3,
 as few of the dependencies are ported yet.
 
@@ -126,6 +129,7 @@ reproduce the problem, or even better a patch!
 .. _notification-daemon: http://www.galago-project.org/
 .. _pygtk: http://www.pygtk.org/
 .. _urlunshort: http://bitbucket.org/runeh/urlunshort
+.. _termcolor: http://pypi.python.org/pypi/termcolor/
 .. _email: jnrowe@gmail.com
 
 ..
