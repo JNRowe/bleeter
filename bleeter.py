@@ -445,6 +445,7 @@ def process_command_line(config_file):
         "ignore = list(default=list('#nowplaying'))",
         "tray = boolean(default=True)",
         "expand = boolean(default=False)",
+        "mobile = boolean(default=False)",
         "count = integer(min=1, max=200, default=20)",
         "stealth_count = integer(min=1, max=200, default=20)",
         "search_count = integer(min=1, max=200, default=20)",
@@ -471,6 +472,7 @@ def process_command_line(config_file):
                         ignore=config.get("ignore"),
                         tray=config.get("tray"),
                         expand=config.get("expand"),
+                        mobile=config.get("mobile"),
                         count=config.get("count"),
                         stealth_count=config.get("stealth_count"),
                         search_count=config.get("search_count"),
@@ -519,6 +521,10 @@ def process_command_line(config_file):
                           help="Expand links in tweets")
     tweet_opts.add_option("--no-expand", action="store_false",
                           dest="expand", help="Don't expand links in tweets")
+    tweet_opts.add_option("-m", "--mobile", action="store_true",
+                          help="Open tweets in twitter's mobile interface")
+    tweet_opts.add_option("--no-mobile", action="store_false", dest="mobile",
+                          help="Don't open tweets in twitter's mobile interface")
     tweet_opts.add_option("--count", action="callback", type="int",
                           metavar=config["count"], callback=check_value,
                           help="Maximum number of timeline tweets to fetch")
@@ -654,7 +660,7 @@ def url_expand(m):
     return '<a href="%s">%s</a>' % (URLS[url], URLS[url])
 
 
-def format_tweet(text, expand=False):
+def format_tweet(text, expand=False, mobile=False):
     """Format tweet for display
 
     >>> format_tweet("Populate #sup contacts from #abook")
@@ -687,6 +693,8 @@ def format_tweet(text, expand=False):
     :param api: Tweet content
     :type expand: ``bool``
     :param expand: Expand links in tweet text
+    :type mobile: ``bool``
+    :param mobile: Open tweets in twitter's mobile site
     :rtype: ``str``
     :return: Tweet content with pretty formatting
     """
@@ -699,7 +707,10 @@ def format_tweet(text, expand=False):
     user_match = re.compile(r'@(\w+(/\w+)?)')
     hashtag_match = re.compile(r'(#\w+)')
 
-    base = "http://twitter.com"
+    if mobile:
+        base = "http://mobile.twitter.com"
+    else:
+        base = "http://twitter.com"
 
     if "body-markup" in NOTIFY_SERVER_CAPS:
         if "body-hyperlinks" in NOTIFY_SERVER_CAPS:
@@ -750,14 +761,22 @@ def get_user_icon(user):
     return "file://%s" % filename
 
 
-def open_tweet(tweet):
+def open_tweet(tweet, mobile=False):
     """"Create tweet opening function
 
     :type tweet: ``tweepy.models.Status``
     :param tweet: Twitter status message to open
+    :type mobile: ``bool``
+    :param mobile: Open tweets in twitter's mobile site
     :rtype: ``FunctionType``
     :return: Wrapper to open tweet in browser
     """
+
+    if mobile:
+        twitter_base = "http://mobile.twitter.com"
+    else:
+        twitter_base = "http://twitter.com"
+
 
     def show(notification, action):  # pylint: disable-msg=W0613
         """Open tweet in browser
@@ -778,7 +797,7 @@ def open_tweet(tweet):
                 name = tweet.from_user
             else:
                 name = tweet.user.screen_name
-            url = "http://twitter.com/%s/status/%s" % (name, tweet.id)
+            url = "%s/%s/status/%s" % (twitter_base, name, tweet.id)
         open_browser(url)
     return show
 
@@ -915,7 +934,7 @@ def update(api, ftype, tweets, state, count, ignore):
 
 
 NOTIFICATIONS = {}
-def display(api, tweets, state, timeout, expand):
+def display(api, tweets, state, timeout, expand, mobile_site=False):
     """Display notifications for new tweets
 
     :type api: ``tweepy.api.API``
@@ -928,6 +947,8 @@ def display(api, tweets, state, timeout, expand):
     :param timeout: Timeout for notifications in seconds
     :type expand: ``bool``
     :param expand: Whether to expand links in tweet text
+    :type mobile_site: ``bool``
+    :param mobile_site: Tweets open in twitter's mobile site
     :rtype: ``True``
     :return: Timers must return a ``True`` value for timer to continue
 
@@ -963,11 +984,13 @@ def display(api, tweets, state, timeout, expand):
         title += " in %s search" % tweet.from_arg
 
     # pylint: disable-msg=E1101
-    note = pynotify.Notification(title, format_tweet(tweet.text, expand), icon)
+    note = pynotify.Notification(title,
+                                 format_tweet(tweet.text, expand, mobile_site),
+                                 icon)
     # pylint: enable-msg=E1101
     if not tweet.from_type == "direct":
         if "actions" in NOTIFY_SERVER_CAPS:
-            note.add_action("default", " ", open_tweet(tweet))
+            note.add_action("default", " ", open_tweet(tweet, mobile_site))
             if tweet.from_type == "search" or not tweet.user.protected:
                 note.add_action("mail-forward", "retweet",
                                 lambda n, a: api.retweet(tweet.id))
@@ -1209,7 +1232,7 @@ def main(argv):
                                  options.search_count, options.ignore)
 
     glib.timeout_add_seconds(options.timeout + 1, display, api, tweets, state,
-                             options.timeout, options.expand)
+                             options.timeout, options.expand, options.mobile)
     if options.tray:
         glib.timeout_add_seconds(options.timeout // 2, tooltip, icon, tweets)
 

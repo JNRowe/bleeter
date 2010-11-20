@@ -77,6 +77,14 @@ Options
 
    don't expand links in tweets
 
+.. cmdoption:: -m, --mobile
+
+   open tweets in twitter's mobile interface
+
+.. cmdoption:: --no-mobile
+
+   don't open tweets in twitter's mobile interface
+
 .. cmdoption:: --count
 
    maximum number of timeline tweets to fetch(max 200)
