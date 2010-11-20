@@ -85,6 +85,10 @@ Options
 
    don't open links in lighter mobile versions
 
+.. cmdoption:: --map-provider "google"
+
+   open geo links using specified site
+
 .. cmdoption:: --count
 
    maximum number of timeline tweets to fetch(max 200)

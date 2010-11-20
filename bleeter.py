@@ -447,6 +447,7 @@ def process_command_line(config_file):
         "tray = boolean(default=True)",
         "expand = boolean(default=False)",
         "mobile = boolean(default=False)",
+        "map_provider = string(default='google')",
         "count = integer(min=1, max=200, default=20)",
         "stealth_count = integer(min=1, max=200, default=20)",
         "search_count = integer(min=1, max=200, default=20)",
@@ -474,6 +475,7 @@ def process_command_line(config_file):
                         tray=config.get("tray"),
                         expand=config.get("expand"),
                         mobile=config.get("mobile"),
+                        map_provider=config.get("map_provider"),
                         count=config.get("count"),
                         stealth_count=config.get("stealth_count"),
                         search_count=config.get("search_count"),
@@ -524,6 +526,10 @@ def process_command_line(config_file):
                           help="Open links in lighter mobile versions")
     tweet_opts.add_option("--no-mobile", action="store_false", dest="mobile",
                           help="Don't open links in lighter mobile versions")
+    tweet_opts.add_option("--map-provider", action="store",
+                          choices=("bing", "google"),
+                          metavar=config.get("map_provider"),
+                          help="Open geo links using specified site")
     tweet_opts.add_option("--count", action="callback", type="int",
                           metavar=config["count"], callback=check_value,
                           help="Maximum number of timeline tweets to fetch")
@@ -761,13 +767,16 @@ def get_user_icon(user):
     return "file://%s" % filename
 
 
-def open_tweet(tweet, mobile=False):
+def open_tweet(tweet, mobile=False, map_provider="google"):
     """"Create tweet opening function
 
     :type tweet: ``tweepy.models.Status``
     :param tweet: Twitter status message to open
     :type mobile: ``bool``
     :param mobile: Open links in lighter mobile versions
+    :type map_provider: ``str``
+    :param map_provider: Map provider to open geo links in, if ``mobile`` is
+        ``False``
     :rtype: ``FunctionType``
     :return: Wrapper to open tweet in browser
     """
@@ -778,8 +787,11 @@ def open_tweet(tweet, mobile=False):
             "&markers=%(latlon)s&size=500x300&sensor=false"
     else:
         twitter_base = "http://twitter.com"
-        map_url = "http://maps.google.com/maps?q=%(name)s@%(latlon)s" \
-            "&sll=%(latlon)s&z=16"
+        if map_provider == "google":
+            map_url = "http://maps.google.com/maps?q=%(name)s@%(latlon)s" \
+                "&sll=%(latlon)s&z=16"
+        elif map_provider == "bing":
+            map_url = "http://bing.com/maps/default.aspx?where1=%(latlon)s"
 
     def show(notification, action):  # pylint: disable-msg=W0613
         """Open tweet in browser
@@ -936,7 +948,7 @@ def update(api, ftype, tweets, state, count, ignore):
 
 
 NOTIFICATIONS = {}
-def display(api, tweets, state, timeout, expand, mobile=False):
+def display(api, tweets, state, timeout, expand, mobile, map_provider):
     """Display notifications for new tweets
 
     :type api: ``tweepy.api.API``
@@ -951,6 +963,9 @@ def display(api, tweets, state, timeout, expand, mobile=False):
     :param expand: Whether to expand links in tweet text
     :type mobile: ``bool``
     :param mobile: Links open in lighter mobile versions
+    :type map_provider: ``str``
+    :param map_provider: Map provider to open geo links in, if ``mobile`` is
+        ``False`
     :rtype: ``True``
     :return: Timers must return a ``True`` value for timer to continue
 
@@ -1001,7 +1016,8 @@ def display(api, tweets, state, timeout, expand, mobile=False):
                 note.add_action("bookmark", "Fave",
                                 lambda n, a: api.create_favorite(tweet.id))
             if tweet.geo:
-                note.add_action("find", "Geo", open_tweet(tweet, mobile))
+                note.add_action("find", "Geo", open_tweet(tweet, mobile,
+                                                          map_provider))
             # Keep a reference for handling the action.
             NOTIFICATIONS[hash(note)] = note
             note.connect_object("closed", NOTIFICATIONS.pop, hash(note))
@@ -1234,7 +1250,8 @@ def main(argv):
                                  options.search_count, options.ignore)
 
     glib.timeout_add_seconds(options.timeout + 1, display, api, tweets, state,
-                             options.timeout, options.expand, options.mobile)
+                             options.timeout, options.expand, options.mobile,
+                             options.map_provider)
     if options.tray:
         glib.timeout_add_seconds(options.timeout // 2, tooltip, icon, tweets)
 

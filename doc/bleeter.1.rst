@@ -74,6 +74,9 @@ OPTIONS
 --no-mobile
     don't open links in lighter mobile versions
 
+--map-provider **site**
+    open geo links using specified site
+
 --count **n**
     maximum number of timeline tweets to fetch(max 200)
 
