@@ -527,7 +527,7 @@ def process_command_line(config_file):
     tweet_opts.add_option("--no-mobile", action="store_false", dest="mobile",
                           help="Don't open links in lighter mobile versions")
     tweet_opts.add_option("--map-provider", action="store",
-                          choices=("bing", "google"),
+                          choices=("bing", "google", "google-nojs"),
                           metavar=config.get("map_provider"),
                           help="Open geo links using specified site")
     tweet_opts.add_option("--count", action="callback", type="int",
@@ -787,11 +787,14 @@ def open_tweet(tweet, mobile=False, map_provider="google"):
             "&markers=%(latlon)s&size=500x300&sensor=false"
     else:
         twitter_base = "http://twitter.com"
-        if map_provider == "google":
+        if map_provider == "bing":
+            map_url = "http://bing.com/maps/default.aspx?where1=%(latlon)s"
+        elif map_provider == "google":
             map_url = "http://maps.google.com/maps?q=%(name)s@%(latlon)s" \
                 "&sll=%(latlon)s&z=16"
-        elif map_provider == "bing":
-            map_url = "http://bing.com/maps/default.aspx?where1=%(latlon)s"
+        elif map_provider == "google-nojs":
+            map_url = "http://maps.google.com/m?q=@(latlon)s&oi=nojs"
+
 
     def show(notification, action):  # pylint: disable-msg=W0613
         """Open tweet in browser
