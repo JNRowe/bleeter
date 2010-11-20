@@ -164,6 +164,7 @@ class State(object):
         # Shutdown can take a long time, especially with lots of lists or
         # stealth follows.
         atexit.register(sys.stderr.write, warn("Shutting down\n"))
+
     def get_user(self):
         """Return next stealth user to update
 
@@ -482,12 +483,10 @@ def process_command_line(config_file):
                         cache=config.get("cache"))
 
     parser.add_option("-t", "--timeout", action="callback", type="int",
-                      metavar=config["timeout"],
-                      callback=check_value,
+                      metavar=config["timeout"], callback=check_value,
                       help="Timeout for notification popups in seconds")
     parser.add_option("-f", "--frequency", action="callback", type="int",
-                      metavar=config["frequency"],
-                      callback=check_value,
+                      metavar=config["frequency"], callback=check_value,
                       help="Update frequency in in seconds")
 
     auth_opts = optparse.OptionGroup(parser, "Authentication options")
@@ -529,7 +528,8 @@ def process_command_line(config_file):
                           metavar=config["count"], callback=check_value,
                           help="Maximum number of timeline tweets to fetch")
     tweet_opts.add_option("--stealth-count", action="callback", type="int",
-                          metavar=config["stealth_count"], callback=check_value,
+                          metavar=config["stealth_count"],
+                          callback=check_value,
                           help="Maximum number of stealth tweets to fetch")
     tweet_opts.add_option("--search-count", action="callback", type="int",
                           metavar=config["search_count"], callback=check_value,
@@ -780,7 +780,6 @@ def open_tweet(tweet, mobile=False):
         twitter_base = "http://twitter.com"
         map_url = "http://maps.google.com/maps?q=%(name)s@%(latlon)s" \
             "&sll=%(latlon)s&z=16"
-
 
     def show(notification, action):  # pylint: disable-msg=W0613
         """Open tweet in browser
