@@ -69,10 +69,10 @@ OPTIONS
     don't expand links in tweets
 
 -m, --mobile
-    open tweets in twitter's mobile interface
+    open links in lighter mobile versions
 
 --no-mobile
-    don't open tweets in twitter's mobile interface
+    don't open links in lighter mobile versions
 
 --count **n**
     maximum number of timeline tweets to fetch(max 200)

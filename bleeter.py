@@ -522,9 +522,9 @@ def process_command_line(config_file):
     tweet_opts.add_option("--no-expand", action="store_false",
                           dest="expand", help="Don't expand links in tweets")
     tweet_opts.add_option("-m", "--mobile", action="store_true",
-                          help="Open tweets in twitter's mobile interface")
+                          help="Open links in lighter mobile versions")
     tweet_opts.add_option("--no-mobile", action="store_false", dest="mobile",
-                          help="Don't open tweets in twitter's mobile interface")
+                          help="Don't open links in lighter mobile versions")
     tweet_opts.add_option("--count", action="callback", type="int",
                           metavar=config["count"], callback=check_value,
                           help="Maximum number of timeline tweets to fetch")
@@ -694,7 +694,7 @@ def format_tweet(text, expand=False, mobile=False):
     :type expand: ``bool``
     :param expand: Expand links in tweet text
     :type mobile: ``bool``
-    :param mobile: Open tweets in twitter's mobile site
+    :param mobile: Open links in twitter's mobile site
     :rtype: ``str``
     :return: Tweet content with pretty formatting
     """
@@ -767,15 +767,19 @@ def open_tweet(tweet, mobile=False):
     :type tweet: ``tweepy.models.Status``
     :param tweet: Twitter status message to open
     :type mobile: ``bool``
-    :param mobile: Open tweets in twitter's mobile site
+    :param mobile: Open links in lighter mobile versions
     :rtype: ``FunctionType``
     :return: Wrapper to open tweet in browser
     """
 
     if mobile:
         twitter_base = "http://mobile.twitter.com"
+        map_url = "http://maps.google.com/maps/api/staticmap?zoom=14" \
+            "&markers=%(latlon)s&size=500x300&sensor=false"
     else:
         twitter_base = "http://twitter.com"
+        map_url = "http://maps.google.com/maps?q=%(name)s@%(latlon)s" \
+            "&sll=%(latlon)s&z=16"
 
 
     def show(notification, action):  # pylint: disable-msg=W0613
@@ -790,8 +794,7 @@ def open_tweet(tweet, mobile=False):
         if action == "find":
             latlon = ",".join(map(str, tweet.geo['coordinates']))
 
-            url = "http://maps.google.com/maps?q=%s@%s&sll=%s&z=16" \
-                    % (tweet.user.screen_name, latlon, latlon)
+            url = map_url % {"name": tweet.user.screen_name, "latlon": latlon}
         else:
             if tweet.from_type == "search":
                 name = tweet.from_user
@@ -934,7 +937,7 @@ def update(api, ftype, tweets, state, count, ignore):
 
 
 NOTIFICATIONS = {}
-def display(api, tweets, state, timeout, expand, mobile_site=False):
+def display(api, tweets, state, timeout, expand, mobile=False):
     """Display notifications for new tweets
 
     :type api: ``tweepy.api.API``
@@ -947,8 +950,8 @@ def display(api, tweets, state, timeout, expand, mobile_site=False):
     :param timeout: Timeout for notifications in seconds
     :type expand: ``bool``
     :param expand: Whether to expand links in tweet text
-    :type mobile_site: ``bool``
-    :param mobile_site: Tweets open in twitter's mobile site
+    :type mobile: ``bool``
+    :param mobile: Links open in lighter mobile versions
     :rtype: ``True``
     :return: Timers must return a ``True`` value for timer to continue
 
@@ -985,12 +988,12 @@ def display(api, tweets, state, timeout, expand, mobile_site=False):
 
     # pylint: disable-msg=E1101
     note = pynotify.Notification(title,
-                                 format_tweet(tweet.text, expand, mobile_site),
+                                 format_tweet(tweet.text, expand, mobile),
                                  icon)
     # pylint: enable-msg=E1101
     if not tweet.from_type == "direct":
         if "actions" in NOTIFY_SERVER_CAPS:
-            note.add_action("default", " ", open_tweet(tweet, mobile_site))
+            note.add_action("default", " ", open_tweet(tweet, mobile))
             if tweet.from_type == "search" or not tweet.user.protected:
                 note.add_action("mail-forward", "retweet",
                                 lambda n, a: api.retweet(tweet.id))
@@ -999,7 +1002,7 @@ def display(api, tweets, state, timeout, expand, mobile_site=False):
                 note.add_action("bookmark", "Fave",
                                 lambda n, a: api.create_favorite(tweet.id))
             if tweet.geo:
-                note.add_action("find", "Geo", open_tweet(tweet))
+                note.add_action("find", "Geo", open_tweet(tweet, mobile))
             # Keep a reference for handling the action.
             NOTIFICATIONS[hash(note)] = note
             note.connect_object("closed", NOTIFICATIONS.pop, hash(note))

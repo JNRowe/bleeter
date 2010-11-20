@@ -79,11 +79,11 @@ Options
 
 .. cmdoption:: -m, --mobile
 
-   open tweets in twitter's mobile interface
+   open links in lighter mobile versions
 
 .. cmdoption:: --no-mobile
 
-   don't open tweets in twitter's mobile interface
+   don't open links in lighter mobile versions
 
 .. cmdoption:: --count
 
