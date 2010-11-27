@@ -753,7 +753,10 @@ def get_user_icon(user):
     filename = "%s/%s" % (cache_dir, md5.hexdigest())
     if not os.path.exists(filename):
         try:
-            urllib.urlretrieve(user.profile_image_url, filename)
+            # twitter results can be Unicode strings, urlretrieve won't work
+            # with them.
+            urllib.urlretrieve(user.profile_image_url.encode("utf-8"),
+                               filename)
         except IOError:
             # Fallback to application icon
             if not os.path.exists("%s/bleeter.png" % cache_dir):
