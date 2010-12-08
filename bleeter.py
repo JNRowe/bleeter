@@ -771,7 +771,7 @@ def get_user_icon(user):
 
 
 def open_tweet(tweet, mobile=False, map_provider="google"):
-    """"Create tweet opening function
+    """Create tweet opening function
 
     :type tweet: ``tweepy.models.Status``
     :param tweet: Twitter status message to open
@@ -823,7 +823,7 @@ def open_tweet(tweet, mobile=False, map_provider="google"):
 
 
 def skip_check(ignore):
-    """"Create tweet skip testing wrapper function
+    """Create tweet skip testing wrapper function
 
     >>> filt = skip_check(["#nowplaying", "@boring"])
     >>> tweet = tweepy.models.Status()
