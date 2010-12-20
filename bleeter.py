@@ -20,7 +20,7 @@
 
 from __future__ import print_function
 
-__version__ = "0.7.0"
+__version__ = "0.8.0-git"
 __date__ = "2010-12-20"
 __author__ = "James Rowe <jnrowe@gmail.com>"
 __copyright__ = "Copyright (C) 2010 James Rowe <jnrowe@gmail.com>"
