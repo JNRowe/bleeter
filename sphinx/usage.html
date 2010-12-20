@@ -7,13 +7,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Usage &mdash; bleeter v0.6.0 documentation</title>
+    <title>Usage &mdash; bleeter v0.7.0 documentation</title>
     <link rel="stylesheet" href="static/default.css" type="text/css" />
     <link rel="stylesheet" href="static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.6.0',
+        VERSION:     '0.7.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
@@ -22,7 +22,7 @@
     <script type="text/javascript" src="static/jquery.js"></script>
     <script type="text/javascript" src="static/underscore.js"></script>
     <script type="text/javascript" src="static/doctools.js"></script>
-    <link rel="top" title="bleeter v0.6.0 documentation" href="index.html" />
+    <link rel="top" title="bleeter v0.7.0 documentation" href="index.html" />
     <link rel="next" title="bleeter.py" href="bleeter.1.html" />
     <link rel="prev" title="Configuration" href="configuration.html" />
     <style type="text/css">
@@ -50,7 +50,7 @@
         <li class="right" >
           <a href="configuration.html" title="Configuration"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">bleeter v0.6.0 documentation</a> &raquo;</li> 
+        <li><a href="index.html">bleeter v0.7.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -162,9 +162,45 @@ $ rm ${XDG_DATA_HOME:-~/.local}/bleeter/oauth_token</pre>
 </dd></dl>
 
 <dl class="cmdoption">
+<dt id="cmdoption-bleeter.py-m">
+<tt class="descname">-m</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--mobile</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-bleeter.py-m" title="Permalink to this definition">¶</a></dt>
+<dd><p>open links in lighter mobile versions</p>
+</dd></dl>
+
+<dl class="cmdoption">
+<dt id="cmdoption-bleeter.py--no-mobile">
+<tt class="descname">--no-mobile</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-bleeter.py--no-mobile" title="Permalink to this definition">¶</a></dt>
+<dd><p>don&#8217;t open links in lighter mobile versions</p>
+</dd></dl>
+
+<dl class="cmdoption">
+<dt id="cmdoption-bleeter.py--map-provider">
+<tt class="descname">--map-provider</tt><tt class="descclassname"> &quot;google&quot;</tt><a class="headerlink" href="#cmdoption-bleeter.py--map-provider" title="Permalink to this definition">¶</a></dt>
+<dd><p>open geo links using specified site</p>
+</dd></dl>
+
+<dl class="cmdoption">
 <dt id="cmdoption-bleeter.py--count">
 <tt class="descname">--count</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-bleeter.py--count" title="Permalink to this definition">¶</a></dt>
-<dd><p>maximum number of tweets to fetch(max 200)</p>
+<dd><p>maximum number of timeline tweets to fetch(max 200)</p>
+</dd></dl>
+
+<dl class="cmdoption">
+<dt id="cmdoption-bleeter.py--stealth-count">
+<tt class="descname">--stealth-count</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-bleeter.py--stealth-count" title="Permalink to this definition">¶</a></dt>
+<dd><p>maximum number of stealth tweets to fetch</p>
+</dd></dl>
+
+<dl class="cmdoption">
+<dt id="cmdoption-bleeter.py--search-count">
+<tt class="descname">--search-count</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-bleeter.py--search-count" title="Permalink to this definition">¶</a></dt>
+<dd><p>maximum number of tweets to fetch for searches</p>
+</dd></dl>
+
+<dl class="cmdoption">
+<dt id="cmdoption-bleeter.py--list-count">
+<tt class="descname">--list-count</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-bleeter.py--list-count" title="Permalink to this definition">¶</a></dt>
+<dd><p>maximum number of tweets to fetch for lists</p>
 </dd></dl>
 
 <dl class="cmdoption">
@@ -177,6 +213,24 @@ $ rm ${XDG_DATA_HOME:-~/.local}/bleeter/oauth_token</pre>
 <dt id="cmdoption-bleeter.py--no-lists">
 <tt class="descname">--no-lists</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-bleeter.py--no-lists" title="Permalink to this definition">¶</a></dt>
 <dd><p>don&#8217;t fetch user&#8217;s lists</p>
+</dd></dl>
+
+<dl class="cmdoption">
+<dt id="cmdoption-bleeter.py--searches">
+<tt class="descname">--searches</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-bleeter.py--searches" title="Permalink to this definition">¶</a></dt>
+<dd><p>fetch user&#8217;s saved searches</p>
+</dd></dl>
+
+<dl class="cmdoption">
+<dt id="cmdoption-bleeter.py--no-searches">
+<tt class="descname">--no-searches</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-bleeter.py--no-searches" title="Permalink to this definition">¶</a></dt>
+<dd><p>don&#8217;t fetch user&#8217;s saved searches</p>
+</dd></dl>
+
+<dl class="cmdoption">
+<dt id="cmdoption-bleeter.py--no-cache">
+<tt class="descname">--no-cache</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-bleeter.py--no-cache" title="Permalink to this definition">¶</a></dt>
+<dd><p>don&#8217;t cache twitter communications</p>
 </dd></dl>
 
 <dl class="cmdoption">
@@ -246,7 +300,7 @@ $ rm ${XDG_DATA_HOME:-~/.local}/bleeter/oauth_token</pre>
         <li class="right" >
           <a href="configuration.html" title="Configuration"
              >previous</a> |</li>
-        <li><a href="index.html">bleeter v0.6.0 documentation</a> &raquo;</li> 
+        <li><a href="index.html">bleeter v0.7.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

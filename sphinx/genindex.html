@@ -7,13 +7,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Index &mdash; bleeter v0.6.0 documentation</title>
+    <title>Index &mdash; bleeter v0.7.0 documentation</title>
     <link rel="stylesheet" href="static/default.css" type="text/css" />
     <link rel="stylesheet" href="static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.6.0',
+        VERSION:     '0.7.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
@@ -22,7 +22,7 @@
     <script type="text/javascript" src="static/jquery.js"></script>
     <script type="text/javascript" src="static/underscore.js"></script>
     <script type="text/javascript" src="static/doctools.js"></script>
-    <link rel="top" title="bleeter v0.6.0 documentation" href="index.html" />
+    <link rel="top" title="bleeter v0.7.0 documentation" href="index.html" />
     <style type="text/css">
     /*<![CDATA[*/
         pre {
@@ -42,7 +42,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="index.html">bleeter v0.6.0 documentation</a> &raquo;</li> 
+        <li><a href="index.html">bleeter v0.7.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -64,9 +64,21 @@
     <dd><dl>
       <dt><a href="usage.html#cmdoption-bleeter.py--count">bleeter.py command line option</a></dt>
   </dl></dd>
+    <dt>--list-count</dt>
+    <dd><dl>
+      <dt><a href="usage.html#cmdoption-bleeter.py--list-count">bleeter.py command line option</a></dt>
+  </dl></dd>
     <dt>--lists</dt>
     <dd><dl>
       <dt><a href="usage.html#cmdoption-bleeter.py--lists">bleeter.py command line option</a></dt>
+  </dl></dd>
+    <dt>--map-provider &#34;google&#34;</dt>
+    <dd><dl>
+      <dt><a href="usage.html#cmdoption-bleeter.py--map-provider">bleeter.py command line option</a></dt>
+  </dl></dd>
+    <dt>--no-cache</dt>
+    <dd><dl>
+      <dt><a href="usage.html#cmdoption-bleeter.py--no-cache">bleeter.py command line option</a></dt>
   </dl></dd>
     <dt>--no-expand</dt>
     <dd><dl>
@@ -80,6 +92,14 @@
     <dd><dl>
       <dt><a href="usage.html#cmdoption-bleeter.py--no-lists">bleeter.py command line option</a></dt>
   </dl></dd>
+    <dt>--no-mobile</dt>
+    <dd><dl>
+      <dt><a href="usage.html#cmdoption-bleeter.py--no-mobile">bleeter.py command line option</a></dt>
+  </dl></dd>
+    <dt>--no-searches</dt>
+    <dd><dl>
+      <dt><a href="usage.html#cmdoption-bleeter.py--no-searches">bleeter.py command line option</a></dt>
+  </dl></dd>
     <dt>--no-secure</dt>
     <dd><dl>
       <dt><a href="usage.html#cmdoption-bleeter.py--no-secure">bleeter.py command line option</a></dt>
@@ -92,16 +112,28 @@
     <dd><dl>
       <dt><a href="usage.html#cmdoption-bleeter.py--no-tray">bleeter.py command line option</a></dt>
   </dl></dd>
+    <dt>--search-count</dt>
+    <dd><dl>
+      <dt><a href="usage.html#cmdoption-bleeter.py--search-count">bleeter.py command line option</a></dt>
+  </dl></dd>
+</dl></td>
+  <td width="33%" valign="top"><dl>
+    <dt>--searches</dt>
+    <dd><dl>
+      <dt><a href="usage.html#cmdoption-bleeter.py--searches">bleeter.py command line option</a></dt>
+  </dl></dd>
     <dt>--secure</dt>
     <dd><dl>
       <dt><a href="usage.html#cmdoption-bleeter.py--secure">bleeter.py command line option</a></dt>
+  </dl></dd>
+    <dt>--stealth-count</dt>
+    <dd><dl>
+      <dt><a href="usage.html#cmdoption-bleeter.py--stealth-count">bleeter.py command line option</a></dt>
   </dl></dd>
     <dt>--version</dt>
     <dd><dl>
       <dt><a href="usage.html#cmdoption-bleeter.py--version">bleeter.py command line option</a></dt>
   </dl></dd>
-</dl></td>
-  <td width="33%" valign="top"><dl>
     <dt>-e, --expand</dt>
     <dd><dl>
       <dt><a href="usage.html#cmdoption-bleeter.py-e">bleeter.py command line option</a></dt>
@@ -121,6 +153,10 @@
     <dt>-i &#34;#nowplaying&#34;, --ignore &#34;#nowplaying&#34;</dt>
     <dd><dl>
       <dt><a href="usage.html#cmdoption-bleeter.py-i">bleeter.py command line option</a></dt>
+  </dl></dd>
+    <dt>-m, --mobile</dt>
+    <dd><dl>
+      <dt><a href="usage.html#cmdoption-bleeter.py-m">bleeter.py command line option</a></dt>
   </dl></dd>
     <dt>-q, --quiet</dt>
     <dd><dl>
@@ -150,20 +186,29 @@
     <dt>bleeter.py command line option</dt>
     <dd><dl>
       <dt><a href="usage.html#cmdoption-bleeter.py--count">--count</a></dt>
+      <dt><a href="usage.html#cmdoption-bleeter.py--list-count">--list-count</a></dt>
       <dt><a href="usage.html#cmdoption-bleeter.py--lists">--lists</a></dt>
+      <dt><a href="usage.html#cmdoption-bleeter.py--map-provider">--map-provider &#34;google&#34;</a></dt>
+      <dt><a href="usage.html#cmdoption-bleeter.py--no-cache">--no-cache</a></dt>
       <dt><a href="usage.html#cmdoption-bleeter.py--no-expand">--no-expand</a></dt>
       <dt><a href="usage.html#cmdoption-bleeter.py--no-ignore">--no-ignore</a></dt>
       <dt><a href="usage.html#cmdoption-bleeter.py--no-lists">--no-lists</a></dt>
+      <dt><a href="usage.html#cmdoption-bleeter.py--no-mobile">--no-mobile</a></dt>
+      <dt><a href="usage.html#cmdoption-bleeter.py--no-searches">--no-searches</a></dt>
       <dt><a href="usage.html#cmdoption-bleeter.py--no-secure">--no-secure</a></dt>
       <dt><a href="usage.html#cmdoption-bleeter.py--no-stealth">--no-stealth</a></dt>
       <dt><a href="usage.html#cmdoption-bleeter.py--no-tray">--no-tray</a></dt>
+      <dt><a href="usage.html#cmdoption-bleeter.py--search-count">--search-count</a></dt>
+      <dt><a href="usage.html#cmdoption-bleeter.py--searches">--searches</a></dt>
       <dt><a href="usage.html#cmdoption-bleeter.py--secure">--secure</a></dt>
+      <dt><a href="usage.html#cmdoption-bleeter.py--stealth-count">--stealth-count</a></dt>
       <dt><a href="usage.html#cmdoption-bleeter.py--version">--version</a></dt>
       <dt><a href="usage.html#cmdoption-bleeter.py-e">-e, --expand</a></dt>
       <dt><a href="usage.html#cmdoption-bleeter.py-f">-f &lt;n&gt;, --frequency=&lt;n&gt;</a></dt>
       <dt><a href="usage.html#cmdoption-bleeter.py-g">-g, --get-token</a></dt>
       <dt><a href="usage.html#cmdoption-bleeter.py-h">-h, --help</a></dt>
       <dt><a href="usage.html#cmdoption-bleeter.py-i">-i &#34;#nowplaying&#34;, --ignore &#34;#nowplaying&#34;</a></dt>
+      <dt><a href="usage.html#cmdoption-bleeter.py-m">-m, --mobile</a></dt>
       <dt><a href="usage.html#cmdoption-bleeter.py-q">-q, --quiet</a></dt>
       <dt><a href="usage.html#cmdoption-bleeter.py-s">-s ewornj, --stealth=ewornj</a></dt>
       <dt><a href="usage.html#cmdoption-bleeter.py-t">-t &lt;n&gt;, --timeout=&lt;n&gt;</a></dt>
@@ -208,7 +253,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="index.html">bleeter v0.6.0 documentation</a> &raquo;</li> 
+        <li><a href="index.html">bleeter v0.7.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

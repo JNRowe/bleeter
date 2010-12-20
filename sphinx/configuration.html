@@ -7,13 +7,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Configuration &mdash; bleeter v0.6.0 documentation</title>
+    <title>Configuration &mdash; bleeter v0.7.0 documentation</title>
     <link rel="stylesheet" href="static/default.css" type="text/css" />
     <link rel="stylesheet" href="static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.6.0',
+        VERSION:     '0.7.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
@@ -22,7 +22,7 @@
     <script type="text/javascript" src="static/jquery.js"></script>
     <script type="text/javascript" src="static/underscore.js"></script>
     <script type="text/javascript" src="static/doctools.js"></script>
-    <link rel="top" title="bleeter v0.6.0 documentation" href="index.html" />
+    <link rel="top" title="bleeter v0.7.0 documentation" href="index.html" />
     <link rel="next" title="Usage" href="usage.html" />
     <link rel="prev" title="Background" href="background.html" />
     <style type="text/css">
@@ -50,7 +50,7 @@
         <li class="right" >
           <a href="background.html" title="Background"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">bleeter v0.6.0 documentation</a> &raquo;</li> 
+        <li><a href="index.html">bleeter v0.7.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -88,7 +88,7 @@ Its value is specified in seconds.  Not all notification daemons support setting
 this value, and some daemons may simply ignore it.</p>
 </div>
 <div class="section" id="stealth-option">
-<h2><tt class="docutils literal"><span class="pre">stealth</span></tt> option<a class="headerlink" href="#stealth-option" title="Permalink to this headline">¶</a></h2>
+<span id="stealth-label"></span><h2><tt class="docutils literal"><span class="pre">stealth</span></tt> option<a class="headerlink" href="#stealth-option" title="Permalink to this headline">¶</a></h2>
 <p>The <tt class="docutils literal"><span class="pre">stealth</span></tt> option allows you to specify a list of users you wish to receive
 tweets from without following, its main purpose is to follow people for limited
 periods of time without needing to follow and unfollow them.</p>
@@ -106,18 +106,29 @@ people like to produce.</p>
 <p>The entries should be comma separated, and must be quoted if they contain &#8216;#&#8217;
 to match hashtags.</p>
 </div>
-<div class="section" id="count-option">
-<h2><tt class="docutils literal"><span class="pre">count</span></tt> option<a class="headerlink" href="#count-option" title="Permalink to this headline">¶</a></h2>
-<p>The <tt class="docutils literal"><span class="pre">count</span></tt> option allows you to specify the maximum number of new statuses to
-fetch when updating.  Only new tweets are fetched, so specifying large values
-here only affects initial runs and users who do not run <tt class="docutils literal"><span class="pre">bleeter</span></tt> very often.</p>
-<p>By default <a class="reference external" href="http://twitter.com/">twitter</a> returns 20 new statuses, and this is also the default setting
-for <tt class="docutils literal"><span class="pre">bleeter</span></tt>.  <a class="reference external" href="http://twitter.com/">twitter</a> sets a limit of 200 statuses.</p>
+<div class="section" id="count-options">
+<h2><tt class="docutils literal"><span class="pre">count</span></tt> options<a class="headerlink" href="#count-options" title="Permalink to this headline">¶</a></h2>
+<p>The <tt class="docutils literal"><span class="pre">count</span></tt> option allows you to specify the maximum number of new statuses
+from your timeline to fetch when updating.  Only new tweets are fetched, so
+specifying large values here only affects initial runs and users who do not run
+<tt class="docutils literal"><span class="pre">bleeter</span></tt> very often.</p>
+<p>By default <a class="reference external" href="http://twitter.com/">twitter</a> returns 20 new statuses, and this is also the default
+setting for <tt class="docutils literal"><span class="pre">bleeter</span></tt>.  <a class="reference external" href="http://twitter.com/">twitter</a> sets a limit of 200 statuses.</p>
+<p>The <tt class="docutils literal"><span class="pre">search_count</span></tt> and <tt class="docutils literal"><span class="pre">list_count</span></tt> options perform the same task for search
+results and list timelines respectively.</p>
+<p>The <tt class="docutils literal"><span class="pre">stealth_count</span></tt> option performs the same task for stealth follows, see
+<a class="reference internal" href="#stealth-label"><em>stealth option</em></a>.</p>
 </div>
 <div class="section" id="lists-option">
 <h2><tt class="docutils literal"><span class="pre">lists</span></tt> option<a class="headerlink" href="#lists-option" title="Permalink to this headline">¶</a></h2>
 <p>The <tt class="docutils literal"><span class="pre">lists</span></tt> option enables fetching of user&#8217;s lists, in addition to the
 standard behaviour of fetching user&#8217;s timeline and mentions.</p>
+</div>
+<div class="section" id="searches-option">
+<h2><tt class="docutils literal"><span class="pre">searches</span></tt> option<a class="headerlink" href="#searches-option" title="Permalink to this headline">¶</a></h2>
+<p>The <tt class="docutils literal"><span class="pre">searches</span></tt> option enables fetching of user&#8217;s saved searches, in
+addition to the standard behaviour of fetching user&#8217;s timeline and
+mentions.</p>
 <table class="docutils footnote" frame="void" id="id2" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
@@ -142,8 +153,9 @@ see <a class="reference external" href="http://standards.freedesktop.org/basedir
 <li><a class="reference internal" href="#timeout-option"><tt class="docutils literal"><span class="pre">timeout</span></tt> option</a></li>
 <li><a class="reference internal" href="#stealth-option"><tt class="docutils literal"><span class="pre">stealth</span></tt> option</a></li>
 <li><a class="reference internal" href="#ignore-option"><tt class="docutils literal"><span class="pre">ignore</span></tt> option</a></li>
-<li><a class="reference internal" href="#count-option"><tt class="docutils literal"><span class="pre">count</span></tt> option</a></li>
+<li><a class="reference internal" href="#count-options"><tt class="docutils literal"><span class="pre">count</span></tt> options</a></li>
 <li><a class="reference internal" href="#lists-option"><tt class="docutils literal"><span class="pre">lists</span></tt> option</a></li>
+<li><a class="reference internal" href="#searches-option"><tt class="docutils literal"><span class="pre">searches</span></tt> option</a></li>
 </ul>
 </li>
 </ul>
@@ -186,7 +198,7 @@ see <a class="reference external" href="http://standards.freedesktop.org/basedir
         <li class="right" >
           <a href="background.html" title="Background"
              >previous</a> |</li>
-        <li><a href="index.html">bleeter v0.6.0 documentation</a> &raquo;</li> 
+        <li><a href="index.html">bleeter v0.7.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

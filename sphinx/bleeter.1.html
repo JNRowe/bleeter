@@ -7,13 +7,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>bleeter.py &mdash; bleeter v0.6.0 documentation</title>
+    <title>bleeter.py &mdash; bleeter v0.7.0 documentation</title>
     <link rel="stylesheet" href="static/default.css" type="text/css" />
     <link rel="stylesheet" href="static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.6.0',
+        VERSION:     '0.7.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
@@ -22,7 +22,7 @@
     <script type="text/javascript" src="static/jquery.js"></script>
     <script type="text/javascript" src="static/underscore.js"></script>
     <script type="text/javascript" src="static/doctools.js"></script>
-    <link rel="top" title="bleeter v0.6.0 documentation" href="index.html" />
+    <link rel="top" title="bleeter v0.7.0 documentation" href="index.html" />
     <link rel="prev" title="Usage" href="usage.html" />
     <style type="text/css">
     /*<![CDATA[*/
@@ -46,7 +46,7 @@
         <li class="right" >
           <a href="usage.html" title="Usage"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">bleeter v0.6.0 documentation</a> &raquo;</li> 
+        <li><a href="index.html">bleeter v0.7.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -156,12 +156,29 @@ on the popup.</p>
 <tr><td class="option-group">
 <kbd><span class="option">--no-expand</span></kbd></td>
 <td>don&#8217;t expand links in tweets</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">-m</span>, <span class="option">--mobile</span></kbd></td>
+<td>open links in lighter mobile versions</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">--no-mobile</span></kbd></td>
+<td>don&#8217;t open links in lighter mobile versions</td></tr>
 </tbody>
 </table>
 <dl class="docutils">
+<dt>&#8211;map-provider <strong>site</strong></dt>
+<dd>open geo links using specified site</dd>
 <dt>&#8211;count <strong>n</strong></dt>
-<dd>maximum number of tweets to fetch(max 200)</dd>
+<dd>maximum number of timeline tweets to fetch(max 200)</dd>
 </dl>
+<p>&#8211;stealth-count <strong>n</strong></p>
+<blockquote>
+maximum number of stealth tweets to fetch</blockquote>
+<p>&#8211;search-count <strong>n</strong></p>
+<blockquote>
+maximum number of tweets to fetch for searches</blockquote>
+<p>&#8211;list-count <strong>n</strong></p>
+<blockquote>
+maximum number of tweets to fetch for lists</blockquote>
 <table class="docutils option-list" frame="void" rules="none">
 <col class="option" />
 <col class="description" />
@@ -172,6 +189,15 @@ on the popup.</p>
 <tr><td class="option-group">
 <kbd><span class="option">--no-lists</span></kbd></td>
 <td>don&#8217;t fetch user&#8217;s lists</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">--searches</span></kbd></td>
+<td>fetch user&#8217;s saved searches</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">--no-searches</span></kbd></td>
+<td>don&#8217;t fetch user&#8217;s saved searches</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">--no-cache</span></kbd></td>
+<td>don&#8217;t cache twitter communications</td></tr>
 <tr><td class="option-group">
 <kbd><span class="option">-v</span>, <span class="option">--verbose</span></kbd></td>
 <td>produce verbose output</td></tr>
@@ -274,7 +300,7 @@ option) any later version.</p>
         <li class="right" >
           <a href="usage.html" title="Usage"
              >previous</a> |</li>
-        <li><a href="index.html">bleeter v0.6.0 documentation</a> &raquo;</li> 
+        <li><a href="index.html">bleeter v0.7.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
