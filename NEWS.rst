@@ -6,6 +6,18 @@ User-visible changes
 
 .. contents::
 
+0.7.0 - 2010-12-20
+------------------
+
+    * New ``--mobile`` option for low-bandwidth links
+    * Optional SSL twitter communication
+    * Support for multiple map providers
+    * Optional support for twitter_'s saved searches and lists
+    * Coloured terminal output with termcolor_
+
+.. _termcolor: http://pypi.python.org/pypi/termcolor/
+
+
 0.6.0 - 2010-07-12
 ------------------
 
