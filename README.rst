@@ -47,7 +47,9 @@ adding them to the configuration file, which should be placed in
     stealth = NotThatInteresting,Boring
 
 Where the ``stealth`` value should be a comma separated list of twitter
-usernames or numeric identifiers.
+usernames or numeric identifiers.  This feature can be used to keep track of
+users for a short time without having to follow and then unfollow, for example
+when you're at a conference and want to follow the conference news items.
 
 There is an ``ignore`` option that allows you to specify a list of keywords you
 wish to use as ignore filters for tweets you receive.  Keywords can be normal
