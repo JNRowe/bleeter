@@ -79,13 +79,14 @@ except ImportError:  # pragma: no cover
     colored = None  # pylint: disable-msg=C0103
 
 # Select colours if terminal is a tty
+# pylint: disable-msg=C0103
 if colored and sys.stdout.isatty():
     success = lambda s: colored(s, "green")
     fail = lambda s: colored(s, "red")
     warn = lambda s: colored(s, "yellow")
 else:  # pragma: no cover
-    # pylint: disable-msg=C0103
     success = fail = warn = str
+# pylint: enable-msg=C0103
 
 # OAuth design FTL!
 OAUTH_KEY = "WJ3RGn3aMN98b41b3pJQ"
@@ -539,7 +540,8 @@ def process_command_line(config_file):
                           help="Maximum number of stealth tweets to fetch")
     tweet_opts.add_option("--search-count", action="callback", type="int",
                           metavar=config["search_count"], callback=check_value,
-                          help="Maximum number of tweets to fetch for searches")
+                          help="Maximum number of tweets to fetch for "
+                               "searches")
     tweet_opts.add_option("--list-count", action="callback", type="int",
                           metavar=config["list_count"], callback=check_value,
                           help="Maximum number of tweets to fetch for lists")
@@ -643,7 +645,7 @@ def relative_time(timestamp):
 
 # Keep a cache for free handling of retweets and such.
 URLS = {}
-def url_expand(m):
+def url_expand(match):
     """Generate links with expanded URLs
 
     >>> NOTIFY_SERVER_CAPS.extend(["body-markup", "body-hyperlinks"])
@@ -652,12 +654,12 @@ def url_expand(m):
     'See <a href="terminal.png">terminal.png</a>'
     >>> NOTIFY_SERVER_CAPS[:] = []
 
-    :type m: ``SRE_Match``
-    :param m: Regular expression match object
+    :type match: ``SRE_Match``
+    :param match: Regular expression match object
     :rtype: ``str``
     :return: HTML formatted link for URL
     """
-    url = m.group()
+    url = match.group()
     if not url in URLS:
         if urlunshort.is_shortened(url):
             URLS[url] = glib.markup_escape_text(urlunshort.resolve(url))
@@ -1068,10 +1070,10 @@ def tooltip(icon, tweets):
     :param tweets: Tweets pending display
     """
 
-    n = len(tweets)
+    count = len(tweets)
 
-    icon.set_visible(n)
-    icon.set_tooltip("%i tweets awaiting display" % n)
+    icon.set_visible(count)
+    icon.set_tooltip("%i tweets awaiting display" % count)
     return True
 
 
