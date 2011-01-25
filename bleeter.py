@@ -2,7 +2,7 @@
 # vim: set sw=4 sts=4 et tw=80 fileencoding=utf-8:
 #
 """bleeter - Nasty little twitter client"""
-# Copyright (C) 2010  James Rowe <jnrowe@gmail.com>
+# Copyright (C) 2010-2011  James Rowe <jnrowe@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@ from __future__ import print_function
 __version__ = "0.8.0-git"
 __date__ = "2010-12-20"
 __author__ = "James Rowe <jnrowe@gmail.com>"
-__copyright__ = "Copyright (C) 2010 James Rowe <jnrowe@gmail.com>"
+__copyright__ = "Copyright (C) 2010-2011  James Rowe <jnrowe@gmail.com>"
 __license__ = "GNU General Public License Version 3"
 __credits__ = ""
 __history__ = "See git repository"
