@@ -34,5 +34,8 @@ setup(
     license='GPL-3',
     description=bleeter.__doc__.splitlines ()[0].split("-", 1)[1][1:],
     long_description=open('README.rst').read(),
-    data_files=[("share/pixmaps", ["bleeter.png", ]), ],
+    data_files=[
+        ("share/pixmaps", ["bleeter.png", ]),
+        ("share/applications", ["bleeter.desktop"]),
+    ],
 )

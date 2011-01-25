@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=bleeter
+GenericName=Twitter client
+Comment=Nasty little twitter client
+Terminal=false
+Icon=bleeter
+OnlyShowIn=GNOME
+Exec=bleeter
+Categories=Network;InstantMessaging;TrayIcon
