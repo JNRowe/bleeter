@@ -1,0 +1,20 @@
+#compdef bleeter.py
+
+# zsh completion for bleeter
+
+typeset -A opt_args
+
+_arguments -s -S \
+  "--help[show this help message and exit]:" \
+  "-h[show this help message and exit]:" \
+  "--version[show program's version number and exit]:" \
+  "--timeout[Timeout for notification popups in seconds]::7:_files" \
+  "-t[Timeout for notification popups in seconds]::7:_files" \
+  "--frequency[Update frequency in in seconds]::300:_files" \
+  "-f[Update frequency in in seconds]::300:_files" \
+  "--no-cache[Don't cache twitter communications]" \
+  "--no-tray[Disable systray icon]" \
+  "--verbose[Produce verbose output]" \
+  "-v[Produce verbose output]" \
+  "--quiet[Output only matches and errors]" \
+  "-q[Output only matches and errors]"
