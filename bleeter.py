@@ -229,6 +229,9 @@ class State(object):
 
         self._data = data
 
+        # Must return True, so we can this method in a timer
+        return True
+
 
 class Tweets(dict):
     """Object for holding tweets pending display
