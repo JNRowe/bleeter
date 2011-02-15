@@ -1,6 +1,4 @@
 #! /usr/bin/python -tt
-# vim: set sw=4 sts=4 et tw=80 fileencoding=utf-8:
-#
 """bleeter - Nasty little twitter client"""
 # Copyright (C) 2010-2011  James Rowe <jnrowe@gmail.com>
 #

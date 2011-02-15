@@ -133,7 +133,3 @@ reproduce the problem, or even better a patch!
 .. _urlunshort: http://bitbucket.org/runeh/urlunshort
 .. _termcolor: http://pypi.python.org/pypi/termcolor/
 .. _email: jnrowe@gmail.com
-
-..
-    :vim: set ft=rst ts=4 sw=4 et:
-

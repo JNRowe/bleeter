@@ -139,7 +139,3 @@ See `PyPI listing`_.
 .. _upoints: http://github.com/JNRowe/upoints
 .. _plone: http://plone.org/
 .. _pyisbn: http://github.com/JNRowe/pyisbn
-
-..
-    :vim: set ft=rst ts=4 sw=4 et:
-
