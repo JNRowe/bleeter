@@ -397,9 +397,9 @@ def find_app_icon(uri=True):
 
     """
     icon_locations = [
-        "%s/share/pixmaps/bleeter.png" % sys.prefix,
-        "%s/bleeter/bleeter.png" % glib.get_user_cache_dir(),
         "%s/bleeter.png" % os.path.abspath(sys.path[0]),
+        "%s/bleeter/bleeter.png" % glib.get_user_cache_dir(),
+        "%s/share/pixmaps/bleeter.png" % sys.prefix,
     ]
     for icon in icon_locations:
         if os.path.exists(icon):
