@@ -1,3 +1,5 @@
+.. _bleeter-label:
+
 :mod:`bleeter`
 ==============
 
