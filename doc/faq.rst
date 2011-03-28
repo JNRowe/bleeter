@@ -28,9 +28,9 @@ notification system.  Find another client, install another notification daemon
 or just read the tweets and refer to twitter_ when you wish to interact.
 
 The specific feature that is required is called ``actions``.  It is possible to
-use ``notify-osd`` with actions by just ignoring the servers stated
-capabilities, and then ``notify-osd`` opens a alert box for each message which
-is even less useful than just being a passive reader.
+use actions with ``notify-osd`` by just ignoring the servers stated
+capabilities, but then ``notify-osd`` will open an alert box for each message
+which is even less useful than just being a passive reader.
 
 Patches for integration with the Ubuntu notification and indicator system
 probably won't be accepted unless other distributions decide to switch.
