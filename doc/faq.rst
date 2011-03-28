@@ -25,7 +25,7 @@ I can't click on the tweets!
 
 If you're using Ubuntu that is a design goal of their new notify-osd_ default
 notification system.  Find another client, install another notification daemon
-or just read the tweets and refer to twitter.com when you wish to interact.
+or just read the tweets and refer to twitter_ when you wish to interact.
 
 The specific feature that is required is called ``actions``.  It is possible to
 use ``notify-osd`` with actions by just ignoring the servers stated
@@ -46,6 +46,7 @@ following in a Python interpreter::
     ['actions', 'body', 'body-hyperlinks', 'body-markup', 'icon-static']
 
 .. _notify-osd: https://launchpad.net/notify-osd
+.. _twitter: http://twitter.com
 
 The icons are cut in half in tweets!
 ''''''''''''''''''''''''''''''''''''
@@ -71,9 +72,9 @@ If you're using Ubuntu or e17_ this is expected behaviour.  Neither the Ubuntu
 or e17_ notification systems support the ``actions`` capability that is required
 for adding buttons to notifications,
 
-The only ways around this are to find another client, install another
-notification daemon or just read the tweets and refer to twitter.com when you
-wish to interact.
+The only workarounds for this are to find another client, install another
+notification daemon or just read the tweets and refer to twitter_ when you wish
+to interact.
 
 See `capabilities testing`_ for a method to check your notification systems
 support.
