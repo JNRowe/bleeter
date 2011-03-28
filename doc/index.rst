@@ -38,6 +38,7 @@ Contents:
    configuration
    usage
    bleeter manpage <bleeter.1>
+   faq
 
 Indices and tables
 ==================
