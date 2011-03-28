@@ -20,7 +20,7 @@ take long, does exactly what I want and works where I want it to work.
 Why is the logo so crap?
 ''''''''''''''''''''''''
 
-.. image:: http://jnrowe.github.com/bleeter/images/bleeter.png
+.. image:: .static/bleeter.png
 
 Because *I* made it with my complete lack of design skills, if you can do better
 please do so.  Send me a mail_ if you come up with something better.
@@ -57,7 +57,7 @@ following in a Python interpreter::
 The icons are cut in half in tweets!
 ''''''''''''''''''''''''''''''''''''
 
-.. figure:: http://jnrowe.github.com/images/e17-notify.png
+.. figure:: .static/e17-notify.png
 
    e17's notification module with cropped icon
 
@@ -90,7 +90,7 @@ The tweets don't have the same formatting as the screenshots!
 
 If you're using Ubuntu, Xfce_ or e17_ this is expected behaviour.
 
-.. figure:: http://jnrowe.github.com/images/ubuntu-notify3.png
+.. figure:: .static/ubuntu-notify3.png
 
     Example tweet being displayed with Ubuntu's notification system
 
