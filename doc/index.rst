@@ -35,6 +35,7 @@ Contents:
    :maxdepth: 1
 
    background
+   install
    configuration
    usage
    bleeter manpage <bleeter.1>
