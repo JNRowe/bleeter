@@ -4,7 +4,7 @@
  *
  * Sphinx JavaScript utilties for the full-text search.
  *
- * :copyright: Copyright 2007-2010 by the Sphinx team, see AUTHORS.
+ * :copyright: Copyright 2007-2011 by the Sphinx team, see AUTHORS.
  * :license: BSD, see LICENSE for details.
  *
  */
@@ -480,7 +480,7 @@ var Search = {
             displayNextItem();
           });
         } else if (DOCUMENTATION_OPTIONS.HAS_SOURCE) {
-          $.get(DOCUMENTATION_OPTIONS.URL_ROOT + 'sources/' +
+          $.get(DOCUMENTATION_OPTIONS.URL_ROOT + '_sources/' +
                 item[0] + '.txt', function(data) {
             if (data != '') {
               listItem.append($.makeSearchSummary(data, searchterms, hlterms));
