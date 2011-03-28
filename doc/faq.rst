@@ -71,7 +71,7 @@ There are no buttons on the tweets!
 
 If you're using Ubuntu or e17_ this is expected behaviour.  Neither the Ubuntu
 or e17_ notification systems support the ``actions`` capability that is required
-for adding buttons to notifications,
+for adding buttons to notifications.
 
 The only workarounds for this are to find another client, install another
 notification daemon or just read the tweets and refer to twitter_ when you wish
