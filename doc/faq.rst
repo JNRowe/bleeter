@@ -33,7 +33,8 @@ capabilities, but then ``notify-osd`` will open an alert box for each message
 which is even less useful than just being a passive reader.
 
 Patches for integration with the Ubuntu notification and indicator system
-probably won't be accepted unless other distributions decide to switch.
+probably won't be accepted unless other distributions decide to switch.  Such
+changes are currently too invasive for their value.
 
 .. _capabilities testing:
 
