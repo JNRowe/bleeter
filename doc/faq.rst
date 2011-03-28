@@ -59,12 +59,12 @@ The icons are cut in half in tweets!
 If you're using e17_ with its `notification module`_ then there isn't a great
 deal I can do about this, it is just a bug in that module.
 
-If you're not using e17_ and see behaviour like this please `file a bug`_ or
+If you're not using e17_ and see behaviour like this please `file an issue`_ or
 send me a mail_!!
 
 .. _e17: http://enlightenment.org/
 .. _notification module: http://trac.enlightenment.org/e/browser/trunk/E-MODULES-EXTRA/notification/
-.. _file a bug: http://github.com/JNRowe/bleeter/issues
+.. _file an issue: http://github.com/JNRowe/bleeter/issues
 
 There are no buttons on the tweets!
 '''''''''''''''''''''''''''''''''''
@@ -78,7 +78,8 @@ notification daemon or just read the tweets and refer to twitter_ when you wish
 to interact.
 
 See `capabilities testing`_ for a method to check your notification systems
-support.
+support for ``actions``.  If you're not seeing buttons and your notification
+daemon supports ``actions`` please `file an issue`_ or send me a mail_!!
 
 The tweets don't have the same formatting as the screenshots!
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -98,9 +99,10 @@ The Xfce_ notification system, xfce4-notifyd_, supports ``actions`` and
 functionality you'll be missing is the direct opening of links within tweet
 text.
 
-If you're not using either Ubuntu, Xfce_ or e17_ then you're encouraged to post
-a screenshot online somewhere and either link to it when you `file a bug`_ or
-send me a mail_ with a link explaining the problem.
+If you're not using either Ubuntu, Xfce_ or e17_ but you're having display
+problems then you may have found a bug.  You're encouraged to post a screenshot
+online and either link to it when you `file an issue`_ or send me a mail_ with a
+link to the image and an explanation of the problem.
 
 .. _Xfce: http://www.xfce.org/
 .. _xfce4-notifyd: http://spuriousinterrupt.org/projects/xfce4-notifyd
