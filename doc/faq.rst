@@ -120,7 +120,8 @@ the life out of my hobby projects for far too long already.
 Handling such bug reports killed public releases of upoints_, and the plone_
 users finally killed public releases of pyisbn_.  Having given this some
 considerable thought I decided that my hobby projects shouldn't be exposed to
-that, so they can remain fun.
+that, so that they can remain fun.  I apologise if this causes you
+inconvenience.
 
 Why can't I ``easy_install`` this?
 ''''''''''''''''''''''''''''''''''
