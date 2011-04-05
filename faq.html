@@ -1,0 +1,215 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Frequently Asked Questions &mdash; bleeter v0.8.0-git documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.8.0-git',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="bleeter v0.8.0-git documentation" href="index.html" />
+    <link rel="prev" title="bleeter.py" href="bleeter.1.html" />
+    <style type="text/css">
+    /*<![CDATA[*/
+        pre {
+            overflow: auto;
+        }
+    /*]]>*/
+    </style>
+
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="bleeter.1.html" title="bleeter.py"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">bleeter v0.8.0-git documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="frequently-asked-questions">
+<h1>Frequently Asked Questions<a class="headerlink" href="#frequently-asked-questions" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="why-another-twitter-client">
+<h2>Why another twitter client?<a class="headerlink" href="#why-another-twitter-client" title="Permalink to this headline">¶</a></h2>
+<p>Because other clients didn&#8217;t do quite what I wanted, or work on the systems
+I wanted to use them on.</p>
+<p>So, in the end writing <tt class="docutils literal"><span class="pre">bleeter</span></tt> seemed like the obvious answer.  It didn&#8217;t
+take long, does exactly what I want and works where I want it to work.</p>
+</div>
+<div class="section" id="why-is-the-logo-so-crap">
+<h2>Why is the logo so crap?<a class="headerlink" href="#why-is-the-logo-so-crap" title="Permalink to this headline">¶</a></h2>
+<img alt="_images/bleeter.png" src="_images/bleeter.png" />
+<p>Because <em>I</em> made it with my complete lack of design skills, if you can do better
+please do so.  Send me a <a class="reference external" href="mailto:jnrowe&#37;&#52;&#48;gmail&#46;com">mail</a> if you come up with something better.</p>
+</div>
+<div class="section" id="i-can-t-click-on-the-tweets">
+<h2>I can&#8217;t click on the tweets!<a class="headerlink" href="#i-can-t-click-on-the-tweets" title="Permalink to this headline">¶</a></h2>
+<p>If you&#8217;re using Ubuntu that is a design goal of their new <a class="reference external" href="https://launchpad.net/notify-osd">notify-osd</a> default
+notification system.  Find another client, install another notification daemon
+or just read the tweets and refer to <a class="reference external" href="http://twitter.com">twitter</a> when you wish to interact.</p>
+<p>The specific feature that is required is called <tt class="docutils literal"><span class="pre">actions</span></tt>.  It is possible to
+use actions with <tt class="docutils literal"><span class="pre">notify-osd</span></tt> by just ignoring the servers stated
+capabilities, but then <tt class="docutils literal"><span class="pre">notify-osd</span></tt> will open an alert box for each message
+which is even less useful than just being a passive reader.</p>
+<p>Patches for integration with the Ubuntu notification and indicator system
+probably won&#8217;t be accepted unless other distributions decide to switch.  Such
+changes are currently too invasive for their value.</p>
+<p id="capabilities-testing">You can check what features your notification daemon has by running the
+following in a Python interpreter:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">impory</span> <span class="n">pynotify</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pynotify</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="s">&quot;test&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pynotify</span><span class="o">.</span><span class="n">get_server_caps</span><span class="p">()</span>
+<span class="go">[&#39;actions&#39;, &#39;body&#39;, &#39;body-hyperlinks&#39;, &#39;body-markup&#39;, &#39;icon-static&#39;]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="the-icons-are-cut-in-half-in-tweets">
+<h2>The icons are cut in half in tweets!<a class="headerlink" href="#the-icons-are-cut-in-half-in-tweets" title="Permalink to this headline">¶</a></h2>
+<div class="figure">
+<img alt="_images/e17-notify.png" src="_images/e17-notify.png" />
+<p class="caption">e17&#8217;s notification module with cropped icon</p>
+</div>
+<p>If you&#8217;re using <a class="reference external" href="http://enlightenment.org/">e17</a> with its <a class="reference external" href="http://trac.enlightenment.org/e/browser/trunk/E-MODULES-EXTRA/notification/">notification module</a> then there isn&#8217;t a great
+deal I can do about this, it is just a bug in that module.</p>
+<p>If you&#8217;re not using <a class="reference external" href="http://enlightenment.org/">e17</a> and see behaviour like this please <a class="reference external" href="http://github.com/JNRowe/bleeter/issues">file an issue</a> or
+send me a <a class="reference external" href="mailto:jnrowe&#37;&#52;&#48;gmail&#46;com">mail</a>!!</p>
+</div>
+<div class="section" id="there-are-no-buttons-on-the-tweets">
+<h2>There are no buttons on the tweets!<a class="headerlink" href="#there-are-no-buttons-on-the-tweets" title="Permalink to this headline">¶</a></h2>
+<p>If you&#8217;re using Ubuntu or <a class="reference external" href="http://enlightenment.org/">e17</a> this is expected behaviour.  Neither the Ubuntu
+or <a class="reference external" href="http://enlightenment.org/">e17</a> notification systems support the <tt class="docutils literal"><span class="pre">actions</span></tt> capability that is required
+for adding buttons to notifications.</p>
+<p>The only workarounds for this are to find another client, install another
+notification daemon or just read the tweets and refer to <a class="reference external" href="http://twitter.com">twitter</a> when you wish
+to interact.</p>
+<p>See <a class="reference internal" href="#capabilities-testing">capabilities testing</a> for a method to check your notification systems
+support for <tt class="docutils literal"><span class="pre">actions</span></tt>.  If you&#8217;re not seeing buttons and your notification
+daemon supports <tt class="docutils literal"><span class="pre">actions</span></tt> please <a class="reference external" href="http://github.com/JNRowe/bleeter/issues">file an issue</a> or send me a <a class="reference external" href="mailto:jnrowe&#37;&#52;&#48;gmail&#46;com">mail</a>!!</p>
+</div>
+<div class="section" id="the-tweets-don-t-have-the-same-formatting-as-the-screenshots">
+<h2>The tweets don&#8217;t have the same formatting as the screenshots!<a class="headerlink" href="#the-tweets-don-t-have-the-same-formatting-as-the-screenshots" title="Permalink to this headline">¶</a></h2>
+<p>If you&#8217;re using Ubuntu, <a class="reference external" href="http://www.xfce.org/">Xfce</a> or <a class="reference external" href="http://enlightenment.org/">e17</a> this is expected behaviour.</p>
+<div class="figure">
+<img alt="_images/ubuntu-notify3.png" src="_images/ubuntu-notify3.png" />
+<p class="caption">Example tweet being displayed with Ubuntu&#8217;s notification system</p>
+</div>
+<p>It is likely the feature you&#8217;re missing is either <tt class="docutils literal"><span class="pre">body-markup</span></tt> or
+<tt class="docutils literal"><span class="pre">body-hyperlinks</span></tt>, see <a class="reference internal" href="#capabilities-testing">capabilities testing</a> for a method you can use to
+check your notification systems supported capabilities.</p>
+<p>The <a class="reference external" href="http://www.xfce.org/">Xfce</a> notification system, <a class="reference external" href="http://spuriousinterrupt.org/projects/xfce4-notifyd">xfce4-notifyd</a>, supports <tt class="docutils literal"><span class="pre">actions</span></tt> and
+<tt class="docutils literal"><span class="pre">body-markup</span></tt> which means it is still quite usable with <tt class="docutils literal"><span class="pre">bleeter</span></tt>.  The only
+functionality you&#8217;ll be missing is the direct opening of links within tweet
+text.</p>
+<p>If you&#8217;re not using either Ubuntu, <a class="reference external" href="http://www.xfce.org/">Xfce</a> or <a class="reference external" href="http://enlightenment.org/">e17</a> but you&#8217;re having display
+problems then you may have found a bug.  You&#8217;re encouraged to post a screenshot
+online and either link to it when you <a class="reference external" href="http://github.com/JNRowe/bleeter/issues">file an issue</a> or send me a <a class="reference external" href="mailto:jnrowe&#37;&#52;&#48;gmail&#46;com">mail</a> with a
+link to the image and an explanation of the problem.</p>
+</div>
+<div class="section" id="why-isn-t-this-listed-on-pypi">
+<span id="pypi-listing"></span><h2>Why isn&#8217;t this listed on PyPI?<a class="headerlink" href="#why-isn-t-this-listed-on-pypi" title="Permalink to this headline">¶</a></h2>
+<p>For the Python projects I&#8217;ve posted on <a class="reference external" href="http://pypi.python.org/pypi">PyPI</a>, or contributed to significantly,
+I&#8217;d say at least 90% of the bug reports have been from <tt class="docutils literal"><span class="pre">easy_install</span></tt> users
+with problems caused by <tt class="docutils literal"><span class="pre">easy_install</span></tt>.  Frankly dealing with those has sucked
+the life out of my hobby projects for far too long already.</p>
+<p>Handling such bug reports killed public releases of <a class="reference external" href="http://github.com/JNRowe/upoints">upoints</a>, and the <a class="reference external" href="http://plone.org/">plone</a>
+users finally killed public releases of <a class="reference external" href="http://github.com/JNRowe/pyisbn">pyisbn</a>.  Having given this some
+considerable thought I decided that my hobby projects shouldn&#8217;t be exposed to
+that, so that they can remain fun.  I apologise if this causes you
+inconvenience.</p>
+</div>
+<div class="section" id="why-can-t-i-easy-install-this">
+<h2>Why can&#8217;t I <tt class="docutils literal"><span class="pre">easy_install</span></tt> this?<a class="headerlink" href="#why-can-t-i-easy-install-this" title="Permalink to this headline">¶</a></h2>
+<p>See <a class="reference internal" href="#pypi-listing">PyPI listing</a>.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Frequently Asked Questions</a><ul>
+<li><a class="reference internal" href="#why-another-twitter-client">Why another twitter client?</a></li>
+<li><a class="reference internal" href="#why-is-the-logo-so-crap">Why is the logo so crap?</a></li>
+<li><a class="reference internal" href="#i-can-t-click-on-the-tweets">I can&#8217;t click on the tweets!</a></li>
+<li><a class="reference internal" href="#the-icons-are-cut-in-half-in-tweets">The icons are cut in half in tweets!</a></li>
+<li><a class="reference internal" href="#there-are-no-buttons-on-the-tweets">There are no buttons on the tweets!</a></li>
+<li><a class="reference internal" href="#the-tweets-don-t-have-the-same-formatting-as-the-screenshots">The tweets don&#8217;t have the same formatting as the screenshots!</a></li>
+<li><a class="reference internal" href="#why-isn-t-this-listed-on-pypi">Why isn&#8217;t this listed on PyPI?</a></li>
+<li><a class="reference internal" href="#why-can-t-i-easy-install-this">Why can&#8217;t I <tt class="docutils literal"><span class="pre">easy_install</span></tt> this?</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="bleeter.1.html"
+                        title="previous chapter">bleeter.py</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="bleeter.1.html" title="bleeter.py"
+             >previous</a> |</li>
+        <li><a href="index.html">bleeter v0.8.0-git documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010-2011  James Rowe.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>
