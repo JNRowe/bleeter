@@ -11,7 +11,9 @@ uses OAuth_ this process is a little more cumbersome than it should be.
   twitter_.
 
 If you wish to create a new authentication token, or need to regenerate it, you
-can be doing one of the following::
+can be doing one of the following:
+
+.. code-block:: sh
 
     $ bleeter.py --get-token
     $ rm ${XDG_DATA_HOME:-~/.local}/bleeter/oauth_token
