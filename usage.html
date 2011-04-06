@@ -1,20 +1,24 @@
 
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>Usage &mdash; bleeter v0.8.0-git documentation</title>
-    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <meta charset="utf-8" />
+    <meta name="ICBM" content="52.213,0.105" />
+    <title>Usage − bleeter v0.8.0-git documentation</title>
+    <link rel="stylesheet" href="_static/design.css" type="text/css" />
+    <link rel="stylesheet" href="_static/docutils.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/sphinx.css" type="text/css" />
+    
+    <link rel="openid.server" href="http://openid.claimid.com/server" />
+    <link rel="openid.delegate" href="http://openid.claimid.com/jnrowe" />
+    <meta http-equiv="x-xrds-location" content="http://claimid.com/jnrowe/xrds" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
+        URL_ROOT:    '#',
         VERSION:     '0.8.0-git',
-        COLLAPSE_INDEX: false,
+        COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
       };
@@ -22,9 +26,16 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/icon.png" type="image/png" />
+    <link rel="index" title="Index" href="index.html" />
+    <link rel="search" title="Search" href="search.html" />
     <link rel="top" title="bleeter v0.8.0-git documentation" href="index.html" />
     <link rel="next" title="bleeter.py" href="bleeter.1.html" />
     <link rel="prev" title="Configuration" href="configuration.html" />
+    <link rel="contents" href="index.html" title="Site contents" />
+    <link rel="home" href="index.html" title="Home page" />
+    <link rel="made" href="mailto:jnrowe@gmail.com" title="Author's email address" />
+    <link rel="me" href="index.html" />
     <style type="text/css">
     /*<![CDATA[*/
         pre {
@@ -34,30 +45,56 @@
     </style>
 
   </head>
-  <body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="bleeter.1.html" title="bleeter.py"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="configuration.html" title="Configuration"
-             accesskey="P">previous</a> |</li>
-        <li><a href="index.html">bleeter v0.8.0-git documentation</a> &raquo;</li> 
+  <body id="jnrowe-github-com">
+    <div id="corewrapper">
+      <h1 class="skipvisual"><a href="index.html" rel="home author me" accesskey="1">bleeter v0.8.0-git documentation</a></h1>
+      <ul class="skipvisual">
+        <li>
+          <a href="#content" accesskey="2">
+            Skip navigation section
+          </a>
+        </li>
+        <li>
+          <a href="accessibility.html" title="Accessibility statement"
+            accesskey="0">Accessibility statement</a>
+        </li>
+        <li>
+          <a href="search.html">Search</a>
+        </li>
       </ul>
-    </div>  
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body">
+      <div id="content">
+        <div class="breadcrumbs">
+          <h3>Navigation</h3>
+          <ul>
+            <li class="bounce first">
+              <a href="genindex.html" title="General Index"
+                accesskey="I">index</a></li>
+            <li class="bounce">
+              <a href="py-modindex.html" title="Python Module Index"
+                accesskey="">modules</a> |</li>
+            <li class="bounce">
+              <a href="bleeter.1.html" title="bleeter.py"
+                accesskey="N">next</a> |</li>
+            <li class="bounce">
+              <a href="configuration.html" title="Configuration"
+                accesskey="P">previous</a> |</li>
+            <li><a href="index.html">bleeter v0.8.0-git documentation</a> &#8594;</li>
+            <li><a href="">Usage</a></li> 
+          </ul>
+        </div>
+        <div class="quicksearch">
+          <p class="sidebar-title">Quick search</p>
+          <form class="search" action="search.html" method="get">
+            <div>
+              <input type="text" name="q" size="18" /> <input type="submit" value="Go" />
+              <input type="hidden" name="check_keywords" value="yes" />
+              <input type="hidden" name="area" value="default" />
+            </div>
+          </form>
+        </div>
+        <div class="entry">
+          <div class="entry-content">
             
   <div class="section" id="usage">
 <h1>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h1>
@@ -72,8 +109,9 @@ access to your account.</li>
 </ul>
 <p>If you wish to create a new authentication token, or need to regenerate it, you
 can be doing one of the following:</p>
-<div class="highlight-python"><pre>$ bleeter.py --get-token
-$ rm ${XDG_DATA_HOME:-~/.local}/bleeter/oauth_token</pre>
+<div class="highlight-sh"><div class="highlight"><pre><span class="nv">$ </span>bleeter.py --get-token
+<span class="nv">$ </span>rm <span class="k">${</span><span class="nv">XDG_DATA_HOME</span><span class="k">:-</span><span class="p">~/.local</span><span class="k">}</span>/bleeter/oauth_token
+</pre></div>
 </div>
 <div class="section" id="options">
 <h2>Options<a class="headerlink" href="#options" title="Permalink to this headline">¶</a></h2>
@@ -250,62 +288,40 @@ $ rm ${XDG_DATA_HOME:-~/.local}/bleeter/oauth_token</pre>
 
 
           </div>
+          <div class="page_meta">
+            <ul>
+              <li>
+                <a href="http://jnrowe.github.com/usage.html" rel="bookmark" title="Permalink">Permalink</a>
+              </li>
+              <li>
+                Rights: © Copyright 2010-2011  James Rowe.
+              </li>
+              <li>
+                Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+              </li>
+            </ul>
+            <p>
+              <a href="#content">Return to Top</a>
+            </p>
+          </div>
+          <div class="clearer"></div>
         </div>
-      </div>
-      <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Usage</a><ul>
-<li><a class="reference internal" href="#options">Options</a></li>
-</ul>
-</li>
-</ul>
-
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="configuration.html"
-                        title="previous chapter">Configuration</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="bleeter.1.html"
-                        title="next chapter">bleeter.py</a></p>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" size="18" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+        <div class="breadcrumbs">
+          <h3>Navigation</h3>
+          <ul>
+            <li class="bounce first">
+              <a href="genindex.html" title="General Index">index</a></li>
+            <li class="bounce">
+              <a href="py-modindex.html" title="Python Module Index">modules</a> |</li>
+            <li class="bounce">
+              <a href="bleeter.1.html" title="bleeter.py">next</a> |</li>
+            <li class="bounce">
+              <a href="configuration.html" title="Configuration">previous</a> |</li>
+            <li><a href="index.html">bleeter v0.8.0-git documentation</a> &#8594;</li>
+            <li><a href="">Usage</a></li> 
+          </ul>
         </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="bleeter.1.html" title="bleeter.py"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="configuration.html" title="Configuration"
-             >previous</a> |</li>
-        <li><a href="index.html">bleeter v0.8.0-git documentation</a> &raquo;</li> 
-      </ul>
-    </div>
-    <div class="footer">
-        &copy; Copyright 2010-2011  James Rowe.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+        </div>
     </div>
   </body>
 </html>
