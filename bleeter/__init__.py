@@ -1,4 +1,4 @@
-#! /usr/bin/python -tt
+#
 """bleeter - Nasty little twitter client"""
 # Copyright (C) 2010-2011  James Rowe <jnrowe@gmail.com>
 #
