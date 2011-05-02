@@ -21,4 +21,4 @@ import sys
 import bleeter
 
 
-sys.exit(bleeter.main(sys.argv[:]))
+sys.exit(bleeter.main())

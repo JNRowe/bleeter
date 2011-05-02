@@ -1188,7 +1188,7 @@ def get_token(auth, fetch, token_file):
     return token.key, token.secret
 
 
-def main(argv):
+def main(argv=sys.argv[:]):
     """Main handler
 
     :type argv: ``list``
@@ -1314,6 +1314,6 @@ def main(argv):
 
 if __name__ == "__main__":
     try:
-        sys.exit(main(sys.argv[:]))
+        sys.exit(main())
     except KeyboardInterrupt:
         pass
