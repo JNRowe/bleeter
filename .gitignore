@@ -1,4 +1,6 @@
 doc/.build/
 
+*.pyc
+
 .coverage
 .noseids
