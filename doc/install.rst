@@ -12,6 +12,7 @@ You can download releases from the `downloads page`_.
 
 The following optional packages will be used if available:
 
+* setproctitle_ for displaying ``bleeter`` state in process title
 * termcolor_ for coloured output in the terminal
 
 If you're using Gentoo_ all the dependencies are available from either the main
@@ -27,5 +28,6 @@ script.
 .. _pygtk: http://www.pygtk.org/
 .. _tweepy: http://pypi.python.org/pypi/tweepy/
 .. _termcolor: http://pypi.python.org/pypi/termcolor/
+.. _setproctitle: http://pypi.python.org/pypi/setproctitle
 .. _Gentoo: http://www.gentoo.org
 .. _my overlay: http://github.com/JNRowe/misc-overlay.

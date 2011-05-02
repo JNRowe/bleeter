@@ -52,6 +52,8 @@ import time
 import urllib
 import webbrowser
 
+from contextlib import contextmanager
+from functools import wraps
 from xml.sax import saxutils
 
 import json
@@ -65,6 +67,11 @@ import validate
 import pygtk
 pygtk.require('2.0')
 import gtk
+
+try:
+    import setproctitle  # pylint: disable-msg=F0401
+except ImportError:  # pragma: no cover
+    setproctitle = None  # pylint: disable-msg=C0103
 
 try:
     import urlunshort  # pylint: disable-msg=F0401
@@ -867,6 +874,38 @@ def skip_check(ignore):
     return wrapper
 
 
+@contextmanager
+def wrap_proctitle(string):
+    """Set process title for a given context
+
+    :type string: ``str``
+    :param string: Context to display in process title
+    """
+    if setproctitle:
+        oldtitle = setproctitle.getproctitle()
+        setproctitle.setproctitle("%s [%s]" % (sys.argv[0], string))
+    yield
+    if setproctitle:
+        setproctitle.setproctitle(oldtitle)
+
+
+def proctitle_decorator(f):
+    """Decorator to apply ``wrap_proctitle``
+
+    :type f: ``func``
+    :param f: Function to wrap
+    :rtype: ``func``
+    :return: Function wrapped in ``wrap_proctitle`` context manager
+    """
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        with wrap_proctitle(f.__name__):
+            retval = f(*args, **kwargs)
+        return retval
+    return wrapper
+
+
+@proctitle_decorator
 def update(api, ftype, tweets, state, count, ignore):
     """Fetch new tweets and queue them for display
 
@@ -957,6 +996,7 @@ def update(api, ftype, tweets, state, count, ignore):
 
 
 NOTIFICATIONS = {}
+@proctitle_decorator
 def display(api, tweets, state, timeout, expand, mobile, map_provider):
     """Display notifications for new tweets
 
@@ -1078,6 +1118,7 @@ def tooltip(icon, tweets):
     return True
 
 
+@proctitle_decorator
 def get_token(auth, fetch, token_file):
     """Fetch a new OAuth token
 
@@ -1155,6 +1196,8 @@ def main(argv):
     :rtype: ``int``
     :return: Shell return value
     """
+    if setproctitle:
+        setproctitle.setproctitle(sys.argv[0])
 
     # Must be ahead of setup, for non-X environments to run --help|--version
     config_file = "%s/bleeter/config.ini" % glib.get_user_config_dir()
@@ -1172,15 +1215,16 @@ def main(argv):
     except IOError:
         return errno.EIO
 
-    token_file = "%s/bleeter/oauth_token" % glib.get_user_data_dir()
+    with wrap_proctitle("authenticating"):
+        token_file = "%s/bleeter/oauth_token" % glib.get_user_data_dir()
 
-    auth = tweepy.OAuthHandler(OAUTH_KEY, OAUTH_SECRET)
-    try:
-        token = get_token(auth, options.get_token, token_file)
-    except tweepy.TweepError:
-        return errno.EPERM
-    if not token:
-        return errno.EPERM
+        auth = tweepy.OAuthHandler(OAUTH_KEY, OAUTH_SECRET)
+        try:
+            token = get_token(auth, options.get_token, token_file)
+        except tweepy.TweepError:
+            return errno.EPERM
+        if not token:
+            return errno.EPERM
 
     if options.cache:
         cachedir = "%s/bleeter/http_cache" % glib.get_user_cache_dir()
@@ -1237,7 +1281,8 @@ def main(argv):
 
     state = State(options.stealth, lists, searches)
 
-    update(api, "user", tweets, state, options.count, options.ignore)
+    with wrap_proctitle("Initial update"):
+        update(api, "user", tweets, state, options.count, options.ignore)
 
     glib.timeout_add_seconds(options.frequency, update, api, "user", tweets,
                              state, options.count, options.ignore)

@@ -29,6 +29,9 @@ urlunshort_.
 If you would like coloured terminal output for debugging information, then you
 will need termcolor_.
 
+If you wish to have the process title reflect the current state of ``bleeter``,
+then you will need setproctitle_.
+
 No significant effort has been put in to making ``bleeter`` work with Python 3,
 as few of the dependencies are ported yet.
 
@@ -132,4 +135,5 @@ reproduce the problem, or even better a patch!
 .. _pygtk: http://www.pygtk.org/
 .. _urlunshort: http://bitbucket.org/runeh/urlunshort
 .. _termcolor: http://pypi.python.org/pypi/termcolor/
+.. _setproctitle: http://pypi.python.org/pypi/setproctitle
 .. _email: jnrowe@gmail.com
