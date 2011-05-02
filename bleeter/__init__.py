@@ -66,16 +66,6 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 
-try:
-    import setproctitle  # pylint: disable-msg=F0401
-except ImportError:  # pragma: no cover
-    setproctitle = None  # pylint: disable-msg=C0103
-
-try:
-    import urlunshort  # pylint: disable-msg=F0401
-except ImportError:  # pragma: no cover
-    urlunshort = None  # pylint: disable-msg=C0103
-
 from . import utils
 
 # OAuth design FTL!
@@ -879,8 +869,8 @@ def main(argv=sys.argv[:]):
     :rtype: ``int``
     :return: Shell return value
     """
-    if setproctitle:
-        setproctitle.setproctitle(sys.argv[0])
+    if utils.setproctitle:
+        utils.setproctitle.setproctitle(sys.argv[0])
 
     # Must be ahead of setup, for non-X environments to run --help|--version
     config_file = "%s/bleeter/config.ini" % glib.get_user_config_dir()
@@ -924,7 +914,7 @@ def main(argv=sys.argv[:]):
         # notification
         utils.usage_note("Started", level=utils.success)
 
-    if not urlunshort and options.expand:
+    if not utils.urlunshort and options.expand:
         utils.usage_note("Link expansion support requires the urlunshort "
                          "module")
         options.expand = False
