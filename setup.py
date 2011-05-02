@@ -27,7 +27,6 @@ setup(
     version=bleeter.__version__,
     author=aname,
     author_email=aemail,
-    scripts=['bleeter.py', ],
     url='http://github.com/JNRowe/bleeter',
     license='GPL-3',
     description=bleeter.__doc__.splitlines ()[0].split("-", 1)[1][1:],
