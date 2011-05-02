@@ -18,8 +18,7 @@
 
 import imp
 
-from distutils.core import setup
-from email.utils import parseaddr
+from setuptools import setup
 
 # Hack to import _version file without importing bleeter/__init__.py, its
 # purpose is to allow import without requiring dependencies at this point.
