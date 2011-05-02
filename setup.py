@@ -16,20 +16,25 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+import imp
+
 from distutils.core import setup
 from email.utils import parseaddr
 
-import bleeter
+# Hack to import _version file without importing bleeter/__init__.py, its
+# purpose is to allow import without requiring dependencies at this point.
+ver_file = open("bleeter/_version.py")
+_version = imp.load_module("_version", ver_file, ver_file.name,
+                           (".py", ver_file.mode, imp.PY_SOURCE))
 
-aname, aemail = parseaddr(bleeter.__author__)
 setup(
     name='bleeter',
-    version=bleeter.__version__,
-    author=aname,
-    author_email=aemail,
+    version=_version.dotted,
+    author="James Rowe",
+    author_email="jnrowe@gmail.com",
     url='http://github.com/JNRowe/bleeter',
     license='GPL-3',
-    description=bleeter.__doc__.splitlines ()[0].split("-", 1)[1][1:],
+    description="Nasty little twitter client",
     long_description=open('README.rst').read(),
     data_files=[
         ("share/pixmaps", ["bleeter.png", ]),
