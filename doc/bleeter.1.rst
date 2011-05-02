@@ -1,5 +1,5 @@
-bleeter.py
-==========
+bleeter
+=======
 
 A nasty little twitter viewer
 """""""""""""""""""""""""""""
@@ -13,7 +13,7 @@ A nasty little twitter viewer
 SYNOPSIS
 --------
 
-    bleeter.py [option]...
+    bleeter [option]...
 
 DESCRIPTION
 -----------

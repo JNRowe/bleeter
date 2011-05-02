@@ -1,7 +1,7 @@
 Usage
 -----
 
-:program:`bleeter.py` will seek authorisation when initially run.  As twitter_
+:program:`bleeter` will seek authorisation when initially run.  As twitter_
 uses OAuth_ this process is a little more cumbersome than it should be.
 
 * An authentication link will be opened in your default browser, allowing you to
@@ -15,13 +15,13 @@ can be doing one of the following:
 
 .. code-block:: sh
 
-    $ bleeter.py --get-token
+    $ bleeter --get-token
     $ rm ${XDG_DATA_HOME:-~/.local}/bleeter/oauth_token
 
 Options
 '''''''
 
-.. program:: bleeter.py
+.. program:: bleeter
 
 .. cmdoption:: --version
 
