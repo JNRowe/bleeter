@@ -113,12 +113,9 @@ class State(object):
         >>> state.fetched["self-status"]
         1
 
-        :type users: ``list``
-        :param users: Stealth users to watch
-        :type lists: ``list``
-        :param lists: Authenticated user's lists
-        :type searches: ``list``
-        :param lists: Authenticated user's saved searches
+        :param list users: Stealth users to watch
+        :param list lists: Authenticated user's lists
+        :param list lists: Authenticated user's saved searches
         """
         self.state_file = "%s/bleeter/state.db" % glib.get_user_data_dir()
 
@@ -198,8 +195,7 @@ class State(object):
         We store displayed, not fetched, info so we don't miss pending tweets
         from a previous run
 
-        :type force: ``bool``
-        :param force: Force update, even if data hasn't changed for mtime
+        :param bool force: Force update, even if data hasn't changed for mtime
             promotion
         """
         data = copy.deepcopy(self._data)
@@ -242,8 +238,7 @@ class Tweets(dict):
     def add(self, tweets):
         """Add new tweets to the store
 
-        :type tweets: ``list``
-        :param tweets: Tweets to add store
+        :param list tweets: Tweets to add store
         """
         for tweet in tweets:
             self[tweet.id] = tweet
@@ -252,8 +247,7 @@ class Tweets(dict):
 def process_command_line(config_file):
     """Main command line interface
 
-    :type config_file: ``str``
-    :param config_file: Location of the configuration file
+    :param str config_file: Location of the configuration file
     :rtype: ``tuple`` of ``optparse`` and ``list``
     :return: Parsed options and arguments
     """
@@ -452,12 +446,9 @@ def format_tweet(text, expand=False, mobile=False):
     'entity test, &amp; &quot; &apos; &lt; &gt;'
     >>> NOTIFY_SERVER_CAPS[:] = []
 
-    :type text: ``str``
-    :param api: Tweet content
-    :type expand: ``bool``
-    :param expand: Expand links in tweet text
-    :type mobile: ``bool``
-    :param mobile: Open links in twitter's mobile site
+    :param str api: Tweet content
+    :param bool expand: Expand links in tweet text
+    :param bool mobile: Open links in twitter's mobile site
     :rtype: ``str``
     :return: Tweet content with pretty formatting
     """
@@ -498,8 +489,7 @@ def format_tweet(text, expand=False, mobile=False):
 def get_user_icon(user):
     """Get icon location for user
 
-    :type user: ``tweepy.models.User``
-    :param user: Tweet user reference
+    :param tweepy.models.User user: Tweet user reference
     :rtype: ``str``
     :return: Location of the icon file
     """
@@ -530,13 +520,10 @@ def get_user_icon(user):
 def open_tweet(tweet, mobile=False, map_provider="google"):
     """Create tweet opening function
 
-    :type tweet: ``tweepy.models.Status``
-    :param tweet: Twitter status message to open
-    :type mobile: ``bool``
-    :param mobile: Open links in lighter mobile versions
-    :type map_provider: ``str``
-    :param map_provider: Map provider to open geo links in, if ``mobile`` is
-        ``False``
+    :param tweepy.models.Status tweet: Twitter status message to open
+    :param bool mobile: Open links in lighter mobile versions
+    :param str map_provider: Map provider to open geo links in, if ``mobile``
+        is ``False``
     :rtype: ``FunctionType``
     :return: Wrapper to open tweet in browser
     """
@@ -558,10 +545,9 @@ def open_tweet(tweet, mobile=False, map_provider="google"):
     def show(notification, action):  # pylint: disable-msg=W0613
         """Open tweet in browser
 
-        :type notification: ``pynotify.Notification``
-        :param notification: Calling notification instance
-        :type action: ``str``
-        :param action: Calling action name
+        :param pynotify.Notification notification: Calling notification
+            instance
+        :param str action: Calling action name
         """
 
         if action == "find":
@@ -606,8 +592,8 @@ def skip_check(ignore):
     def wrapper(tweet):
         """Filter tweets containing user selected words
 
-        :type tweet: ``tweepy.models.Status``
-        :param tweet: Twitter status message to scan for selected words
+        :param tweepy.models.Status tweet: Twitter status message to scan for
+            selected words
         :rtype: ``bool``
         :return: True if tweet is clean
         """
@@ -628,16 +614,11 @@ def update(api, ftype, tweets, state, count, ignore):
     search on each run, fetching the full timeline for each element on each run
     is a waste of resources
 
-    :type api: ``tweepy.api.API``
-    :param api: Authenticated ``tweepy.api.API`` object
-    :type ftype: ``str``
-    :param ftype: Type of update to perform
-    :type tweets: ``Tweets``
-    :param tweets: Tweets awaiting display
-    :type state: ``State``
-    :param state: Application state
-    :type count: ``int``
-    :param count: Number of new tweets to fetch
+    :param tweepy.api.API api: Authenticated ``tweepy.api.API`` object
+    :param str ftype: Type of update to perform
+    :param Tweets tweets: Tweets awaiting display
+    :param state state: Application state
+    :param int count: Number of new tweets to fetch
     :type ignore: ``list`` of ``str``
     :param ignore: List of words to trigger tweet skipping
     :rtype: ``True``
@@ -715,21 +696,14 @@ NOTIFICATIONS = {}
 def display(api, tweets, state, timeout, expand, mobile, map_provider):
     """Display notifications for new tweets
 
-    :type api: ``tweepy.api.API``
-    :param api: Authenticated ``tweepy.api.API`` object
-    :type tweets: ``Tweets``
-    :param tweets: Tweets awaiting display
-    :type state: ``State``
-    :param seen: Application state
-    :type timeout: ``tweepy.api.API``
-    :param timeout: Timeout for notifications in seconds
-    :type expand: ``bool``
-    :param expand: Whether to expand links in tweet text
-    :type mobile: ``bool``
-    :param mobile: Links open in lighter mobile versions
-    :type map_provider: ``str``
-    :param map_provider: Map provider to open geo links in, if ``mobile`` is
-        ``False`
+    :param tweepy.api.API api: Authenticated ``tweepy.api.API`` object
+    :param Tweets tweets: Tweets awaiting display
+    :param State seen: Application state
+    :param int timeout: Timeout for notifications in seconds
+    :param bool expand: Whether to expand links in tweet text
+    :param bool mobile: Links open in lighter mobile versions
+    :param str map_provider: Map provider to open geo links in, if ``mobile``
+        is ``False`
     :rtype: ``True``
     :return: Timers must return a ``True`` value for timer to continue
 
@@ -820,10 +794,8 @@ def display(api, tweets, state, timeout, expand, mobile, map_provider):
 def tooltip(icon, tweets):
     """Update statusicon tooltip
 
-    :type icon: ``gtk.StatusIcon``
-    :param icon: Status icon to update
-    :type tweets: ``Tweets``
-    :param tweets: Tweets pending display
+    :param gtk.StatusIcon icon: Status icon to update
+    :param Tweets tweets: Tweets pending display
     """
 
     count = len(tweets)
@@ -837,12 +809,9 @@ def tooltip(icon, tweets):
 def get_token(auth, fetch, token_file):
     """Fetch a new OAuth token
 
-    :type auth: ``OAuthHandler``
-    :param auth: OAuth handler for bleeter
-    :type fetch: ``bool``
-    :param fetch: Fetch a new token, even if one exists
-    :type token_file: ``str``
-    :param token_file: Filename to store token data in
+    :param OAuthHandler auth: OAuth handler for bleeter
+    :param bool fetch: Fetch a new token, even if one exists
+    :param str token_file: Filename to store token data in
     """
 
     if os.path.exists(token_file) and not fetch:
@@ -906,8 +875,7 @@ def get_token(auth, fetch, token_file):
 def main(argv=sys.argv[:]):
     """Main handler
 
-    :type argv: ``list``
-    :param argv: Command line parameters
+    :param list argv: Command line parameters
     :rtype: ``int``
     :return: Shell return value
     """

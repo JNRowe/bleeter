@@ -61,8 +61,7 @@ from . import _version
 def mkdir(directory):
     """Create directory, including parents
 
-    :type directory: ``str``
-    :param directory: Directory to create
+    :param str directory: Directory to create
     :raise OSError: Unable to create directory
 
     """
@@ -114,14 +113,11 @@ def create_lockfile():
 def usage_note(message, title=None, level=warn, icon=None):
     """Display a usage notification
 
-    :type message: ``str``
-    :param message: Message to display
+    :param str message: Message to display
     :type title: ``str`` or ``None`
     :param title: Title for notification popup
-    :type level: ``func``
-    :param level: Function to display text message with
-    :type icon: ``str``
-    :param iconL: Icon to use for notification popup
+    :param func level: Function to display text message with
+    :param str iconL: Icon to use for notification popup
     """
 
     message = message.replace("%prog", sys.argv[0])
@@ -152,8 +148,7 @@ def usage_note(message, title=None, level=warn, icon=None):
 def open_browser(url):
     """Open URL in user's browser
 
-    :type uri: ``str``
-    :param uri: URL to open
+    :param str uri: URL to open
 
     """
 
@@ -191,8 +186,7 @@ def find_app_icon(uri=True):
     >>> find_app_icon() #doctest: +ELLIPSIS
     'file://.../bleeter/bleeter.png'
 
-    :type uri: ``bool``
-    :param uri: Return a URI for the path
+    :param bool uri: Return a URI for the path
     :rtype: ``str``
     :return: Path to the application icon
 
@@ -233,8 +227,8 @@ def relative_time(timestamp):
     >>> relative_time(now - datetime.timedelta(seconds=12))
     'about 12 seconds ago'
 
-    :type timestamp: ``datetime.datetime``
-    :param timestamp: Event to generate relative timestamp against
+    :param datetime.datetime timestamp: Event to generate relative timestamp
+        against
     :rtype: ``str``
     :return: Human readable date and time offset
     """
@@ -282,8 +276,7 @@ def url_expand(match):
     'See <a href="terminal.png">terminal.png</a>'
     >>> NOTIFY_SERVER_CAPS[:] = []
 
-    :type match: ``SRE_Match``
-    :param match: Regular expression match object
+    :param SRE_Match match: Regular expression match object
     :rtype: ``str``
     :return: HTML formatted link for URL
     """
@@ -300,8 +293,7 @@ def url_expand(match):
 def wrap_proctitle(string):
     """Set process title for a given context
 
-    :type string: ``str``
-    :param string: Context to display in process title
+    :param str string: Context to display in process title
     """
     if setproctitle:
         oldtitle = setproctitle.getproctitle()
@@ -314,8 +306,7 @@ def wrap_proctitle(string):
 def proctitle_decorator(f):
     """Decorator to apply ``wrap_proctitle``
 
-    :type f: ``func``
-    :param f: Function to wrap
+    :param func f: Function to wrap
     :rtype: ``func``
     :return: Function wrapped in ``wrap_proctitle`` context manager
     """
