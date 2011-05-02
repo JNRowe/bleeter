@@ -36,4 +36,6 @@ setup(
         ("share/pixmaps", ["bleeter.png", ]),
         ("share/applications", ["bleeter.desktop"]),
     ],
+    packages=['bleeter', ],
+    entry_points={'console_scripts': ['bleeter = bleeter:main', ]},
 )
