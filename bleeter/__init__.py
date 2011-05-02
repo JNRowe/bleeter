@@ -42,7 +42,6 @@ nothing more.
 import atexit
 import copy
 import collections
-import datetime
 import errno
 import hashlib
 import optparse
@@ -50,13 +49,9 @@ import os
 import re
 import shutil
 import sys
-import subprocess
 import time
 import urllib
-import webbrowser
 
-from contextlib import contextmanager
-from functools import wraps
 from xml.sax import saxutils
 
 import json
@@ -81,20 +76,7 @@ try:
 except ImportError:  # pragma: no cover
     urlunshort = None  # pylint: disable-msg=C0103
 
-try:
-    from termcolor import colored
-except ImportError:  # pragma: no cover
-    colored = None  # pylint: disable-msg=C0103
-
-# Select colours if terminal is a tty
-# pylint: disable-msg=C0103
-if colored and sys.stdout.isatty():
-    success = lambda s: colored(s, "green")
-    fail = lambda s: colored(s, "red")
-    warn = lambda s: colored(s, "yellow")
-else:  # pragma: no cover
-    success = fail = warn = str
-# pylint: enable-msg=C0103
+from . import utils
 
 # OAuth design FTL!
 OAUTH_KEY = "WJ3RGn3aMN98b41b3pJQ"
@@ -172,7 +154,7 @@ class State(object):
         atexit.register(self.save_state, force=True)
         # Shutdown can take a long time, especially with lots of lists or
         # stealth follows.
-        atexit.register(sys.stderr.write, warn("Shutting down\n"))
+        atexit.register(sys.stderr.write, utils.warn("Shutting down\n"))
 
     def get_user(self):
         """Return next stealth user to update
@@ -267,156 +249,6 @@ class Tweets(dict):
             self[tweet.id] = tweet
 
 
-def mkdir(directory):
-    """Create directory, including parents
-
-    :type directory: ``str``
-    :param directory: Directory to create
-    :raise OSError: Unable to create directory
-
-    """
-
-    try:
-        os.makedirs(os.path.expanduser(directory))
-    except OSError as exc:
-        if exc.errno == errno.EEXIST:
-            pass
-        else:
-            raise
-
-
-def create_lockfile():
-    """Create lockfile handler
-
-    # Test mocks
-    >>> atexit.register = lambda *args, **kwargs: True
-    >>> glib.get_user_data_dir = lambda: "test/xdg_data_home"
-
-    # Make sure there isn't a stale lock from a previous run
-    >>> if os.path.exists("%s/bleeter/lock" % glib.get_user_data_dir()):
-    ...     os.unlink("%s/bleeter/lock" % glib.get_user_data_dir())
-
-    >>> create_lockfile()
-    >>> os.path.exists("%s/bleeter/lock" % glib.get_user_data_dir())
-    True
-    >>> try:
-    ...     create_lockfile()
-    ... except IOError:
-    ...     pass
-    Another instance is running or `test/xdg_data_home/bleeter/lock' is stale
-    >>> os.unlink("%s/bleeter/lock" % glib.get_user_data_dir())
-
-    """
-    lock_file = "%s/bleeter/lock" % glib.get_user_data_dir()
-
-    # Create directory for state storage
-    mkdir(os.path.dirname(lock_file))
-    if os.path.exists(lock_file):
-        message = "Another instance is running or `%s' is stale" \
-            % lock_file
-        usage_note(message)
-        raise IOError(message)
-    open(lock_file, "w").write(str(os.getpid()))
-    atexit.register(os.unlink, lock_file)
-
-
-def usage_note(message, title=None, level=warn, icon=None):
-    """Display a usage notification
-
-    :type message: ``str``
-    :param message: Message to display
-    :type title: ``str`` or ``None`
-    :param title: Title for notification popup
-    :type level: ``func``
-    :param level: Function to display text message with
-    :type icon: ``str``
-    :param iconL: Icon to use for notification popup
-    """
-
-    message = message.replace("%prog", sys.argv[0])
-    if not title:
-        title = "%%prog %s" % __version__
-    title = title.replace("%prog", sys.argv[0])
-    print(level(message))
-    if not icon:
-        if level == success:
-            icon = find_app_icon()
-        elif level == warn:
-            icon = "stock_dialog-warning"
-        elif level == fail:
-            icon = "error"
-    # pylint: disable-msg=E1101
-    note = pynotify.Notification(title, message, icon)
-    if level == warn:
-        note.set_urgency(pynotify.URGENCY_LOW)
-    elif level == fail:
-        note.set_urgency(pynotify.URGENCY_CRITICAL)
-        note.set_timeout(pynotify.EXPIRES_NEVER)
-    # pylint: enable-msg=E1101
-    if not note.show():
-        raise OSError("Notification failed to display!")
-    return errno.EPERM
-
-
-def open_browser(url):
-    """Open URL in user's browser
-
-    :type uri: ``str``
-    :param uri: URL to open
-
-    """
-
-    try:
-        subprocess.call(["xdg-open", url])
-    except OSError:
-        try:
-            webbrowser.open(url, new=2)
-        except webbrowser.Error:
-            usage_note("Failed to open link", level=fail)
-
-
-def find_app_icon(uri=True):
-    """Find suitable bleeter application icon
-
-    # Test mocks
-    >>> sys.prefix = ""
-    >>> sys.path[0] = "non-existent-path"
-    >>> glib.get_user_cache_dir = lambda: "test/xdg_cache_home"
-
-    >>> find_app_icon()
-    'file://test/xdg_cache_home/bleeter/bleeter.png'
-    >>> find_app_icon(False)
-    'test/xdg_cache_home/bleeter/bleeter.png'
-
-    # Test with no personal icon
-    >>> glib.get_user_cache_dir = lambda: "None"
-    >>> find_app_icon()
-    Traceback (most recent call last):
-        ...
-    EnvironmentError: Can't find application icon!
-
-    # Test with local icon
-    >>> sys.path[0] = ""
-    >>> find_app_icon() #doctest: +ELLIPSIS
-    'file://.../bleeter/bleeter.png'
-
-    :type uri: ``bool``
-    :param uri: Return a URI for the path
-    :rtype: ``str``
-    :return: Path to the application icon
-
-    """
-    icon_locations = [
-        "%s/bleeter.png" % os.path.abspath(sys.path[0]),
-        "%s/bleeter/bleeter.png" % glib.get_user_cache_dir(),
-        "%s/share/pixmaps/bleeter.png" % sys.prefix,
-    ]
-    for icon in icon_locations:
-        if os.path.exists(icon):
-            return "%s%s" % ("file://" if uri else "", icon)
-    raise EnvironmentError("Can't find application icon!")
-
-
 def process_command_line(config_file):
     """Main command line interface
 
@@ -472,7 +304,7 @@ def process_command_line(config_file):
     results = config.validate(validate.Validator())
     if results is not True:
         for key in filter(lambda k: not results[k], results):
-            print(fail("Config value for `%s' is invalid" % key))
+            print(utils.fail("Config value for `%s' is invalid" % key))
         raise SyntaxError("Invalid configuration file")
 
     parser = optparse.OptionParser(usage="%prog [options...]",
@@ -591,94 +423,6 @@ def process_command_line(config_file):
     return options
 
 
-def relative_time(timestamp):
-    """Format a relative time
-
-    >>> now = datetime.datetime.utcnow()
-    >>> relative_time(now - datetime.timedelta(days=365))
-    'last year'
-    >>> relative_time(now - datetime.timedelta(days=70))
-    'about two months ago'
-    >>> relative_time(now - datetime.timedelta(days=30))
-    'last month'
-    >>> relative_time(now - datetime.timedelta(days=21))
-    'about three weeks ago'
-    >>> relative_time(now - datetime.timedelta(days=4))
-    'about four days ago'
-    >>> relative_time(now - datetime.timedelta(days=1))
-    'yesterday'
-    >>> relative_time(now - datetime.timedelta(hours=5))
-    'about five hours ago'
-    >>> relative_time(now - datetime.timedelta(hours=1))
-    'about an hour ago'
-    >>> relative_time(now - datetime.timedelta(minutes=6))
-    'about six minutes ago'
-    >>> relative_time(now - datetime.timedelta(seconds=12))
-    'about 12 seconds ago'
-
-    :type timestamp: ``datetime.datetime``
-    :param timestamp: Event to generate relative timestamp against
-    :rtype: ``str``
-    :return: Human readable date and time offset
-    """
-
-    numstr = ". a two three four five six seven eight nine ten".split()
-
-    matches = [
-        60 * 60 * 24 * 365,
-        60 * 60 * 24 * 28,
-        60 * 60 * 24 * 7,
-        60 * 60 * 24,
-        60 * 60,
-        60,
-        1,
-    ]
-    match_names = ["year", "month", "week", "day", "hour", "minute", "second"]
-
-    delta = datetime.datetime.utcnow() - timestamp
-    seconds = delta.days * 86400 + delta.seconds
-    for scale in matches:
-        i = seconds // scale
-        if i:
-            name = match_names[matches.index(scale)]
-            break
-
-    if i == 1 and name in ("year", "month", "week"):
-        result = "last %s" % name
-    elif i == 1 and name == "day":
-        result = "yesterday"
-    elif i == 1 and name == "hour":
-        result = "about an hour ago"
-    else:
-        result = "about %s %s%s ago" % (i if i > 10 else numstr[i], name,
-                                        "s" if i > 1 else "")
-    return result
-
-# Keep a cache for free handling of retweets and such.
-URLS = {}
-def url_expand(match):
-    """Generate links with expanded URLs
-
-    >>> NOTIFY_SERVER_CAPS.extend(["body-markup", "body-hyperlinks"])
-    >>> URLS["http://bit.ly/dunMgV"] = "terminal.png"
-    >>> format_tweet("See http://bit.ly/dunMgV", True)
-    'See <a href="terminal.png">terminal.png</a>'
-    >>> NOTIFY_SERVER_CAPS[:] = []
-
-    :type match: ``SRE_Match``
-    :param match: Regular expression match object
-    :rtype: ``str``
-    :return: HTML formatted link for URL
-    """
-    url = match.group()
-    if not url in URLS:
-        if urlunshort.is_shortened(url):
-            URLS[url] = glib.markup_escape_text(urlunshort.resolve(url))
-        else:
-            URLS[url] = glib.markup_escape_text(url)
-    return '<a href="%s">%s</a>' % (URLS[url], URLS[url])
-
-
 def format_tweet(text, expand=False, mobile=False):
     """Format tweet for display
 
@@ -734,7 +478,7 @@ def format_tweet(text, expand=False, mobile=False):
     if "body-markup" in NOTIFY_SERVER_CAPS:
         if "body-hyperlinks" in NOTIFY_SERVER_CAPS:
             if expand:
-                text = url_match.sub(url_expand, text)
+                text = url_match.sub(utils.url_expand, text)
             else:
                 text = url_match.sub(r'<a href="\1">\1</a>', text)
             text = user_match.sub(r'@<a href="%s/\1">\1</a>' % base,
@@ -761,7 +505,7 @@ def get_user_icon(user):
     """
 
     cache_dir = "%s/bleeter" % glib.get_user_cache_dir()
-    mkdir(cache_dir)
+    utils.mkdir(cache_dir)
     md5 = hashlib.md5(user.profile_image_url)  # pylint: disable-msg=E1101
     filename = "%s/%s" % (cache_dir, md5.hexdigest())
     if not os.path.exists(filename):
@@ -773,7 +517,7 @@ def get_user_icon(user):
         except IOError:
             # Fallback to application icon
             if not os.path.exists("%s/bleeter.png" % cache_dir):
-                shutil.copy(find_app_icon(uri=False), cache_dir)
+                shutil.copy(utils.find_app_icon(uri=False), cache_dir)
             filename = "%s/bleeter.png" % cache_dir
         icon = gtk.gdk.pixbuf_new_from_file(filename)
         if not (icon.get_width(), icon.get_height()) == (48, 48):
@@ -811,7 +555,6 @@ def open_tweet(tweet, mobile=False, map_provider="google"):
         elif map_provider == "google-nojs":
             map_url = "http://maps.google.com/m?q=@(latlon)s&oi=nojs"
 
-
     def show(notification, action):  # pylint: disable-msg=W0613
         """Open tweet in browser
 
@@ -831,7 +574,7 @@ def open_tweet(tweet, mobile=False, map_provider="google"):
             else:
                 name = tweet.user.screen_name
             url = "%s/%s/status/%s" % (twitter_base, name, tweet.id)
-        open_browser(url)
+        utils.open_browser(url)
     return show
 
 
@@ -877,38 +620,7 @@ def skip_check(ignore):
     return wrapper
 
 
-@contextmanager
-def wrap_proctitle(string):
-    """Set process title for a given context
-
-    :type string: ``str``
-    :param string: Context to display in process title
-    """
-    if setproctitle:
-        oldtitle = setproctitle.getproctitle()
-        setproctitle.setproctitle("%s [%s]" % (sys.argv[0], string))
-    yield
-    if setproctitle:
-        setproctitle.setproctitle(oldtitle)
-
-
-def proctitle_decorator(f):
-    """Decorator to apply ``wrap_proctitle``
-
-    :type f: ``func``
-    :param f: Function to wrap
-    :rtype: ``func``
-    :return: Function wrapped in ``wrap_proctitle`` context manager
-    """
-    @wraps(f)
-    def wrapper(*args, **kwargs):
-        with wrap_proctitle(f.__name__):
-            retval = f(*args, **kwargs)
-        return retval
-    return wrapper
-
-
-@proctitle_decorator
+@utils.proctitle_decorator
 def update(api, ftype, tweets, state, count, ignore):
     """Fetch new tweets and queue them for display
 
@@ -978,7 +690,7 @@ def update(api, ftype, tweets, state, count, ignore):
         elif ftype == "search":
             msg = "Data for `%s' search not available" % search.name
             title = "Fetching search data failed"
-        usage_note(msg, title, fail)
+        utils.usage_note(msg, title, fail)
         # Still return True, so we re-enter the loop
         return True
 
@@ -999,7 +711,7 @@ def update(api, ftype, tweets, state, count, ignore):
 
 
 NOTIFICATIONS = {}
-@proctitle_decorator
+@utils.proctitle_decorator
 def display(api, tweets, state, timeout, expand, mobile, map_provider):
     """Display notifications for new tweets
 
@@ -1031,18 +743,18 @@ def display(api, tweets, state, timeout, expand, mobile, map_provider):
 
     if tweet.from_type == "direct":
         title = "From %s %s" % (tweet.sender.name,
-                                relative_time(tweet.created_at))
+                                utils.relative_time(tweet.created_at))
         icon = get_user_icon(tweet.sender)
     elif tweet.from_type == "search":
         title = "From %s %s" % (tweet.from_user,
-                                relative_time(tweet.created_at))
+                                utils.relative_time(tweet.created_at))
         icon = get_user_icon(tweet)
     else:
         # Don't re-display already seen tweets
         if tweet.id <= state.displayed[tweet.user.screen_name.lower()]:
             return True
         title = "From %s %s" % (tweet.user.name,
-                                relative_time(tweet.created_at))
+                                utils.relative_time(tweet.created_at))
         icon = get_user_icon(tweet.user)
 
     if tweet.from_type == "list":
@@ -1121,7 +833,7 @@ def tooltip(icon, tweets):
     return True
 
 
-@proctitle_decorator
+@utils.proctitle_decorator
 def get_token(auth, fetch, token_file):
     """Fetch a new OAuth token
 
@@ -1137,14 +849,14 @@ def get_token(auth, fetch, token_file):
         return json.load(open(token_file))
 
     try:
-        open_browser(auth.get_authorization_url())
+        utils.open_browser(auth.get_authorization_url())
     except tweepy.TweepError:
-        usage_note("Talking to twitter failed. "
-                   "Is twitter or your network down?",
-                   "Network error", fail)
+        utils.usage_note("Talking to twitter failed. "
+                         "Is twitter or your network down?",
+                         "Network error", utils.fail)
         raise
-    usage_note("Authentication request opened in default browser",
-               level=success)
+    utils.usage_note("Authentication request opened in default browser",
+                     level=utils.success)
     time.sleep(3)
 
     dialog = gtk.Dialog("bleeter authorisation", None, 0,
@@ -1155,7 +867,7 @@ def get_token(auth, fetch, token_file):
     hbox.set_border_width(8)
     dialog.vbox.pack_start(hbox, False, False, 0)  # pylint: disable-msg=E1101
 
-    icon = gtk.image_new_from_file(find_app_icon(uri=False))
+    icon = gtk.image_new_from_file(utils.find_app_icon(uri=False))
     hbox.pack_start(icon, False, False, 0)
 
     table = gtk.Table(2, 1)
@@ -1182,10 +894,10 @@ def get_token(auth, fetch, token_file):
             except tweepy.TweepError:
                 pass
         else:
-            usage_note("Fetching token failed")
+            utils.usage_note("Fetching token failed")
             raise tweepy.TweepError("Fetching token failed")
 
-    mkdir(os.path.dirname(token_file))
+    utils.mkdir(os.path.dirname(token_file))
     json.dump([token.key, token.secret], open(token_file, "w"), indent=4)
 
     return token.key, token.secret
@@ -1208,17 +920,17 @@ def main(argv=sys.argv[:]):
 
     # pylint: disable-msg=E1101
     if not pynotify.init(argv[0]):
-        print(fail("Unable to initialise pynotify!"))
+        print(utils.fail("Unable to initialise pynotify!"))
         return errno.EIO
     NOTIFY_SERVER_CAPS.extend(pynotify.get_server_caps())
     # pylint: enable-msg=E1101
 
     try:
-        create_lockfile()
+        utils.create_lockfile()
     except IOError:
         return errno.EIO
 
-    with wrap_proctitle("authenticating"):
+    with utils.wrap_proctitle("authenticating"):
         token_file = "%s/bleeter/oauth_token" % glib.get_user_data_dir()
 
         auth = tweepy.OAuthHandler(OAUTH_KEY, OAUTH_SECRET)
@@ -1231,7 +943,7 @@ def main(argv=sys.argv[:]):
 
     if options.cache:
         cachedir = "%s/bleeter/http_cache" % glib.get_user_cache_dir()
-        mkdir(cachedir)
+        utils.mkdir(cachedir)
         cache = tweepy.FileCache(cachedir)
     else:
         cache = None
@@ -1242,19 +954,21 @@ def main(argv=sys.argv[:]):
     if options.verbose or not options.tray:
         # Show a "hello" message, as it can take some time the first real
         # notification
-        usage_note("Started", level=success)
+        utils.usage_note("Started", level=utils.success)
 
     if not urlunshort and options.expand:
-        usage_note("Link expansion support requires the urlunshort module")
+        utils.usage_note("Link expansion support requires the urlunshort "
+                         "module")
         options.expand = False
 
     tweets = Tweets()
 
     loop = glib.MainLoop()
     if options.tray:
-        icon = gtk.status_icon_new_from_file(find_app_icon(uri=False))
+        icon = gtk.status_icon_new_from_file(utils.find_app_icon(uri=False))
         icon.set_tooltip("Initial update in progress")
-        icon.connect("activate", lambda x: open_browser("http://twitter.com/"))
+        icon.connect("activate",
+                     lambda x: utils.open_browser("http://twitter.com/"))
 
         # Make sure icon is set up, before entering update()
         ctx = loop.get_context()
@@ -1264,9 +978,9 @@ def main(argv=sys.argv[:]):
     try:
         me = api.me()
     except tweepy.TweepError:
-        usage_note("Talking to twitter failed. "
-                   "Is twitter or your network down?",
-                   "Network error", fail)
+        utils.usage_note("Talking to twitter failed. "
+                         "Is twitter or your network down?",
+                         "Network error", utils.fail)
         return errno.EIO
     # Make calls to api.me() just return the response directly.
     api.me = lambda: me
@@ -1284,7 +998,7 @@ def main(argv=sys.argv[:]):
 
     state = State(options.stealth, lists, searches)
 
-    with wrap_proctitle("Initial update"):
+    with utils.wrap_proctitle("Initial update"):
         update(api, "user", tweets, state, options.count, options.ignore)
 
     glib.timeout_add_seconds(options.frequency, update, api, "user", tweets,
