@@ -6,6 +6,17 @@ User-visible changes
 
 .. contents::
 
+0.8.0 - 2011-05-12
+------------------
+
+    * Main script is now installed as ``bleeter`` without the ``.py`` extension
+    * Desktop entry for easier systray management in modern desktops
+    * zsh_ completion script in ``extra``
+    * Display status in process title, if setproctitle_ is available
+
+.. _zsh: http://www.zsh.org/
+.. _setproctitle: http://code.google.com/p/py-setproctitle/
+
 0.7.0 - 2010-12-20
 ------------------
 

@@ -1,8 +1,8 @@
-# This is bleeter version 0.7.0 (2010-12-20)
+# This is bleeter version 0.8.0 (2011-05-12)
 
-dotted = "0.7.0"
-libtool = "7:20"
-hex = 0x000700
-date = "2010-12-20"
-tuple = (0, 7, 0)
-web = "bleeter/0.7.0"
+dotted = "0.8.0"
+libtool = "8:20"
+hex = 0x000800
+date = "2011-05-12"
+tuple = (0, 8, 0)
+web = "bleeter/0.8.0"
