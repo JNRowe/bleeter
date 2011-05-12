@@ -661,7 +661,7 @@ def update(api, ftype, tweets, state, count, ignore):
         elif ftype == "search":
             msg = "Data for `%s' search not available" % search.name
             title = "Fetching search data failed"
-        utils.usage_note(msg, title, fail)
+        utils.usage_note(msg, title, utils.fail)
         # Still return True, so we re-enter the loop
         return True
 
