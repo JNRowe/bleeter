@@ -123,7 +123,7 @@ def usage_note(message, title=None, level=warn, icon=None):
     message = message.replace("%prog", sys.argv[0])
     if not title:
         title = "%%prog %s" % _version.dotted
-    title = title.replace("%prog", sys.argv[0])
+    title = title.replace("%prog", os.path.basename(sys.argv[0]))
     print(level(message))
     if not icon:
         if level == success:
