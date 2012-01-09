@@ -276,11 +276,14 @@ URLS = {}
 def url_expand(match):
     """Generate links with expanded URLs
 
-    >>> NOTIFY_SERVER_CAPS.extend(["body-markup", "body-hyperlinks"])
+    # Test mocks
     >>> URLS["http://bit.ly/dunMgV"] = "terminal.png"
-    >>> format_tweet("See http://bit.ly/dunMgV", True)
-    'See <a href="terminal.png">terminal.png</a>'
-    >>> NOTIFY_SERVER_CAPS[:] = []
+    >>> from mock import Mock
+    >>> match = Mock()
+    >>> match.group = Mock(return_value=URLS.keys()[0])
+
+    >>> url_expand(match)
+    '<a href="terminal.png">terminal.png</a>'
 
     :param SRE_Match match: Regular expression match object
     :rtype: ``str``
