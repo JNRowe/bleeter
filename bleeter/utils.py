@@ -126,13 +126,16 @@ def usage_note(message, title=None, level=warn, icon=None):
         title = "%%prog %s" % _version.dotted
     title = title.replace("%prog", os.path.basename(sys.argv[0]))
     print(level(message))
-    if not icon:
-        if level == success:
-            icon = find_app_icon()
-        elif level == warn:
-            icon = "stock_dialog-warning"
-        elif level == fail:
-            icon = "error"
+    if "icon-static" in pynotify.get_server_caps():
+        if not icon:
+            if level == success:
+                icon = find_app_icon()
+            elif level == warn:
+                icon = "stock_dialog-warning"
+            elif level == fail:
+                icon = "error"
+    else:
+        icon = None
     # pylint: disable-msg=E1101
     note = pynotify.Notification(title, message, icon)
     if level == warn:

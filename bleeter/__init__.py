@@ -487,6 +487,9 @@ def get_user_icon(user):
     :return: Location of the icon file
     """
 
+    if not "icon-static" in pynotify.get_server_caps():
+        return None
+
     cache_dir = "%s/bleeter" % glib.get_user_cache_dir()
     utils.mkdir(cache_dir)
     md5 = hashlib.md5(user.profile_image_url)  # pylint: disable-msg=E1101
