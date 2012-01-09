@@ -118,7 +118,7 @@ def usage_note(message, title=None, level=warn, icon=None):
     :type title: ``str`` or ``None`
     :param title: Title for notification popup
     :param func level: Function to display text message with
-    :param str iconL: Icon to use for notification popup
+    :param str icon: Icon to use for notification popup
     """
 
     message = message.replace("%prog", sys.argv[0])
