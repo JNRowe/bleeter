@@ -3,8 +3,9 @@
         "ewornj": 123456789, 
         "self-status": 16460438496
     }, 
+    "version": 1, 
     "fetched": {
-        "ewornj": 123456789,
+        "ewornj": 123456789, 
         "self-status": 16460438496
     }
 }
