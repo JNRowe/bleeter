@@ -72,7 +72,6 @@ from . import utils
 OAUTH_KEY = "WJ3RGn3aMN98b41b3pJQ"
 OAUTH_SECRET = "PU0b7yrBOcdpbSrD1pcQq1kfA9ZVmPQoD0fqtg1bQBQ"
 USER_AGENT = "bleeter/%s +http://github.com/JNRowe/bleeter/" % __version__
-NOTIFY_SERVER_CAPS = []
 
 
 # Pull the first paragraph from the docstring
@@ -410,9 +409,11 @@ def process_command_line(config_file):
 def format_tweet(text, expand=False, mobile=False):
     """Format tweet for display
 
+    >>> from mock import Mock
+    >>> pynotify.get_server_caps = Mock(return_value=[])
     >>> format_tweet("Populate #sup contacts from #abook")
     'Populate #sup contacts from #abook'
-    >>> NOTIFY_SERVER_CAPS.append("body-markup")
+    >>> pynotify.get_server_caps = Mock(return_value=["body-markup", ])
     >>> format_tweet("Populate #sup contacts from #abook")
     'Populate <i>#sup</i> contacts from <i>#abook</i>'
     >>> format_tweet("RT @ewornj Populate #sup contacts from #abook")
@@ -421,7 +422,8 @@ def format_tweet(text, expand=False, mobile=False):
     '@<u>rachcholmes</u> London marathon signup closed yet? ;)'
     >>> format_tweet("Updated my vim colour scheme see http://bit.ly/dunMgV")
     'Updated my vim colour scheme see <u>http://bit.ly/dunMgV</u>'
-    >>> NOTIFY_SERVER_CAPS.append("body-hyperlinks")
+    >>> pynotify.get_server_caps = Mock(return_value=["body-markup",
+    ...                                               "body-hyperlinks"])
     >>> format_tweet("See http://bit.ly/dunMgV")
     'See <a href="http://bit.ly/dunMgV">http://bit.ly/dunMgV</a>'
     >>> format_tweet("b123 https://example.com/dunMgV")
@@ -434,7 +436,7 @@ def format_tweet(text, expand=False, mobile=False):
     'Handle ampersands &amp; win'
     >>> format_tweet("entity test, & \\" ' < >")
     'entity test, &amp; &quot; &apos; &lt; &gt;'
-    >>> NOTIFY_SERVER_CAPS[:] = []
+    >>> pynotify.get_server_caps = Mock(return_value=[])
 
     :param str api: Tweet content
     :param bool expand: Expand links in tweet text
@@ -456,8 +458,8 @@ def format_tweet(text, expand=False, mobile=False):
     else:
         base = "http://twitter.com"
 
-    if "body-markup" in NOTIFY_SERVER_CAPS:
-        if "body-hyperlinks" in NOTIFY_SERVER_CAPS:
+    if "body-markup" in pynotify.get_server_caps():
+        if "body-hyperlinks" in pynotify.get_server_caps():
             if expand:
                 text = url_match.sub(utils.url_expand, text)
             else:
@@ -734,7 +736,7 @@ def display(api, tweets, state, timeout, expand, mobile, map_provider):
                                  icon)
     # pylint: enable-msg=E1101
     if not tweet.from_type == "direct":
-        if "actions" in NOTIFY_SERVER_CAPS:
+        if "actions" in pynotify.get_server_caps():
             note.add_action("default", " ", open_tweet(tweet, mobile))
             if tweet.from_type == "search" or not tweet.user.protected:
                 note.add_action("mail-forward", "retweet",
@@ -880,7 +882,6 @@ def main(argv=sys.argv[:]):
     if not pynotify.init(argv[0]):
         print(utils.fail("Unable to initialise pynotify!"))
         return errno.EIO
-    NOTIFY_SERVER_CAPS.extend(pynotify.get_server_caps())
     # pylint: enable-msg=E1101
 
     try:
