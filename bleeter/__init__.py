@@ -89,15 +89,16 @@ class State(object):
         """Initialise a new ``State`` object
 
         # Test mocks
-        >>> atexit.register = lambda *args, **kwargs: True
-        >>> glib.get_user_data_dir = lambda: "test/xdg_data_home"
+        >>> from mock import Mock
+        >>> atexit.register = Mock()
+        >>> glib.get_user_data_dir = Mock(return_value="test/xdg_data_home")
 
         >>> state = State()
         >>> state.fetched["self-status"]
         16460438496
 
         # Test no config
-        >>> glib.get_user_data_dir = lambda: "None"
+        >>> glib.get_user_data_dir = Mock(return_value="None")
         >>> state = State()
         >>> state.fetched["self-status"]
         1

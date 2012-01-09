@@ -79,8 +79,9 @@ def create_lockfile():
     """Create lockfile handler
 
     # Test mocks
-    >>> atexit.register = lambda *args, **kwargs: True
-    >>> glib.get_user_data_dir = lambda: "test/xdg_data_home"
+    >>> from mock import Mock
+    >>> atexit.register = Mock()
+    >>> glib.get_user_data_dir = Mock(return_value="test/xdg_data_home")
 
     # Make sure there isn't a stale lock from a previous run
     >>> if os.path.exists("%s/bleeter/lock" % glib.get_user_data_dir()):
@@ -165,9 +166,11 @@ def find_app_icon(uri=True):
     """Find suitable bleeter application icon
 
     # Test mocks
+    >>> from mock import Mock
+    >>> glib.get_user_cache_dir = Mock(return_value="test/xdg_cache_home")
+
     >>> sys.prefix = ""
-    >>> sys.path[0] = "non-existent-path"
-    >>> glib.get_user_cache_dir = lambda: "test/xdg_cache_home"
+    >>> sys.path.insert(0, "non-existent-path")
 
     >>> find_app_icon()
     'file://test/xdg_cache_home/bleeter/bleeter.png'
@@ -175,15 +178,15 @@ def find_app_icon(uri=True):
     'test/xdg_cache_home/bleeter/bleeter.png'
 
     # Test with no personal icon
-    >>> glib.get_user_cache_dir = lambda: "None"
+    >>> glib.get_user_cache_dir = Mock(return_value="None")
     >>> find_app_icon()
     Traceback (most recent call last):
         ...
     EnvironmentError: Can't find application icon!
 
     # Test with local icon
-    >>> sys.path[0] = ""
-    >>> find_app_icon() #doctest: +ELLIPSIS
+    >>> sys.path.insert(0, "")
+    >>> find_app_icon()  #doctest: +ELLIPSIS
     'file://.../bleeter/bleeter.png'
 
     :param bool uri: Return a URI for the path
