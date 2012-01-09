@@ -852,7 +852,7 @@ def get_token(auth, fetch, token_file):
     dialog.destroy()
 
     if response == gtk.RESPONSE_OK:
-        for i in range(3):  # pylint: disable-msg=W0612
+        for _ in range(3):
             try:
                 token = auth.get_access_token(verifier)
                 break
