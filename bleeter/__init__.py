@@ -952,7 +952,7 @@ def main(argv=sys.argv[:]):
     if options.lists:
         try:
             # Sort lists based on their name, they're returned sorted on ID
-            lists = sorted(api.lists()[0], key=lambda l: l.name.lower())
+            lists = sorted(api.lists(), key=lambda l: l.name.lower())
         except IndexError:
             pass
     searches = []

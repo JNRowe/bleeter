@@ -76,6 +76,7 @@ Bug reports
 * Leon Bird
 * Matt Leighy
 * Rachel Holmes
+* Roy Jackson
 
 Ideas
 '''''
