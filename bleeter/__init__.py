@@ -205,7 +205,7 @@ class State(object):
 
         self._data = data
 
-        # Must return True, so we can this method in a timer
+        # Must return True, so we can use this method in a timer
         return True
 
 

@@ -271,6 +271,7 @@ def relative_time(timestamp):
                                         "s" if i > 1 else "")
     return result
 
+
 # Keep a cache for free handling of retweets and such.
 URLS = {}
 def url_expand(match):
