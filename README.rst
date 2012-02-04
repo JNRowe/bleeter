@@ -20,14 +20,8 @@ Requirements
 ------------
 
 ``bleeter`` requires Python_ v2.6 or above. ``bleeter``'s mandatory dependencies
-outside of the standard library are the configobj_, notify-python_, pygtk_ and
-tweepy_ packages.
-
-If you wish to use the URL expansion option for shortened links, you will need
-urlunshort_.
-
-If you would like coloured terminal output for debugging information, then you
-will need termcolor_.
+outside of the standard library are the blessings_, configobj_, notify-python_,
+pygtk_ and tweepy_ packages.
 
 If you wish to have the process title reflect the current state of ``bleeter``,
 then you will need setproctitle_.
@@ -127,6 +121,7 @@ reproduce the problem, or even better a patch!
 .. _Python: http://www.python.org/
 .. _tweepy: http://pypi.python.org/pypi/tweepy/
 .. _notify-python: http://www.galago-project.org/
+.. _blessings: http://pypi.python.org/pypi/blessings/
 .. _configobj: http://www.voidspace.org.uk/python/configobj.html
 .. _xdg-utils: http://portland.freedesktop.org/wiki
 .. _KDE: http://www.kde.org/
@@ -135,6 +130,5 @@ reproduce the problem, or even better a patch!
 .. _notification-daemon: http://www.galago-project.org/
 .. _pygtk: http://www.pygtk.org/
 .. _urlunshort: http://bitbucket.org/runeh/urlunshort
-.. _termcolor: http://pypi.python.org/pypi/termcolor/
 .. _setproctitle: http://pypi.python.org/pypi/setproctitle
 .. _email: jnrowe@gmail.com

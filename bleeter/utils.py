@@ -27,6 +27,7 @@ import webbrowser
 from contextlib import contextmanager
 from functools import wraps
 
+import blessings
 import glib
 import pynotify
 
@@ -40,22 +41,34 @@ try:
 except ImportError:  # pragma: no cover
     urlunshort = None  # pylint: disable-msg=C0103
 
-try:
-    from termcolor import colored
-except ImportError:  # pragma: no cover
-    colored = None  # pylint: disable-msg=C0103
-
-# Select colours if terminal is a tty
-# pylint: disable-msg=C0103
-if colored and sys.stdout.isatty():
-    success = lambda s: colored(s, "green")
-    fail = lambda s: colored(s, "red")
-    warn = lambda s: colored(s, "yellow")
-else:  # pragma: no cover
-    success = fail = warn = str
-# pylint: enable-msg=C0103
-
 from . import _version
+
+
+T = blessings.Terminal()
+
+
+# Set up informational message functions
+def _colourise(text, colour):
+    """Colour text, if possible
+
+    :param str text: Text to colourise
+    :param str colour: Colour to display text in
+    :rtype: str
+    :return: Colourised text, if possible
+    """
+    return getattr(T, colour.replace(' ', '_'))(text)
+
+
+def success(text):
+    return _colourise(text, 'bright green')
+
+
+def fail(text):
+    return _colourise(text, 'bright red')
+
+
+def warn(text):
+    return _colourise(text, 'bright yellow')
 
 
 def mkdir(directory):
