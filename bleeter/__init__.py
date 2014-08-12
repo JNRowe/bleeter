@@ -71,7 +71,7 @@ from . import utils
 # OAuth design FTL!
 OAUTH_KEY = "WJ3RGn3aMN98b41b3pJQ"
 OAUTH_SECRET = "PU0b7yrBOcdpbSrD1pcQq1kfA9ZVmPQoD0fqtg1bQBQ"
-USER_AGENT = "bleeter/%s +http://github.com/JNRowe/bleeter/" % __version__
+USER_AGENT = "bleeter/%s (https://github.com/JNRowe/bleeter/)" % __version__
 
 
 # Pull the first paragraph from the docstring
