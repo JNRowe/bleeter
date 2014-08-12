@@ -9,6 +9,7 @@ You can download releases from the `downloads page`_.
 * blessings_
 * configobj_
 * pygtk_
+* sh_
 * tweepy_
 
 The following optional packages will be used if available:
@@ -27,6 +28,7 @@ script.
 .. _blessings: http://pypi.python.org/pypi/blessings/
 .. _configobj: http://code.google.com/p/configobj/
 .. _pygtk: http://www.pygtk.org/
+.. _sh: http://pypi.python.org/pypi/sh
 .. _tweepy: http://pypi.python.org/pypi/tweepy/
 .. _setproctitle: http://pypi.python.org/pypi/setproctitle
 .. _Gentoo: http://www.gentoo.org

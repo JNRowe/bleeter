@@ -20,12 +20,16 @@ import atexit
 import datetime
 import errno
 import os
-import subprocess
 import sys
 import webbrowser
 
 from contextlib import contextmanager
 from functools import wraps
+
+try:
+    from sh import xdg_open
+except ImportError:
+    xdg_open = None
 
 import blessings
 import glib
@@ -169,9 +173,9 @@ def open_browser(url):
 
     """
 
-    try:
-        subprocess.call(["xdg-open", url])
-    except OSError:
+    if xdg_open:
+        xdg_open(url)
+    else:
         try:
             webbrowser.open(url, new=2)
         except webbrowser.Error:
