@@ -23,115 +23,115 @@ Options
 
 .. program:: bleeter
 
-.. cmdoption:: --version
+.. option:: --version
 
    show program's version number and exit
 
-.. cmdoption:: -h, --help
+.. option:: -h, --help
 
    show this help message and exit
 
-.. cmdoption:: -t <n>, --timeout=<n>
+.. option:: -t <n>, --timeout=<n>
 
    timeout for notification popups in seconds
 
-.. cmdoption:: -f <n>, --frequency=<n>
+.. option:: -f <n>, --frequency=<n>
 
    update frequency in in seconds
 
-.. cmdoption:: -g, --get-token
+.. option:: -g, --get-token
 
    generate a new OAuth token for twitter
 
-.. cmdoption:: --secure
+.. option:: --secure
 
    use SSL to connect to twitter
 
-.. cmdoption:: --no-secure
+.. option:: --no-secure
 
    don't use SSL to connect to twitter
 
-.. cmdoption:: -s ewornj, --stealth=ewornj
+.. option:: -s ewornj, --stealth=ewornj
 
    users to watch without following(comma separated)
 
-.. cmdoption:: --no-stealth
+.. option:: --no-stealth
 
    don't check stealth users for updates
 
-.. cmdoption:: -i "#nowplaying", --ignore "#nowplaying"
+.. option:: -i "#nowplaying", --ignore "#nowplaying"
 
    keywords to ignore in tweets(comma separated)
 
-.. cmdoption:: --no-ignore
+.. option:: --no-ignore
 
    don't test for ignore keywords
 
-.. cmdoption:: --no-tray
+.. option:: --no-tray
 
    disable the system tray icon
 
-.. cmdoption:: -e, --expand
+.. option:: -e, --expand
 
    expand links in tweets
 
-.. cmdoption:: --no-expand
+.. option:: --no-expand
 
    don't expand links in tweets
 
-.. cmdoption:: -m, --mobile
+.. option:: -m, --mobile
 
    open links in lighter mobile versions
 
-.. cmdoption:: --no-mobile
+.. option:: --no-mobile
 
    don't open links in lighter mobile versions
 
-.. cmdoption:: --map-provider "google"
+.. option:: --map-provider "google"
 
    open geo links using specified site
 
-.. cmdoption:: --count
+.. option:: --count
 
    maximum number of timeline tweets to fetch(max 200)
 
-.. cmdoption:: --stealth-count
+.. option:: --stealth-count
 
    maximum number of stealth tweets to fetch
 
-.. cmdoption:: --search-count
+.. option:: --search-count
 
    maximum number of tweets to fetch for searches
 
-.. cmdoption:: --list-count
+.. option:: --list-count
 
    maximum number of tweets to fetch for lists
 
-.. cmdoption:: --lists
+.. option:: --lists
 
    fetch user's lists
 
-.. cmdoption:: --no-lists
+.. option:: --no-lists
 
    don't fetch user's lists
 
-.. cmdoption:: --searches
+.. option:: --searches
 
    fetch user's saved searches
 
-.. cmdoption:: --no-searches
+.. option:: --no-searches
 
    don't fetch user's saved searches
 
-.. cmdoption:: --no-cache
+.. option:: --no-cache
 
    don't cache twitter communications
 
-.. cmdoption:: -v, --verbose
+.. option:: -v, --verbose
 
    produce verbose output
 
-.. cmdoption:: -q, --quiet
+.. option:: -q, --quiet
 
    output only results and errors
 
