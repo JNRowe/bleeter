@@ -129,6 +129,5 @@ reproduce the problem, or even better a patch!
 .. _xfce4-notifyd: http://spuriousinterrupt.org/projects/xfce4-notifyd
 .. _notification-daemon: http://www.galago-project.org/
 .. _pygtk: http://www.pygtk.org/
-.. _urlunshort: http://bitbucket.org/runeh/urlunshort
 .. _setproctitle: http://pypi.python.org/pypi/setproctitle
 .. _email: jnrowe@gmail.com
