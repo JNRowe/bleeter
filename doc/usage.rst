@@ -136,4 +136,4 @@ Options
    output only results and errors
 
 .. _oauth: http://oauth.net/
-.. _twitter: http://twitter.com/
+.. _twitter: https://twitter.com/

@@ -47,7 +47,7 @@ following in a Python interpreter::
     ['actions', 'body', 'body-hyperlinks', 'body-markup', 'icon-static']
 
 .. _notify-osd: https://launchpad.net/notify-osd
-.. _twitter: http://twitter.com
+.. _twitter: https://twitter.com
 
 The icons are cut in half in tweets!
 ''''''''''''''''''''''''''''''''''''
@@ -64,7 +64,7 @@ send me a mail_!!
 
 .. _e17: http://enlightenment.org/
 .. _notification module: http://trac.enlightenment.org/e/browser/trunk/E-MODULES-EXTRA/notification/
-.. _file an issue: http://github.com/JNRowe/bleeter/issues
+.. _file an issue: https://github.com/JNRowe/bleeter/issues/
 
 There are no buttons on the tweets!
 '''''''''''''''''''''''''''''''''''
@@ -128,7 +128,7 @@ Why can’t I ``easy_install`` this?
 
 See `PyPI listing`_.
 
-.. _PyPI: http://pypi.python.org/pypi
-.. _upoints: http://github.com/JNRowe/upoints
+.. _PyPI: https://pypi.python.org/pypi
+.. _upoints: https://github.com/JNRowe/upoints/
 .. _plone: http://plone.org/
-.. _pyisbn: http://github.com/JNRowe/pyisbn
+.. _pyisbn: https://github.com/JNRowe/pyisbn/

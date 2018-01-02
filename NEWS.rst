@@ -14,8 +14,8 @@ User-visible changes
 * zsh_ completion script in ``extra``
 * Display status in process title, if setproctitle_ is available
 
-.. _zsh: http://www.zsh.org/
-.. _setproctitle: http://code.google.com/p/py-setproctitle/
+.. _zsh: https://www.zsh.org/
+.. _setproctitle: https://pypi.python.org/pypi/setproctitle/
 
 0.7.0 - 2010-12-20
 ------------------
@@ -26,7 +26,7 @@ User-visible changes
 * Optional support for twitter_’s saved searches and lists
 * Coloured terminal output with termcolor_
 
-.. _termcolor: http://pypi.python.org/pypi/termcolor/
+.. _termcolor: https://pypi.python.org/pypi/termcolor/
 
 0.6.0 - 2010-07-12
 ------------------
@@ -50,7 +50,7 @@ User-visible changes
   supports links
 * The status icon is only shown when there are tweets pending displayed
 
-.. _urlunshort: http://bitbucket.org/runeh/urlunshort
+.. _urlunshort: https://bitbucket.org/runeh/urlunshort
 .. _xdg-utils: http://portland.freedesktop.org/wiki
 
 0.4.0 - 2010-04-21
@@ -83,8 +83,8 @@ User-visible changes
 * Displays user “mentions”
 * A button to mark tweets as favourites from within the notification
 
-.. _tweepy: http://pypi.python.org/pypi/tweepy/
-.. _twitter: http://twitter.com/
+.. _tweepy: https://pypi.python.org/pypi/tweepy/
+.. _twitter: https://twitter.com/
 
 0.1.0 - 2010-02-10
 ------------------

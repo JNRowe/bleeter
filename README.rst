@@ -116,12 +116,12 @@ reproduce the problem, or even better a patch!
 .. _PEP 8: http://www.python.org/dev/peps/pep-0008/
 .. _reStructuredText: http://docutils.sourceforge.net/rst.html
 .. _mail: jnrowe@gmail.com
-.. _issue: http://github.com/JNRowe/bleeter/issues
-.. _twitter: http://twitter.com/
+.. _issue: https://github.com/JNRowe/bleeter/issues/
+.. _twitter: https://twitter.com/
 .. _Python: http://www.python.org/
-.. _tweepy: http://pypi.python.org/pypi/tweepy/
+.. _tweepy: https://pypi.python.org/pypi/tweepy/
 .. _notify-python: http://www.galago-project.org/
-.. _blessings: http://pypi.python.org/pypi/blessings/
+.. _blessings: https://pypi.python.org/pypi/blessings/
 .. _configobj: http://www.voidspace.org.uk/python/configobj.html
 .. _xdg-utils: http://portland.freedesktop.org/wiki
 .. _KDE: http://www.kde.org/
@@ -129,5 +129,5 @@ reproduce the problem, or even better a patch!
 .. _xfce4-notifyd: http://spuriousinterrupt.org/projects/xfce4-notifyd
 .. _notification-daemon: http://www.galago-project.org/
 .. _pygtk: http://www.pygtk.org/
-.. _setproctitle: http://pypi.python.org/pypi/setproctitle
+.. _setproctitle: https://pypi.python.org/pypi/setproctitle
 .. _email: jnrowe@gmail.com

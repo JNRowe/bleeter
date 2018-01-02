@@ -96,4 +96,4 @@ mentions.
 
 .. _configobj: http://www.voidspace.org.uk/python/configobj.html
 .. _XDG base directory specification: http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
-.. _twitter: http://twitter.com/
+.. _twitter: https://twitter.com/

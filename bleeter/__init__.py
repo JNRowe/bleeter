@@ -455,9 +455,9 @@ def format_tweet(text, expand=False, mobile=False):
     hashtag_match = re.compile(r'(#\w+)')
 
     if mobile:
-        base = "http://mobile.twitter.com"
+        base = "https://mobile.twitter.com"
     else:
-        base = "http://twitter.com"
+        base = "https://twitter.com"
 
     if "body-markup" in pynotify.get_server_caps():
         if "body-hyperlinks" in pynotify.get_server_caps():
@@ -525,11 +525,11 @@ def open_tweet(tweet, mobile=False, map_provider="google"):
     """
 
     if mobile:
-        twitter_base = "http://mobile.twitter.com"
+        twitter_base = "https://mobile.twitter.com"
         map_url = "http://maps.google.com/maps/api/staticmap?zoom=14" \
             "&markers=%(latlon)s&size=500x300&sensor=false"
     else:
-        twitter_base = "http://twitter.com"
+        twitter_base = "https://twitter.com"
         if map_provider == "bing":
             map_url = "http://bing.com/maps/default.aspx?where1=%(latlon)s"
         elif map_provider == "google":
@@ -931,7 +931,7 @@ def main(argv=sys.argv[:]):
         icon = gtk.status_icon_new_from_file(utils.find_app_icon(uri=False))
         icon.set_tooltip("Initial update in progress")
         icon.connect("activate",
-                     lambda x: utils.open_browser("http://twitter.com/"))
+                     lambda x: utils.open_browser("https://twitter.com/"))
 
         # Make sure icon is set up, before entering update()
         ctx = loop.get_context()

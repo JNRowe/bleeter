@@ -52,4 +52,4 @@ Indices and tables
 .. _GPL v3: http://www.gnu.org/licenses/
 .. _xfce4-notifyd: http://spuriousinterrupt.org/projects/xfce4-notifyd
 .. _notification-daemon: http://www.galago-project.org/
-.. _twitter: http://twitter.com/
+.. _twitter: https://twitter.com/

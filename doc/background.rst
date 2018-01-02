@@ -31,6 +31,6 @@ The obvious answer to all this was to just make a little script to do exactly
 what I wanted... and :mod:`bleeter` was born.  It isn’t pretty, it isn’t clean,
 it isn’t even that useful but it Works For Me™.
 
-.. _twitter: http://twitter.com
-.. _gwibber: https://launchpad.net/gwibber
+.. _twitter: httsp://twitter.com/
+.. _gwibber: https://launchpad.net/gwibber/
 .. _twirssi: http://www.twirssi.com/

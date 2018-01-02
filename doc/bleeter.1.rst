@@ -141,7 +141,7 @@ Written by `James Rowe <mailto:jnrowe@gmail.com>`__
 RESOURCES
 ---------
 
-Home page: http://github.com/JNRowe/bleeter
+Home page: https://github.com/JNRowe/bleeter/
 
 COPYING
 -------
