@@ -1,14 +1,14 @@
-bleeter
-=======
-
-A nasty little twitter viewer
-"""""""""""""""""""""""""""""
-
 :Author: James Rowe <jnrowe@gmail.com>
 :Date: 2010-04-09
 :Copyright: GPL v3
 :Manual section: 1
 :Manual group: Instant Messaging
+
+bleeter
+=======
+
+A nasty little twitter viewer
+-----------------------------
 
 SYNOPSIS
 --------
@@ -19,8 +19,8 @@ DESCRIPTION
 -----------
 
 Fetches your twitter friends timeline and displays notification popups for new
-tweets.  If your system's notification daemon supports adding actions to the
-popups then you'll be able to make a number of choices by clicking the buttons
+tweets.  If your system’s notification daemon supports adding actions to the
+popups then you’ll be able to make a number of choices by clicking the buttons
 on the popup.
 
 OPTIONS
@@ -141,7 +141,7 @@ Written by `James Rowe <mailto:jnrowe@gmail.com>`__
 RESOURCES
 ---------
 
-Home page: http://github.com/JNRowe/bleeter
+Home page: https://github.com/JNRowe/bleeter/
 
 COPYING
 -------

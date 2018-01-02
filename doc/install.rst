@@ -22,14 +22,14 @@ tree or `my overlay`_.
 ``bleeter`` doesn't require installation to work as it is only a single Python_
 script.
 
-.. _downloads page: https://github.com/JNRowe/bleeter/downloads
-..  _Python: http://www.python.org/
+.. _downloads page: https://github.com/JNRowe/bleeter/downloads/
+.. _Python: http://www.python.org/
 .. _libnotify Python bindings: http://www.galago-project.org/downloads.php
-.. _blessings: http://pypi.python.org/pypi/blessings/
-.. _configobj: http://code.google.com/p/configobj/
+.. _blessings: https://pypi.python.org/pypi/blessings/
+.. _configobj: https://pypi.python.org/pypi/configobj/
 .. _pygtk: http://www.pygtk.org/
-.. _sh: http://pypi.python.org/pypi/sh
-.. _tweepy: http://pypi.python.org/pypi/tweepy/
-.. _setproctitle: http://pypi.python.org/pypi/setproctitle
-.. _Gentoo: http://www.gentoo.org
-.. _my overlay: http://github.com/JNRowe/misc-overlay.
+.. _sh: https://pypi.python.org/pypi/sh
+.. _tweepy: https://pypi.python.org/pypi/tweepy/
+.. _setproctitle: https://pypi.python.org/pypi/setproctitle
+.. _Gentoo: http://www.gentoo.org/
+.. _my overlay: https://github.com/JNRowe/misc-overlay

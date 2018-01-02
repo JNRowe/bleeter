@@ -5,21 +5,21 @@ Introduction
 ------------
 
 ``bleeter`` is a nasty little client for twitter_, currently very much in
-a *Works For Me* state.  It isn't intended to be used by others, but perhaps
+a *Works For Me* state.  It isn’t intended to be used by others, but perhaps
 others will find it useful.
 
 All it does is fetch your friends timeline and display notification popups for
-new tweets.  If your system's notification daemon supports adding actions [#]_
-to the popups then you'll be able to make a number of choices by clicking the
+new tweets.  If your system’s notification daemon supports adding actions [#]_
+to the popups then you’ll be able to make a number of choices by clicking the
 buttons on the popup.
 
 .. [#] Most common notification daemons support actions, including
-       xfce4-notifyd_ and Galago's notification-daemon_.
+       xfce4-notifyd_ and Galago’s notification-daemon_.
 
 Requirements
 ------------
 
-``bleeter`` requires Python_ v2.6 or above. ``bleeter``'s mandatory dependencies
+``bleeter`` requires Python_ v2.6 or above. ``bleeter``’s mandatory dependencies
 outside of the standard library are the blessings_, configobj_, notify-python_,
 pygtk_ and tweepy_ packages.
 
@@ -46,7 +46,7 @@ adding them to the configuration file, which should be placed in
 Where the ``stealth`` value should be a comma separated list of twitter
 usernames or numeric identifiers.  This feature can be used to keep track of
 users for a short time without having to follow and then unfollow, for example
-when you're at a conference and want to follow the conference news items.
+when you’re at a conference and want to follow the conference news items.
 
 There is an ``ignore`` option that allows you to specify a list of keywords you
 wish to use as ignore filters for tweets you receive.  Keywords can be normal
@@ -56,12 +56,12 @@ default, tweets containing ``#nowplaying`` are ignored.
 If you notification daemon supports it you can click on the popup to open the
 tweet in your browser of choice.  The browser is opened using ``xdg-open`` from
 xdg-utils_.  It should use your default browser under KDE_ or gnome_, or
-whatever you've configured in the ``BROWSER`` environment variable elsewhere.
+whatever you’ve configured in the ``BROWSER`` environment variable elsewhere.
 
 Contributors
 ------------
 
-I'd like to thank the following people who have contributed to ``bleeter``.
+I’d like to thank the following people who have contributed to ``bleeter``.
 
 Bug reports
 '''''''''''
@@ -78,13 +78,13 @@ Ideas
 * Greg Lovell
 * Paul Murray
 
-If I've forgotten to include your name I wholeheartedly apologise.  Just drop me
-an email_ and I'll update the list!
+If I’ve forgotten to include your name I wholeheartedly apologise.  Just drop me
+an email_ and I’ll update the list!
 
 Hacking
 -------
 
-Patches are most welcome, but I'd appreciate it if you could follow the
+Patches are most welcome, but I’d appreciate it if you could follow the
 guidelines below to make it easier to integrate your changes.  These are
 guidelines however, and as such can be broken if the need arises or you just
 want to convince me that your style is better.
@@ -97,7 +97,7 @@ want to convince me that your style is better.
 * Tests *must not* span network boundaries, use of a mocking framework is
   acceptable.
 * ``doctest`` tests in modules are only for unit testing in general, and should
-  not rely on any modules that aren't in Python's standard library.
+  not rely on any modules that aren’t in Python’s standard library.
 * Functional tests should be in the ``doc`` directory in reStructuredText_
   formatted files, with actual tests in ``doctest`` blocks.  Functional tests
   can depend on external modules, but those modules must be Open Source.
@@ -110,18 +110,18 @@ Bugs
 If you find any problems, bugs or just have a question about this package either
 file an issue_ or drop me a mail_.
 
-If you've found a problem please attempt to include a minimal testcase so I can
+If you’ve found a problem please attempt to include a minimal testcase so I can
 reproduce the problem, or even better a patch!
 
 .. _PEP 8: http://www.python.org/dev/peps/pep-0008/
 .. _reStructuredText: http://docutils.sourceforge.net/rst.html
 .. _mail: jnrowe@gmail.com
-.. _issue: http://github.com/JNRowe/bleeter/issues
-.. _twitter: http://twitter.com/
+.. _issue: https://github.com/JNRowe/bleeter/issues/
+.. _twitter: https://twitter.com/
 .. _Python: http://www.python.org/
-.. _tweepy: http://pypi.python.org/pypi/tweepy/
+.. _tweepy: https://pypi.python.org/pypi/tweepy/
 .. _notify-python: http://www.galago-project.org/
-.. _blessings: http://pypi.python.org/pypi/blessings/
+.. _blessings: https://pypi.python.org/pypi/blessings/
 .. _configobj: http://www.voidspace.org.uk/python/configobj.html
 .. _xdg-utils: http://portland.freedesktop.org/wiki
 .. _KDE: http://www.kde.org/
@@ -129,5 +129,5 @@ reproduce the problem, or even better a patch!
 .. _xfce4-notifyd: http://spuriousinterrupt.org/projects/xfce4-notifyd
 .. _notification-daemon: http://www.galago-project.org/
 .. _pygtk: http://www.pygtk.org/
-.. _setproctitle: http://pypi.python.org/pypi/setproctitle
+.. _setproctitle: https://pypi.python.org/pypi/setproctitle
 .. _email: jnrowe@gmail.com

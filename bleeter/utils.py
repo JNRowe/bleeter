@@ -1,5 +1,5 @@
 #
-"""utils - Utilities for bleeter"""
+"""utils - Utilities for bleeter."""
 # Copyright (C) 2010-2012  James Rowe <jnrowe@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -53,12 +53,14 @@ T = blessings.Terminal()
 
 # Set up informational message functions
 def _colourise(text, colour):
-    """Colour text, if possible
+    """Colour text, if possible.
 
-    :param str text: Text to colourise
-    :param str colour: Colour to display text in
-    :rtype: str
-    :return: Colourised text, if possible
+    Args:
+        text (str): Text to colourise
+        colour (str): Colour to display text in
+
+    Returns:
+        str: Colourised text, if possible
     """
     return getattr(T, colour.replace(' ', '_'))(text)
 
@@ -76,11 +78,13 @@ def warn(text):
 
 
 def mkdir(directory):
-    """Create directory, including parents
+    """Create directory, including parents.
 
-    :param str directory: Directory to create
-    :raise OSError: Unable to create directory
+    Args:
+        directory (str): Directory to create
 
+    Raises:
+        OSError: Unable to create directory
     """
 
     try:
@@ -93,14 +97,14 @@ def mkdir(directory):
 
 
 def create_lockfile():
-    """Create lockfile handler
+    """Create lockfile handler.
 
     # Test mocks
     >>> from mock import Mock
     >>> atexit.register = Mock()
     >>> glib.get_user_data_dir = Mock(return_value="test/xdg_data_home")
 
-    # Make sure there isn't a stale lock from a previous run
+    # Make sure there isn’t a stale lock from a previous run
     >>> if os.path.exists("%s/bleeter/lock" % glib.get_user_data_dir()):
     ...     os.unlink("%s/bleeter/lock" % glib.get_user_data_dir())
 
@@ -113,7 +117,6 @@ def create_lockfile():
     ...     pass
     Another instance is running or `test/xdg_data_home/bleeter/lock' is stale
     >>> os.unlink("%s/bleeter/lock" % glib.get_user_data_dir())
-
     """
     lock_file = "%s/bleeter/lock" % glib.get_user_data_dir()
 
@@ -129,13 +132,13 @@ def create_lockfile():
 
 
 def usage_note(message, title=None, level=warn, icon=None):
-    """Display a usage notification
+    """Display a usage notification.
 
-    :param str message: Message to display
-    :type title: ``str`` or ``None`
-    :param title: Title for notification popup
-    :param func level: Function to display text message with
-    :param str icon: Icon to use for notification popup
+    Args:
+        message (str): Message to display
+        title (str): Title for notification popup
+        level (func): Function to display text message with
+        icon (str): Icon to use for notification popup
     """
 
     message = message.replace("%prog", sys.argv[0])
@@ -167,10 +170,10 @@ def usage_note(message, title=None, level=warn, icon=None):
 
 
 def open_browser(url):
-    """Open URL in user's browser
+    """Open URL in user’s browser.
 
-    :param str uri: URL to open
-
+    Args:
+        uri (str): URL to open
     """
 
     if xdg_open:
@@ -183,7 +186,7 @@ def open_browser(url):
 
 
 def find_app_icon(uri=True):
-    """Find suitable bleeter application icon
+    """Find suitable bleeter application icon.
 
     # Test mocks
     >>> from mock import Mock
@@ -202,17 +205,18 @@ def find_app_icon(uri=True):
     >>> find_app_icon()
     Traceback (most recent call last):
         ...
-    EnvironmentError: Can't find application icon!
+    EnvironmentError: Can’t find application icon!
 
     # Test with local icon
     >>> sys.path.insert(0, "")
     >>> find_app_icon()  #doctest: +ELLIPSIS
     'file://.../bleeter/bleeter.png'
 
-    :param bool uri: Return a URI for the path
-    :rtype: ``str``
-    :return: Path to the application icon
+    Args:
+        uri (bool): Return a URI for the path
 
+    Returns:
+        str: Path to the application icon
     """
     icon_locations = [
         "%s/bleeter.png" % os.path.abspath(sys.path[0]),
@@ -222,11 +226,11 @@ def find_app_icon(uri=True):
     for icon in icon_locations:
         if os.path.exists(icon):
             return "%s%s" % ("file://" if uri else "", icon)
-    raise EnvironmentError("Can't find application icon!")
+    raise EnvironmentError("Can’t find application icon!")
 
 
 def relative_time(timestamp):
-    """Format a relative time
+    """Format a relative time.
 
     >>> now = datetime.datetime.utcnow()
     >>> relative_time(now - datetime.timedelta(days=365))
@@ -250,10 +254,12 @@ def relative_time(timestamp):
     >>> relative_time(now - datetime.timedelta(seconds=12))
     'about 12 seconds ago'
 
-    :param datetime.datetime timestamp: Event to generate relative timestamp
-        against
-    :rtype: ``str``
-    :return: Human readable date and time offset
+    Args:
+        timestamp (datetime.datetime): Event to generate relative timestamp
+            against
+
+    Returns:
+        str: Human readable date and time offset
     """
 
     numstr = ". a two three four five six seven eight nine ten".split()
@@ -291,8 +297,10 @@ def relative_time(timestamp):
 
 # Keep a cache for free handling of retweets and such.
 URLS = {}
+
+
 def url_expand(match):
-    """Generate links with expanded URLs
+    """Generate links with expanded URLs.
 
     # Test mocks
     >>> URLS["http://bit.ly/dunMgV"] = "terminal.png"
@@ -303,12 +311,14 @@ def url_expand(match):
     >>> url_expand(match)
     '<a href="terminal.png">terminal.png</a>'
 
-    :param SRE_Match match: Regular expression match object
-    :rtype: ``str``
-    :return: HTML formatted link for URL
+    Args:
+        match (SRE_Match): Regular expression match object
+
+    Returns:
+        str: HTML formatted link for URL
     """
     url = match.group()
-    if not url in URLS:
+    if url not in URLS:
         if urlunshort.is_shortened(url):
             URLS[url] = glib.markup_escape_text(urlunshort.resolve(url))
         else:
@@ -318,9 +328,10 @@ def url_expand(match):
 
 @contextmanager
 def wrap_proctitle(string):
-    """Set process title for a given context
+    """Set process title for a given context.
 
-    :param str string: Context to display in process title
+    Args:
+        string (str): Context to display in process title
     """
     if setproctitle:
         oldtitle = setproctitle.getproctitle()
@@ -331,11 +342,13 @@ def wrap_proctitle(string):
 
 
 def proctitle_decorator(f):
-    """Decorator to apply ``wrap_proctitle``
+    """Decorator to apply ``wrap_proctitle``.
 
-    :param func f: Function to wrap
-    :rtype: ``func``
-    :return: Function wrapped in ``wrap_proctitle`` context manager
+    Args:
+        f (func): Function to wrap
+
+    Returns:
+        func: Function wrapped in ``wrap_proctitle`` context manager
     """
     @wraps(f)
     def wrapper(*args, **kwargs):

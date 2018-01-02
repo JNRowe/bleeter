@@ -1,5 +1,5 @@
 #! /usr/bin/python -tt
-"""bleeter - Nasty little twitter client"""
+"""bleeter - Nasty little twitter client."""
 # Copyright (C) 2011-2012  James Rowe <jnrowe@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify

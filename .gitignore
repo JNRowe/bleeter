@@ -1,7 +1,6 @@
-.ropeproject/
-doc/.build/
+/doc/.build/
 
-*.pyc
+*.py[co]
 
 .coverage
 .noseids
