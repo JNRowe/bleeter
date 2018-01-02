@@ -25,7 +25,7 @@ Options
 
 .. option:: --version
 
-   show program's version number and exit
+   Show program’s version number and exit
 
 .. option:: -h, --help
 

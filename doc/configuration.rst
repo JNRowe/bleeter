@@ -80,18 +80,18 @@ The ``stealth_count`` option performs the same task for stealth follows, see
 ``lists`` option
 ''''''''''''''''
 
-The ``lists`` option enables fetching of user's lists, in addition to the
-standard behaviour of fetching user's timeline and mentions.
+The ``lists`` option enables fetching of user’s lists, in addition to the
+standard behaviour of fetching user’s timeline and mentions.
 
 ``searches`` option
 '''''''''''''''''''
 
-The ``searches`` option enables fetching of user's saved searches, in
-addition to the standard behaviour of fetching user's timeline and
+The ``searches`` option enables fetching of user’s saved searches, in
+addition to the standard behaviour of fetching user’s timeline and
 mentions.
 
 .. [#] The default value for ``${XDG_CONFIG_HOME}`` is system dependent, but
-       likely to be ``~/.config`` if you haven't set it.  For more information
+       likely to be ``~/.config`` if you haven’t set it.  For more information
        see `XDG base directory specification`_.
 
 .. _configobj: http://www.voidspace.org.uk/python/configobj.html

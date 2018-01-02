@@ -120,7 +120,7 @@ class State(object):
         self.fetched = collections.defaultdict(lambda: 1)
         if os.path.exists(self.state_file):
             data = json.load(open(self.state_file))
-            # Keep loaded data, this keeps state data we're not using on this
+            # Keep loaded data, this keeps state data we’re not using on this
             # run
             self._data = data
             if data.get("version", 1) == 1:
@@ -163,7 +163,7 @@ class State(object):
         :raise IndexError: When user lists are empty
         """
         list_ = self.lists[0]
-        # Rotate user's lists
+        # Rotate user’s lists
         self.lists.append(self.lists.pop(0))
         return list_
 
@@ -175,14 +175,14 @@ class State(object):
         :raise IndexError: When user's saved searches are empty
         """
         search = self.searches[0]
-        # Rotate user's lists
+        # Rotate user’s lists
         self.searches.append(self.searches.pop(0))
         return search
 
     def save_state(self, force=False):
         """Seen tweets state saver
 
-        We store displayed, not fetched, info so we don't miss pending tweets
+        We store displayed, not fetched, info so we don’t miss pending tweets
         from a previous run
 
         :param bool force: Force update, even if data hasn't changed for mtime
@@ -327,7 +327,7 @@ def process_command_line(config_file):
                          help="Use SSL to connect to twitter")
     auth_opts.add_option("--no-secure", action="store_false",
                          dest="secure",
-                         help="Don't use SSL to connect to twitter")
+                         help="Don’t use SSL to connect to twitter")
 
     user_opts = optparse.OptionGroup(parser, "User options")
     parser.add_option_group(user_opts)
@@ -337,7 +337,7 @@ def process_command_line(config_file):
                             "following(comma separated)")
     user_opts.add_option("--no-stealth", action="store_false",
                          dest="stealth",
-                         help="Don't check stealth users for updates")
+                         help="Don’t check stealth users for updates")
 
     tweet_opts = optparse.OptionGroup(parser, "Tweet options")
     parser.add_option_group(tweet_opts)
@@ -345,15 +345,15 @@ def process_command_line(config_file):
                           metavar=",".join(config.get("ignore")),
                           help="Keywords to ignore in tweets(comma separated)")
     tweet_opts.add_option("--no-ignore", action="store_false",
-                          dest="ignore", help="Don't test for ignore keywords")
+                          dest="ignore", help="Don’t test for ignore keywords")
     tweet_opts.add_option("-e", "--expand", action="store_true",
                           help="Expand links in tweets")
     tweet_opts.add_option("--no-expand", action="store_false",
-                          dest="expand", help="Don't expand links in tweets")
+                          dest="expand", help="Don’t expand links in tweets")
     tweet_opts.add_option("-m", "--mobile", action="store_true",
                           help="Open links in lighter mobile versions")
     tweet_opts.add_option("--no-mobile", action="store_false", dest="mobile",
-                          help="Don't open links in lighter mobile versions")
+                          help="Don’t open links in lighter mobile versions")
     tweet_opts.add_option("--map-provider", action="store",
                           choices=("bing", "google", "google-nojs"),
                           metavar=config.get("map_provider"),
@@ -373,18 +373,18 @@ def process_command_line(config_file):
                           metavar=config["list_count"], callback=check_value,
                           help="Maximum number of tweets to fetch for lists")
     tweet_opts.add_option("--lists", action="store_true",
-                          help="Fetch user's lists")
+                          help="Fetch user’s lists")
     tweet_opts.add_option("--no-lists", action="store_false",
-                          dest="lists", help="Don't fetch user's lists")
+                          dest="lists", help="Don’t fetch user’s lists")
     tweet_opts.add_option("--searches", action="store_true",
-                          help="Fetch user's saved searches")
+                          help="Fetch user’s saved searches")
     tweet_opts.add_option("--no-searches", action="store_false",
                           dest="searches",
-                          help="Don't fetch user's saved searches")
+                          help="Don’t fetch user’s saved searches")
 
     parser.add_option("--no-cache", action="store_false",
                       dest="cache",
-                      help="Don't cache twitter communications")
+                      help="Don’t cache twitter communications")
     parser.add_option("--no-tray", action="store_false",
                       dest="tray", help="Disable systray icon")
     parser.add_option("-v", "--verbose", action="store_true",
@@ -496,7 +496,7 @@ def get_user_icon(user):
     filename = "%s/%s" % (cache_dir, md5.hexdigest())
     if not os.path.exists(filename):
         try:
-            # twitter results can be Unicode strings, urlretrieve won't work
+            # twitter results can be Unicode strings, urlretrieve won’t work
             # with them.
             urllib.urlretrieve(user.profile_image_url.encode("utf-8"),
                                filename)
@@ -720,7 +720,7 @@ def display(api, tweets, state, timeout, expand, mobile, map_provider):
                                 utils.relative_time(tweet.created_at))
         icon = get_user_icon(tweet)
     else:
-        # Don't re-display already seen tweets
+        # Don’t re-display already seen tweets
         if tweet.id <= state.displayed[tweet.user.screen_name.lower()]:
             return True
         title = "From %s %s" % (tweet.user.name,
@@ -758,7 +758,7 @@ def display(api, tweets, state, timeout, expand, mobile, map_provider):
     note.set_timeout(timeout * 1000)
     note.set_category("im.received")
     # pylint: disable-msg=E1101
-    # For lists: If we cared about these users they'd be followed, not listed
+    # For lists: If we cared about these users they’d be followed, not listed
     # For searches: These are always low priority
     if tweet.from_type in ("list", "search"):
         note.set_urgency(pynotify.URGENCY_LOW)
@@ -951,7 +951,7 @@ def main(argv=sys.argv[:]):
     lists = []
     if options.lists:
         try:
-            # Sort lists based on their name, they're returned sorted on ID
+            # Sort lists based on their name, they’re returned sorted on ID
             lists = sorted(api.lists(), key=lambda l: l.name.lower())
         except IndexError:
             pass

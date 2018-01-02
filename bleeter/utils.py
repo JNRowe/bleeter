@@ -100,7 +100,7 @@ def create_lockfile():
     >>> atexit.register = Mock()
     >>> glib.get_user_data_dir = Mock(return_value="test/xdg_data_home")
 
-    # Make sure there isn't a stale lock from a previous run
+    # Make sure there isn’t a stale lock from a previous run
     >>> if os.path.exists("%s/bleeter/lock" % glib.get_user_data_dir()):
     ...     os.unlink("%s/bleeter/lock" % glib.get_user_data_dir())
 
@@ -202,7 +202,7 @@ def find_app_icon(uri=True):
     >>> find_app_icon()
     Traceback (most recent call last):
         ...
-    EnvironmentError: Can't find application icon!
+    EnvironmentError: Can’t find application icon!
 
     # Test with local icon
     >>> sys.path.insert(0, "")
@@ -222,7 +222,7 @@ def find_app_icon(uri=True):
     for icon in icon_locations:
         if os.path.exists(icon):
             return "%s%s" % ("file://" if uri else "", icon)
-    raise EnvironmentError("Can't find application icon!")
+    raise EnvironmentError("Can’t find application icon!")
 
 
 def relative_time(timestamp):

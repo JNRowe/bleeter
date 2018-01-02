@@ -19,8 +19,8 @@ DESCRIPTION
 -----------
 
 Fetches your twitter friends timeline and displays notification popups for new
-tweets.  If your system's notification daemon supports adding actions to the
-popups then you'll be able to make a number of choices by clicking the buttons
+tweets.  If your system’s notification daemon supports adding actions to the
+popups then you’ll be able to make a number of choices by clicking the buttons
 on the popup.
 
 OPTIONS

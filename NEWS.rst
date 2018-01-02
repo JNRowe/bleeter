@@ -23,11 +23,10 @@ User-visible changes
 * New ``--mobile`` option for low-bandwidth links
 * Optional SSL twitter communication
 * Support for multiple map providers
-* Optional support for twitter_'s saved searches and lists
+* Optional support for twitter_’s saved searches and lists
 * Coloured terminal output with termcolor_
 
 .. _termcolor: http://pypi.python.org/pypi/termcolor/
-
 
 0.6.0 - 2010-07-12
 ------------------
@@ -68,7 +67,7 @@ User-visible changes
 ------------------
 
 * Switched to OAuth_
-* User images are now resized to a reasonable size
+* User images are now resized to a reasonable… er, size
 * Added a button to retweet from within the notifications
 * Added status icon showing number of pending tweets
 
@@ -78,10 +77,10 @@ User-visible changes
 ------------------
 
 * Switched to the tweepy_ twitter_ library
-* Support for notifications daemons that don't support markup in messages
+* Support for notifications daemons that don’t support markup in messages
 * Open displayed tweet in a browser by clicking the notification
 * Support for overriding options from the command line
-* Displays user "mentions"
+* Displays user “mentions”
 * A button to mark tweets as favourites from within the notification
 
 .. _tweepy: http://pypi.python.org/pypi/tweepy/
