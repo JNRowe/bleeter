@@ -55,10 +55,12 @@ T = blessings.Terminal()
 def _colourise(text, colour):
     """Colour text, if possible.
 
-    :param str text: Text to colourise
-    :param str colour: Colour to display text in
-    :rtype: str
-    :return: Colourised text, if possible
+    Args:
+        text (str): Text to colourise
+        colour (str): Colour to display text in
+
+    Returns:
+        str: Colourised text, if possible
     """
     return getattr(T, colour.replace(' ', '_'))(text)
 
@@ -78,9 +80,11 @@ def warn(text):
 def mkdir(directory):
     """Create directory, including parents.
 
-    :param str directory: Directory to create
-    :raise OSError: Unable to create directory
+    Args:
+        directory (str): Directory to create
 
+    Raises:
+        OSError: Unable to create directory
     """
 
     try:
@@ -130,11 +134,11 @@ def create_lockfile():
 def usage_note(message, title=None, level=warn, icon=None):
     """Display a usage notification.
 
-    :param str message: Message to display
-    :type title: ``str`` or ``None`
-    :param title: Title for notification popup
-    :param func level: Function to display text message with
-    :param str icon: Icon to use for notification popup
+    Args:
+        message (str): Message to display
+        title (str): Title for notification popup
+        level (func): Function to display text message with
+        icon (str): Icon to use for notification popup
     """
 
     message = message.replace("%prog", sys.argv[0])
@@ -168,8 +172,8 @@ def usage_note(message, title=None, level=warn, icon=None):
 def open_browser(url):
     """Open URL in user’s browser.
 
-    :param str uri: URL to open
-
+    Args:
+        uri (str): URL to open
     """
 
     if xdg_open:
@@ -208,10 +212,11 @@ def find_app_icon(uri=True):
     >>> find_app_icon()  #doctest: +ELLIPSIS
     'file://.../bleeter/bleeter.png'
 
-    :param bool uri: Return a URI for the path
-    :rtype: ``str``
-    :return: Path to the application icon
+    Args:
+        uri (bool): Return a URI for the path
 
+    Returns:
+        str: Path to the application icon
     """
     icon_locations = [
         "%s/bleeter.png" % os.path.abspath(sys.path[0]),
@@ -249,10 +254,12 @@ def relative_time(timestamp):
     >>> relative_time(now - datetime.timedelta(seconds=12))
     'about 12 seconds ago'
 
-    :param datetime.datetime timestamp: Event to generate relative timestamp
-        against
-    :rtype: ``str``
-    :return: Human readable date and time offset
+    Args:
+        timestamp (datetime.datetime): Event to generate relative timestamp
+            against
+
+    Returns:
+        str: Human readable date and time offset
     """
 
     numstr = ". a two three four five six seven eight nine ten".split()
@@ -302,9 +309,11 @@ def url_expand(match):
     >>> url_expand(match)
     '<a href="terminal.png">terminal.png</a>'
 
-    :param SRE_Match match: Regular expression match object
-    :rtype: ``str``
-    :return: HTML formatted link for URL
+    Args:
+        match (SRE_Match): Regular expression match object
+
+    Returns:
+        str: HTML formatted link for URL
     """
     url = match.group()
     if not url in URLS:
@@ -319,7 +328,8 @@ def url_expand(match):
 def wrap_proctitle(string):
     """Set process title for a given context.
 
-    :param str string: Context to display in process title
+    Args:
+        string (str): Context to display in process title
     """
     if setproctitle:
         oldtitle = setproctitle.getproctitle()
@@ -332,9 +342,11 @@ def wrap_proctitle(string):
 def proctitle_decorator(f):
     """Decorator to apply ``wrap_proctitle``.
 
-    :param func f: Function to wrap
-    :rtype: ``func``
-    :return: Function wrapped in ``wrap_proctitle`` context manager
+    Args:
+        f (func): Function to wrap
+
+    Returns:
+        func: Function wrapped in ``wrap_proctitle`` context manager
     """
     @wraps(f)
     def wrapper(*args, **kwargs):

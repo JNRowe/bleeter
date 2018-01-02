@@ -93,9 +93,10 @@ class State(object):
         >>> state.fetched["self-status"]
         1
 
-        :param list users: Stealth users to watch
-        :param list lists: Authenticated user's lists
-        :param list lists: Authenticated user's saved searches
+        Args:
+            users (list): Stealth users to watch
+            lists (list): Authenticated user’s lists
+            searches (list): Authenticated user’s saved searches
         """
         self.state_file = "%s/bleeter/state.db" % glib.get_user_data_dir()
 
@@ -136,9 +137,11 @@ class State(object):
     def get_user(self):
         """Return next stealth user to update.
 
-        :rtype: ``str``
-        :return: Next stealth user to update
-        :raise IndexError: When user list is empty
+        Returns:
+            str: Next stealth user to update
+
+        Raises:
+            IndexError: When user list is empty
         """
         user = self.users[0]
         # Rotate users list
@@ -148,9 +151,11 @@ class State(object):
     def get_list(self):
         """Return next list to update.
 
-        :rtype: ``tweepy.models.List``
-        :return: Next list to update
-        :raise IndexError: When user lists are empty
+        Returns:
+            tweepy.models.List: Next list to update
+
+        Raises:
+            IndexError: When user lists are empty
         """
         list_ = self.lists[0]
         # Rotate user’s lists
@@ -160,9 +165,11 @@ class State(object):
     def get_search(self):
         """Return next saved search to update.
 
-        :rtype: ``tweepy.models.SavedSearch``
-        :return: Next saved search to update
-        :raise IndexError: When user's saved searches are empty
+        Returns:
+            tweepy.models.SavedSearch: Next saved search to update
+
+        Raises:
+            IndexError: When user’s saved searches are empty
         """
         search = self.searches[0]
         # Rotate user’s lists
@@ -175,8 +182,9 @@ class State(object):
         We store displayed, not fetched, info so we don’t miss pending tweets
         from a previous run
 
-        :param bool force: Force update, even if data hasn't changed for mtime
-            promotion
+        Args:
+            force (bool): Force update, even if data hasn’t changed for mtime
+                promotion
         """
         data = copy.deepcopy(self._data)
         data["fetched"].update(self.displayed)
@@ -207,9 +215,11 @@ class Tweets(dict):
     def popitem(self):
         """Pop tweet with oldest ID.
 
-        :rtype: ``tweepy.models.Status``
-        :return: Oldest tweet
-        :raise KeyError: Tweets is empty
+        Returns:
+            tweepy.models.Status: Oldest tweet
+
+        Raises:
+            KeyError: Tweets is empty
         """
         if not self:
             raise KeyError('popitem(): object is empty')
@@ -218,7 +228,8 @@ class Tweets(dict):
     def add(self, tweets):
         """Add new tweets to the store.
 
-        :param list tweets: Tweets to add store
+        Args:
+            tweets (list): Tweets to add store
         """
         for tweet in tweets:
             self[tweet.id] = tweet
@@ -227,9 +238,11 @@ class Tweets(dict):
 def process_command_line(config_file):
     """Main command line interface.
 
-    :param str config_file: Location of the configuration file
-    :rtype: ``tuple`` of ``optparse`` and ``list``
-    :return: Parsed options and arguments
+    Args:
+        config_file (str): Location of the configuration file
+
+    Returns:
+        (optparse, list): Parsed options and arguments
     """
 
     def check_value(option, opt_str, value, parser):
@@ -429,13 +442,14 @@ def format_tweet(text, expand=False, mobile=False):
     'entity test, &amp; &quot; &apos; &lt; &gt;'
     >>> pynotify.get_server_caps = Mock(return_value=[])
 
-    :param str api: Tweet content
-    :param bool expand: Expand links in tweet text
-    :param bool mobile: Open links in twitter's mobile site
-    :rtype: ``str``
-    :return: Tweet content with pretty formatting
-    """
+    Args:
+        api (str): Tweet content
+        expand (bool): Expand links in tweet text
+        mobile (bool): Open links in twitter’s mobile site
 
+    Returns:
+        str: Tweet content with pretty formatting
+    """
     # Sanitize entity escaping for input
     text = glib.markup_escape_text(saxutils.unescape(text))
 
@@ -472,9 +486,11 @@ def format_tweet(text, expand=False, mobile=False):
 def get_user_icon(user):
     """Get icon location for user.
 
-    :param tweepy.models.User user: Tweet user reference
-    :rtype: ``str``
-    :return: Location of the icon file
+    Args:
+        user (tweepy.models.User): Tweet user reference
+
+    Returns:
+        str: Location of the icon file
     """
     if not "icon-static" in pynotify.get_server_caps():
         return None
@@ -505,12 +521,14 @@ def get_user_icon(user):
 def open_tweet(tweet, mobile=False, map_provider="google"):
     """Create tweet opening function.
 
-    :param tweepy.models.Status tweet: Twitter status message to open
-    :param bool mobile: Open links in lighter mobile versions
-    :param str map_provider: Map provider to open geo links in, if ``mobile``
-        is ``False``
-    :rtype: ``FunctionType``
-    :return: Wrapper to open tweet in browser
+    Args:
+        tweet (tweepy.models.Status): Twitter status message to open
+        mobile (bool): Open links in lighter mobile versions
+        map_provider (str): Map provider to open geo links in, if ``mobile``
+            is ``False``
+
+    Returns:
+        func: Wrapper to open tweet in browser
     """
     if mobile:
         twitter_base = "https://mobile.twitter.com"
@@ -529,9 +547,9 @@ def open_tweet(tweet, mobile=False, map_provider="google"):
     def show(notification, action):  # pylint: disable-msg=W0613
         """Open tweet in browser.
 
-        :param pynotify.Notification notification: Calling notification
-            instance
-        :param str action: Calling action name
+        Args:
+            notification (pynotify.Notification): Calling notification instance
+            action (str): Calling action name
         """
         if action == "find":
             latlon = ",".join(map(str, tweet.geo['coordinates']))
@@ -566,19 +584,22 @@ def skip_check(ignore):
     >>> filt(tweet)
     True
 
-    :type ignore: ``list`` of ``str``
-    :param ignore: List of words to trigger tweet skipping
-    :rtype: ``FunctionType``
-    :return: Wrapper to scan tweets
+    Args:
+        ignore (List[str]): List of words to trigger tweet skipping
+
+    Returns:
+        func: Wrapper to scan tweets
     """
 
     def wrapper(tweet):
         """Filter tweets containing user selected words.
 
-        :param tweepy.models.Status tweet: Twitter status message to scan for
-            selected words
-        :rtype: ``bool``
-        :return: True if tweet is clean
+        Args:
+            tweet (tweepy.models.Status): Twitter status message to scan for
+                selected words
+
+        Returns:
+            bool: True if tweet is clean
         """
         # Not just \W, because of the special case of # and @ in tweets
         word_match = re.compile("[^a-zA-Z0-9_#@]")
@@ -596,17 +617,17 @@ def update(api, ftype, tweets, state, count, ignore):
     search on each run, fetching the full timeline for each element on each run
     is a waste of resources
 
-    :param tweepy.api.API api: Authenticated ``tweepy.api.API`` object
-    :param str ftype: Type of update to perform
-    :param Tweets tweets: Tweets awaiting display
-    :param state state: Application state
-    :param int count: Number of new tweets to fetch
-    :type ignore: ``list`` of ``str``
-    :param ignore: List of words to trigger tweet skipping
-    :rtype: ``True``
-    :return: Timers must return a ``True`` value for timer to continue
-    """
+    Args:
+        api (tweepy.api.API): Authenticated ``tweepy.api.API`` object
+        ftype (str): Type of update to perform
+        tweets (Tweets): Tweets awaiting display
+        state (state): Application state
+        count (int): Number of new tweets to fetch
+        ignore (List[str]): List of words to trigger tweet skipping
 
+    Returns:
+        True: Timers must return a ``True`` value for timer to continue
+    """
     kwargs = {"count": count}
 
     if ftype == "user":
@@ -678,17 +699,18 @@ NOTIFICATIONS = {}
 def display(api, tweets, state, timeout, expand, mobile, map_provider):
     """Display notifications for new tweets.
 
-    :param tweepy.api.API api: Authenticated ``tweepy.api.API`` object
-    :param Tweets tweets: Tweets awaiting display
-    :param State seen: Application state
-    :param int timeout: Timeout for notifications in seconds
-    :param bool expand: Whether to expand links in tweet text
-    :param bool mobile: Links open in lighter mobile versions
-    :param str map_provider: Map provider to open geo links in, if ``mobile``
-        is ``False`
-    :rtype: ``True``
-    :return: Timers must return a ``True`` value for timer to continue
+    Args:
+        api (tweepy.api.API): Authenticated ``tweepy.api.API`` object
+        tweets (Tweets): Tweets awaiting display
+        seen (State): Application state
+        timeout (int): Timeout for notifications in seconds
+        expand (bool): Whether to expand links in tweet text
+        mobile (bool): Links open in lighter mobile versions
+        map_provider (str): Map provider to open geo links in, if ``mobile``
+            is ``False`
 
+    Returns:
+        True: Timers must return a ``True`` value for timer to continue
     """
     try:
         tweet = tweets.popitem()
@@ -775,8 +797,9 @@ def display(api, tweets, state, timeout, expand, mobile, map_provider):
 def tooltip(icon, tweets):
     """Update statusicon tooltip.
 
-    :param gtk.StatusIcon icon: Status icon to update
-    :param Tweets tweets: Tweets pending display
+    Args:
+        icon (gtk.StatusIcon): Status icon to update
+        tweets (Tweets): Tweets pending display
     """
     count = len(tweets)
 
@@ -789,9 +812,10 @@ def tooltip(icon, tweets):
 def get_token(auth, fetch, token_file):
     """Fetch a new OAuth token.
 
-    :param OAuthHandler auth: OAuth handler for bleeter
-    :param bool fetch: Fetch a new token, even if one exists
-    :param str token_file: Filename to store token data in
+    Args:
+        auth (OAuthHandler): OAuth handler for bleeter
+        fetch (bool): Fetch a new token, even if one exists
+        token_file (str): Filename to store token data in
     """
     if os.path.exists(token_file) and not fetch:
         return json.load(open(token_file))
@@ -854,9 +878,11 @@ def get_token(auth, fetch, token_file):
 def main(argv=sys.argv[:]):
     """Main handler.
 
-    :param list argv: Command line parameters
-    :rtype: ``int``
-    :return: Shell return value
+    Args:
+        argv (List[str]): Command line parameters
+
+    Returns:
+        int: Shell return value
     """
     if utils.setproctitle:
         utils.setproctitle.setproctitle(sys.argv[0])
