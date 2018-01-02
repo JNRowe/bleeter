@@ -58,11 +58,11 @@ import gtk
 
 from . import utils
 
+
 # OAuth design FTL!
 OAUTH_KEY = "WJ3RGn3aMN98b41b3pJQ"
 OAUTH_SECRET = "PU0b7yrBOcdpbSrD1pcQq1kfA9ZVmPQoD0fqtg1bQBQ"
 USER_AGENT = "bleeter/%s (https://github.com/JNRowe/bleeter/)" % __version__
-
 
 # Pull the first paragraph from the docstring
 USAGE = __doc__[:__doc__.find('\n\n', 100)].splitlines()[2:]
@@ -336,8 +336,8 @@ def process_command_line(config_file):
     parser.add_option_group(user_opts)
     user_opts.add_option("-s", "--stealth", action="store",
                          metavar=",".join(config.get("stealth")),
-                         help="Users to watch without " \
-                            "following(comma separated)")
+                         help="Users to watch without "
+                              "following(comma separated)")
     user_opts.add_option("--no-stealth", action="store_false",
                          dest="stealth",
                          help="Don’t check stealth users for updates")
@@ -492,7 +492,7 @@ def get_user_icon(user):
     Returns:
         str: Location of the icon file
     """
-    if not "icon-static" in pynotify.get_server_caps():
+    if "icon-static" not in pynotify.get_server_caps():
         return None
 
     cache_dir = "%s/bleeter" % glib.get_user_cache_dir()
@@ -695,6 +695,8 @@ def update(api, ftype, tweets, state, count, ignore):
 
 
 NOTIFICATIONS = {}
+
+
 @utils.proctitle_decorator
 def display(api, tweets, state, timeout, expand, mobile, map_provider):
     """Display notifications for new tweets.
@@ -781,7 +783,7 @@ def display(api, tweets, state, timeout, expand, mobile, map_provider):
     if not note.show():
         # Fail hard at this point, recovery has little value.
         raise OSError("Notification failed to display!")
-    if not tweet.from_type in ("direct", "search"):
+    if tweet.from_type not in ("direct", "search"):
         state.displayed[tweet.user.screen_name.lower()] = tweet.id
     if tweet.from_type == "user":
         state.displayed["self-status"] = tweet.id
@@ -1000,6 +1002,7 @@ def main(argv=sys.argv[:]):
 
     glib.timeout_add_seconds(options.frequency * 2, state.save_state)
     loop.run()
+
 
 if __name__ == "__main__":
     try:

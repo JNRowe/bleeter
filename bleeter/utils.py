@@ -297,6 +297,8 @@ def relative_time(timestamp):
 
 # Keep a cache for free handling of retweets and such.
 URLS = {}
+
+
 def url_expand(match):
     """Generate links with expanded URLs.
 
@@ -316,7 +318,7 @@ def url_expand(match):
         str: HTML formatted link for URL
     """
     url = match.group()
-    if not url in URLS:
+    if url not in URLS:
         if urlunshort.is_shortened(url):
             URLS[url] = glib.markup_escape_text(urlunshort.resolve(url))
         else:
