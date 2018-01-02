@@ -26,92 +26,114 @@ on the popup.
 OPTIONS
 -------
 
---version
-    show program's version number and exit
+.. program:: bleeter
 
--h, --help
-    show this help message and exit
+.. option:: --version
 
--t, --timeout **n**
-    timeout for notification popups in seconds
+    Show program’s version number and exit
 
--f, --frequency **n**
-    update frequency in in seconds
+.. option:: -h, --help
 
--g, --get-token
-    generate a new OAuth token for twitter
+    Show this help message and exit
 
---secure
-    use SSL to connect to twitter
+.. option:: -t, --timeout <n>
 
---no-secure
-    don't use SSL to connect to twitter
+    Timeout for notification popups in seconds
 
--s, --stealth **user**
-    users to watch without following(comma separated)
+.. option:: -f, --frequency <n>
+    Update frequency in in seconds
 
---no-stealth
-    don't check stealth users for updates
+.. option:: -g, --get-token
 
--i, --ignore **word**
-    keywords to ignore in tweets(comma separated)
+    Generate a new OAuth token for twitter
 
---no-ignore
-    don't test for ignore keywords
+.. option:: --secure
 
---no-tray
-    disable the system tray icon
+    Use SSL to connect to twitter
 
--e, --expand
-    expand links in tweets
+.. option:: --no-secure
 
---no-expand
-    don't expand links in tweets
+    Don’t use SSL to connect to twitter
 
--m, --mobile
-    open links in lighter mobile versions
+.. option:: -s, --stealth <user>
 
---no-mobile
-    don't open links in lighter mobile versions
+    Users to watch without following(comma separated)
 
---map-provider **site**
-    open geo links using specified site
+.. option:: --no-stealth
 
---count **n**
-    maximum number of timeline tweets to fetch(max 200)
+    Don’t check stealth users for updates
 
---stealth-count **n**
+.. option:: -i, --ignore <word>
 
-   maximum number of stealth tweets to fetch
+    Keywords to ignore in tweets(comma separated)
 
---search-count **n**
+.. option:: --no-ignore
 
-   maximum number of tweets to fetch for searches
+    Don’t test for ignore keywords
 
---list-count **n**
+.. option:: --no-tray
 
-   maximum number of tweets to fetch for lists
+    Disable the system tray icon
 
---lists
-    fetch user's lists
+.. option:: -e, --expand
 
---no-lists
-    don't fetch user's lists
+    Expand links in tweets
 
---searches
-    fetch user's saved searches
+.. option:: --no-expand
 
---no-searches
-   don't fetch user's saved searches
+    Don’t expand links in tweets
 
---no-cache
-    don't cache twitter communications
+.. option:: -m, --mobile
 
--v, --verbose
-    produce verbose output
+    Open links in lighter mobile versions
 
--q, --quiet
-    output only results and errors
+.. option:: --no-mobile
+
+    Don’t open links in lighter mobile versions
+
+.. option:: --map-provider <site>
+
+    Open geo links using specified site
+
+.. option:: --count <n>
+
+    Maximum number of timeline tweets to fetch(max 200)
+
+.. option:: --stealth-count <n>
+
+    Maximum number of stealth tweets to fetch
+
+.. option:: --search-count <n>
+
+    Maximum number of tweets to fetch for searches
+
+.. option:: --list-count <n>
+
+    Maximum number of tweets to fetch for lists
+
+.. option:: --lists
+
+    Fetch user’s lists
+
+.. option:: --no-lists
+
+    Don’t fetch user’s lists
+
+.. option:: --searches / --no-searches
+
+    Fetch user’s saved searches
+
+.. option:: --cache / --no-cache
+
+    Don’t cache twitter communications
+
+.. option:: -v, --verbose
+
+    Produce verbose output
+
+.. option:: -q, --quiet
+
+    Output only results and errors
 
 CONFIGURATION FILE
 ------------------
