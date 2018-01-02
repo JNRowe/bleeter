@@ -1,6 +1,9 @@
 Frequently Asked Questions
 ==========================
 
+.. contents::
+   :local:
+
 Why another twitter client?
 ---------------------------
 
