@@ -164,6 +164,8 @@ RESOURCES
 ---------
 
 Home page: https://github.com/JNRowe/bleeter/
+Full documentation: http://bleeter.readthedocs.io/
+Issue tracker: https://github.com/JNRowe/rdial/issues/
 
 COPYING
 -------
