@@ -57,7 +57,7 @@ use as ignore filters for tweets you receive.  Keywords can be normal words,
 The default is "#nowplaying" to ignore all the audio player spam that some
 people like to produce.
 
-The entries should be comma separated, and must be quoted if they contain '#'
+The entries should be comma separated, and must be quoted if they contain ``#``
 to match hashtags.
 
 ``count`` options

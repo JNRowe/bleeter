@@ -138,7 +138,7 @@ OPTIONS
 CONFIGURATION FILE
 ------------------
 
-The configuration file, **${XDG_CONFIG_HOME:-~/.config}/bleeter/config.ini**, is
+The configuration file, ``${XDG_CONFIG_HOME:-~/.config}/bleeter/config.ini``, is
 a simple **INI** format file for storing the command line options.  For
 example::
 
