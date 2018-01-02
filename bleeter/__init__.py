@@ -1,5 +1,9 @@
 #
-"""bleeter - Nasty little twitter client"""
+"""bleeter - Nasty little twitter client.
+
+A simple little twitter client that display notifications for new tweets and
+nothing more.
+"""
 # Copyright (C) 2010-2012  James Rowe <jnrowe@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -20,24 +24,10 @@ from __future__ import print_function
 
 from . import _version
 
-
 __version__ = _version.dotted
 __date__ = _version.date
 __author__ = "James Rowe <jnrowe@gmail.com>"
 __copyright__ = "Copyright (C) 2010-2012  James Rowe <jnrowe@gmail.com>"
-__license__ = "GNU General Public License Version 3"
-__credits__ = ""
-__history__ = "See git repository"
-
-from email.utils import parseaddr
-
-__doc__ += """.
-
-A simple little twitter client that display notifications for new tweets and
-nothing more.
-
-.. moduleauthor:: `%s <mailto:%s>`__
-""" % parseaddr(__author__)
 
 import atexit
 import copy
