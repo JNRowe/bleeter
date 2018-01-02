@@ -1,5 +1,5 @@
 Usage
------
+=====
 
 :program:`bleeter` will seek authorisation when initially run.  As twitter_
 uses OAuth_ this process is a little more cumbersome than it should be.
@@ -19,7 +19,7 @@ can be doing one of the following:
     $ rm ${XDG_DATA_HOME:-~/.local}/bleeter/oauth_token
 
 Options
-'''''''
+-------
 
 .. program:: bleeter
 

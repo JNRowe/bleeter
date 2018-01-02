@@ -1,8 +1,8 @@
 Frequently Asked Questions
---------------------------
+==========================
 
 Why another twitter client?
-'''''''''''''''''''''''''''
+---------------------------
 
 Because other clients didn’t do quite what I wanted, or work on the systems
 I wanted to use them on.
@@ -11,7 +11,7 @@ So, in the end writing ``bleeter`` seemed like the obvious answer.  It didn’t
 take long, does exactly what I want and works where I want it to work.
 
 Why is the logo so crap?
-''''''''''''''''''''''''
+------------------------
 
 .. image:: .static/bleeter.png
 
@@ -21,7 +21,7 @@ please do so.  Send me a mail_ if you come up with something better.
 .. _mail: jnrowe@gmail.com
 
 I can’t click on the tweets!
-''''''''''''''''''''''''''''
+----------------------------
 
 If you’re using Ubuntu that is a design goal of their new notify-osd_ default
 notification system.  Find another client, install another notification daemon
@@ -50,7 +50,7 @@ following in a Python interpreter::
 .. _twitter: https://twitter.com
 
 The icons are cut in half in tweets!
-''''''''''''''''''''''''''''''''''''
+------------------------------------
 
 .. figure:: .static/e17-notify.png
 
@@ -67,7 +67,7 @@ send me a mail_!!
 .. _file an issue: https://github.com/JNRowe/bleeter/issues/
 
 There are no buttons on the tweets!
-'''''''''''''''''''''''''''''''''''
+-----------------------------------
 
 If you’re using Ubuntu or e17_ this is expected behaviour.  Neither the Ubuntu
 or e17_ notification systems support the ``actions`` capability that is required
@@ -82,7 +82,7 @@ support for ``actions``.  If you’re not seeing buttons and your notification
 daemon supports ``actions`` please `file an issue`_ or send me a mail_!!
 
 The tweets don’t have the same formatting as the screenshots!
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+-------------------------------------------------------------
 
 If you’re using Ubuntu, Xfce_ or e17_ this is expected behaviour.
 
@@ -110,7 +110,7 @@ link to the image and an explanation of the problem.
 .. _pypi listing:
 
 Why isn’t this listed on PyPI?
-''''''''''''''''''''''''''''''
+------------------------------
 
 For the Python projects I’ve posted on PyPI_, or contributed to significantly,
 I’d say at least 90% of the bug reports have been from ``easy_install`` users
@@ -124,7 +124,7 @@ that, so that they can remain fun.  I apologise if this causes you
 inconvenience.
 
 Why can’t I ``easy_install`` this?
-''''''''''''''''''''''''''''''''''
+----------------------------------
 
 See `PyPI listing`_.
 

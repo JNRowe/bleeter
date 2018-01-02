@@ -1,14 +1,14 @@
-bleeter
-=======
-
-A nasty little twitter viewer
-"""""""""""""""""""""""""""""
-
 :Author: James Rowe <jnrowe@gmail.com>
 :Date: 2010-04-09
 :Copyright: GPL v3
 :Manual section: 1
 :Manual group: Instant Messaging
+
+bleeter
+=======
+
+A nasty little twitter viewer
+-----------------------------
 
 SYNOPSIS
 --------
