@@ -30,6 +30,10 @@ buttons on the popup.
 It is written in Python_, and requires v3.5 or later.  |modref| is released
 under the `GPL v3`_ license.
 
+:Git repository:  https://github.com/JNRowe/bleeter/
+:Issue tracker:  https://github.com/JNRowe/bleeter/issues/
+:Contributors:  https://github.com/JNRowe/bleeter/contributors/
+
 Contents
 --------
 
