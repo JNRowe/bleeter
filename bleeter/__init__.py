@@ -69,7 +69,7 @@ USAGE = __doc__[:__doc__.find('\n\n', 100)].splitlines()[2:]
 USAGE = '\n'.join(USAGE).replace('bleeter', '%prog')
 
 
-class State(object):
+class State:
     """Bleeter state handling."""
 
     _version = 1
