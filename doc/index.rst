@@ -48,6 +48,7 @@ Contents
    thaw
    release
    NEWS
+   api/index
    faq
 
 Indices and tables
