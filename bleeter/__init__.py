@@ -40,6 +40,7 @@ import sys
 import time
 import urllib
 
+from contextlib import suppress
 from xml.sax import saxutils
 
 import json
@@ -862,11 +863,9 @@ def get_token(auth, fetch, token_file):
 
     if response == Gtk.ResponseType.OK:
         for _ in range(3):
-            try:
+            with suppress(tweepy.TweepError):
                 token = auth.get_access_token(verifier)
                 break
-            except tweepy.TweepError:
-                pass
         else:
             utils.usage_note('Fetching token failed')
             raise tweepy.TweepError('Fetching token failed')
@@ -961,11 +960,9 @@ def main(argv=sys.argv[:]):
 
     lists = []
     if options.lists:
-        try:
+        with suppress(IndexError):
             # Sort lists based on their name, they’re returned sorted on ID
             lists = sorted(api.lists(), key=lambda l: l.name.lower())
-        except IndexError:
-            pass
     searches = []
     if options.searches:
         searches = sorted(api.saved_searches(), key=lambda s: s.name.lower())
@@ -1005,7 +1002,5 @@ def main(argv=sys.argv[:]):
 
 
 if __name__ == '__main__':
-    try:
+    with suppress(KeyboardInterrupt):
         sys.exit(main())
-    except KeyboardInterrupt:
-        pass

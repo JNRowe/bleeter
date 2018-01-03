@@ -23,7 +23,7 @@ import os
 import sys
 import webbrowser
 
-from contextlib import contextmanager
+from contextlib import contextmanager, suppress
 from functools import wraps
 
 try:
@@ -104,10 +104,8 @@ def create_lockfile():
     >>> create_lockfile()
     >>> os.path.exists('{}/bleeter/lock'.format(GLib.get_user_data_dir()))
     True
-    >>> try:
+    >>> with suppress(IOError):
     ...     create_lockfile()
-    ... except IOError:
-    ...     pass
     Another instance is running or `test/xdg_data_home/bleeter/lock' is stale
     >>> os.unlink('{}/bleeter/lock'.format(GLib.get_user_data_dir()))
     """
