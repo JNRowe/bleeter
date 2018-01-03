@@ -14,6 +14,10 @@
       directly to *any* released version.  Check the release tarballs for
       documentation for a particular version of ``bleeter``.
 
+.. warning::
+   This project is dead and unsupported.  While it may work for you, you’re on
+   your own if it doesn’t.
+
 |modref| is a nasty little viewer for twitter_, currently very much in a *Works
 For Me* state.  It isn't intended to be used by others, but perhaps others will
 find it useful.
