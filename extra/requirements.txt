@@ -1,0 +1,5 @@
+blessings>=1.5.1
+configobj>=5.0.6
+pygobject>=3.22.0
+sh>=1.11
+tweepy>=3.5.0
