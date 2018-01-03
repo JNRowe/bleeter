@@ -32,8 +32,8 @@ except ImportError:
     xdg_open = None
 
 import blessings
-import glib
-import pynotify
+
+from gi.repository import GLib, Notify
 
 try:
     import setproctitle  # pylint: disable-msg=F0401
@@ -102,23 +102,23 @@ def create_lockfile():
     # Test mocks
     >>> from mock import Mock
     >>> atexit.register = Mock()
-    >>> glib.get_user_data_dir = Mock(return_value="test/xdg_data_home")
+    >>> GLib.get_user_data_dir = Mock(return_value="test/xdg_data_home")
 
     # Make sure there isn’t a stale lock from a previous run
-    >>> if os.path.exists("%s/bleeter/lock" % glib.get_user_data_dir()):
-    ...     os.unlink("%s/bleeter/lock" % glib.get_user_data_dir())
+    >>> if os.path.exists("%s/bleeter/lock" % GLib.get_user_data_dir()):
+    ...     os.unlink("%s/bleeter/lock" % GLib.get_user_data_dir())
 
     >>> create_lockfile()
-    >>> os.path.exists("%s/bleeter/lock" % glib.get_user_data_dir())
+    >>> os.path.exists("%s/bleeter/lock" % GLib.get_user_data_dir())
     True
     >>> try:
     ...     create_lockfile()
     ... except IOError:
     ...     pass
     Another instance is running or `test/xdg_data_home/bleeter/lock' is stale
-    >>> os.unlink("%s/bleeter/lock" % glib.get_user_data_dir())
+    >>> os.unlink("%s/bleeter/lock" % GLib.get_user_data_dir())
     """
-    lock_file = "%s/bleeter/lock" % glib.get_user_data_dir()
+    lock_file = "%s/bleeter/lock" % GLib.get_user_data_dir()
 
     # Create directory for state storage
     mkdir(os.path.dirname(lock_file))
@@ -146,7 +146,7 @@ def usage_note(message, title=None, level=warn, icon=None):
         title = "%%prog %s" % _version.dotted
     title = title.replace("%prog", os.path.basename(sys.argv[0]))
     print(level(message))
-    if "icon-static" in pynotify.get_server_caps():
+    if "icon-static" in Notify.get_server_caps():
         if not icon:
             if level == success:
                 icon = find_app_icon()
@@ -157,12 +157,12 @@ def usage_note(message, title=None, level=warn, icon=None):
     else:
         icon = None
     # pylint: disable-msg=E1101
-    note = pynotify.Notification(title, message, icon)
+    note = Notify.Notification.new(title, message, icon)
     if level == warn:
-        note.set_urgency(pynotify.URGENCY_LOW)
+        note.set_urgency(Notify.Urgency.LOW)
     elif level == fail:
-        note.set_urgency(pynotify.URGENCY_CRITICAL)
-        note.set_timeout(pynotify.EXPIRES_NEVER)
+        note.set_urgency(Notify.Urgency.CRITICAL)
+        note.set_timeout(Notify.EXPIRES_NEVER)
     # pylint: enable-msg=E1101
     if not note.show():
         raise OSError("Notification failed to display!")
@@ -190,7 +190,7 @@ def find_app_icon(uri=True):
 
     # Test mocks
     >>> from mock import Mock
-    >>> glib.get_user_cache_dir = Mock(return_value="test/xdg_cache_home")
+    >>> GLib.get_user_cache_dir = Mock(return_value="test/xdg_cache_home")
 
     >>> sys.prefix = ""
     >>> sys.path.insert(0, "non-existent-path")
@@ -201,7 +201,7 @@ def find_app_icon(uri=True):
     'test/xdg_cache_home/bleeter/bleeter.png'
 
     # Test with no personal icon
-    >>> glib.get_user_cache_dir = Mock(return_value="None")
+    >>> GLib.get_user_cache_dir = Mock(return_value="None")
     >>> find_app_icon()
     Traceback (most recent call last):
         ...
@@ -220,7 +220,7 @@ def find_app_icon(uri=True):
     """
     icon_locations = [
         "%s/bleeter.png" % os.path.abspath(sys.path[0]),
-        "%s/bleeter/bleeter.png" % glib.get_user_cache_dir(),
+        "%s/bleeter/bleeter.png" % GLib.get_user_cache_dir(),
         "%s/share/pixmaps/bleeter.png" % sys.prefix,
     ]
     for icon in icon_locations:
@@ -320,9 +320,9 @@ def url_expand(match):
     url = match.group()
     if url not in URLS:
         if urlunshort.is_shortened(url):
-            URLS[url] = glib.markup_escape_text(urlunshort.resolve(url))
+            URLS[url] = GLib.markup_escape_text(urlunshort.resolve(url))
         else:
-            URLS[url] = glib.markup_escape_text(url)
+            URLS[url] = GLib.markup_escape_text(url)
     return '<a href="%s">%s</a>' % (URLS[url], URLS[url])
 
 

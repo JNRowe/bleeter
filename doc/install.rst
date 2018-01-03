@@ -5,10 +5,9 @@ You can download releases from the `downloads page`_.
 
 ``bleeter`` requires Python_ v2.6(or newer) and the following Python modules:
 
-* `libnotify Python bindings`_
 * blessings_
 * configobj_
-* pygtk_
+* PyGObject_
 * sh_
 * tweepy_
 
@@ -24,10 +23,9 @@ script.
 
 .. _downloads page: https://github.com/JNRowe/bleeter/downloads/
 .. _Python: http://www.python.org/
-.. _libnotify Python bindings: http://www.galago-project.org/downloads.php
 .. _blessings: https://pypi.python.org/pypi/blessings/
 .. _configobj: https://pypi.python.org/pypi/configobj/
-.. _pygtk: http://www.pygtk.org/
+.. _PyGObject: https://wiki.gnome.org/Projects/PyGObject
 .. _sh: https://pypi.python.org/pypi/sh
 .. _tweepy: https://pypi.python.org/pypi/tweepy/
 .. _setproctitle: https://pypi.python.org/pypi/setproctitle

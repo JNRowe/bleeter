@@ -47,14 +47,14 @@ from xml.sax import saxutils
 import json
 
 import configobj
-import glib
-import pynotify
+import gi
 import tweepy
 import validate
 
-import pygtk
-pygtk.require('2.0')
-import gtk
+gi.require_version('GdkPixbuf', '2.0')
+gi.require_version('Gtk', '3.0')
+gi.require_version('Notify', '0.7')
+from gi.repository import GdkPixbuf, GLib, Gtk, Notify
 
 from . import utils
 
@@ -81,14 +81,14 @@ class State(object):
         # Test mocks
         >>> from mock import Mock
         >>> atexit.register = Mock()
-        >>> glib.get_user_data_dir = Mock(return_value="test/xdg_data_home")
+        >>> GLib.get_user_data_dir = Mock(return_value="test/xdg_data_home")
 
         >>> state = State()
         >>> state.fetched["self-status"]
         16460438496
 
         # Test no config
-        >>> glib.get_user_data_dir = Mock(return_value="None")
+        >>> GLib.get_user_data_dir = Mock(return_value="None")
         >>> state = State()
         >>> state.fetched["self-status"]
         1
@@ -98,7 +98,7 @@ class State(object):
             lists (list): Authenticated user’s lists
             searches (list): Authenticated user’s saved searches
         """
-        self.state_file = "%s/bleeter/state.db" % glib.get_user_data_dir()
+        self.state_file = "%s/bleeter/state.db" % GLib.get_user_data_dir()
 
         self.users = users if users else []
         self.lists = lists if lists else []
@@ -414,10 +414,10 @@ def format_tweet(text, expand=False, mobile=False):
     """Format tweet for display.
 
     >>> from mock import Mock
-    >>> pynotify.get_server_caps = Mock(return_value=[])
+    >>> Notify.get_server_caps = Mock(return_value=[])
     >>> format_tweet("Populate #sup contacts from #abook")
     'Populate #sup contacts from #abook'
-    >>> pynotify.get_server_caps = Mock(return_value=["body-markup", ])
+    >>> Notify.get_server_caps = Mock(return_value=["body-markup", ])
     >>> format_tweet("Populate #sup contacts from #abook")
     'Populate <i>#sup</i> contacts from <i>#abook</i>'
     >>> format_tweet("RT @ewornj Populate #sup contacts from #abook")
@@ -426,8 +426,8 @@ def format_tweet(text, expand=False, mobile=False):
     '@<u>rachcholmes</u> London marathon signup closed yet? ;)'
     >>> format_tweet("Updated my vim colour scheme see http://bit.ly/dunMgV")
     'Updated my vim colour scheme see <u>http://bit.ly/dunMgV</u>'
-    >>> pynotify.get_server_caps = Mock(return_value=["body-markup",
-    ...                                               "body-hyperlinks"])
+    >>> Notify.get_server_caps = Mock(return_value=["body-markup",
+    ...                                             "body-hyperlinks"])
     >>> format_tweet("See http://bit.ly/dunMgV")
     'See <a href="http://bit.ly/dunMgV">http://bit.ly/dunMgV</a>'
     >>> format_tweet("b123 https://example.com/dunMgV")
@@ -440,7 +440,7 @@ def format_tweet(text, expand=False, mobile=False):
     'Handle ampersands &amp; win'
     >>> format_tweet("entity test, & \\" ' < >")
     'entity test, &amp; &quot; &apos; &lt; &gt;'
-    >>> pynotify.get_server_caps = Mock(return_value=[])
+    >>> Notify.get_server_caps = Mock(return_value=[])
 
     Args:
         api (str): Tweet content
@@ -451,7 +451,7 @@ def format_tweet(text, expand=False, mobile=False):
         str: Tweet content with pretty formatting
     """
     # Sanitize entity escaping for input
-    text = glib.markup_escape_text(saxutils.unescape(text))
+    text = GLib.markup_escape_text(saxutils.unescape(text))
 
     # re is smart enough to use pre-cached versions
     url_match = re.compile(r'(https?://[\w\.?=\+/_-]+)')
@@ -463,8 +463,8 @@ def format_tweet(text, expand=False, mobile=False):
     else:
         base = "https://twitter.com"
 
-    if "body-markup" in pynotify.get_server_caps():
-        if "body-hyperlinks" in pynotify.get_server_caps():
+    if "body-markup" in Notify.get_server_caps():
+        if "body-hyperlinks" in Notify.get_server_caps():
             if expand:
                 text = url_match.sub(utils.url_expand, text)
             else:
@@ -492,10 +492,10 @@ def get_user_icon(user):
     Returns:
         str: Location of the icon file
     """
-    if "icon-static" not in pynotify.get_server_caps():
+    if "icon-static" not in Notify.get_server_caps():
         return None
 
-    cache_dir = "%s/bleeter" % glib.get_user_cache_dir()
+    cache_dir = "%s/bleeter" % GLib.get_user_cache_dir()
     utils.mkdir(cache_dir)
     md5 = hashlib.md5(user.profile_image_url)  # pylint: disable-msg=E1101
     filename = "%s/%s" % (cache_dir, md5.hexdigest())
@@ -510,9 +510,9 @@ def get_user_icon(user):
             if not os.path.exists("%s/bleeter.png" % cache_dir):
                 shutil.copy(utils.find_app_icon(uri=False), cache_dir)
             filename = "%s/bleeter.png" % cache_dir
-        icon = gtk.gdk.pixbuf_new_from_file(filename)
+        icon = GdkPixbuf.Pixbuf.new_from_file(filename)
         if not (icon.get_width(), icon.get_height()) == (48, 48):
-            icon = icon.scale_simple(48, 48, gtk.gdk.INTERP_BILINEAR)
+            icon = icon.scale_simple(48, 48, GdkPixbuf.InterpType.BILINEAR)
             icon.save(filename, "png")
 
     return "file://%s" % filename
@@ -548,7 +548,7 @@ def open_tweet(tweet, mobile=False, map_provider="google"):
         """Open tweet in browser.
 
         Args:
-            notification (pynotify.Notification): Calling notification instance
+            notification (Notify.Notification): Calling notification instance
             action (str): Calling action name
         """
         if action == "find":
@@ -744,12 +744,12 @@ def display(api, tweets, state, timeout, expand, mobile, map_provider):
         title += " in %s search" % tweet.from_arg
 
     # pylint: disable-msg=E1101
-    note = pynotify.Notification(title,
-                                 format_tweet(tweet.text, expand, mobile),
-                                 icon)
+    note = Notify.Notification.new(title,
+                                   format_tweet(tweet.text, expand, mobile),
+                                   icon)
     # pylint: enable-msg=E1101
     if not tweet.from_type == "direct":
-        if "actions" in pynotify.get_server_caps():
+        if "actions" in Notify.get_server_caps():
             note.add_action("default", " ", open_tweet(tweet, mobile))
             if tweet.from_type == "search" or not tweet.user.protected:
                 note.add_action("mail-forward", "retweet",
@@ -770,15 +770,15 @@ def display(api, tweets, state, timeout, expand, mobile, map_provider):
     # For lists: If we cared about these users they’d be followed, not listed
     # For searches: These are always low priority
     if tweet.from_type in ("list", "search"):
-        note.set_urgency(pynotify.URGENCY_LOW)
+        note.set_urgency(Notify.Urgency.LOW)
     if api.me().screen_name.lower() in tweet.text.lower():
-        note.set_urgency(pynotify.URGENCY_CRITICAL)
+        note.set_urgency(Notify.Urgency.CRITICAL)
     if tweet.text.lower().startswith(("@%s" % api.me().screen_name.lower(),
                                       ".@%s" % api.me().screen_name.lower())):
-        note.set_timeout(pynotify.EXPIRES_NEVER)
+        note.set_timeout(Notify.EXPIRES_NEVER)
     if tweet.from_type == "direct":
-        note.set_urgency(pynotify.URGENCY_CRITICAL)
-        note.set_timeout(pynotify.EXPIRES_NEVER)
+        note.set_urgency(Notify.Urgency.CRITICAL)
+        note.set_timeout(Notify.EXPIRES_NEVER)
     # pylint: enable-msg=E1101
     if not note.show():
         # Fail hard at this point, recovery has little value.
@@ -800,7 +800,7 @@ def tooltip(icon, tweets):
     """Update statusicon tooltip.
 
     Args:
-        icon (gtk.StatusIcon): Status icon to update
+        icon (Gtk.StatusIcon): Status icon to update
         tweets (Tweets): Tweets pending display
     """
     count = len(tweets)
@@ -833,25 +833,25 @@ def get_token(auth, fetch, token_file):
                      level=utils.success)
     time.sleep(3)
 
-    dialog = gtk.Dialog("bleeter authorisation", None, 0,
-                        (gtk.STOCK_OK, gtk.RESPONSE_OK,
-                         gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL))
+    dialog = Gtk.Dialog("bleeter authorisation", None, 0,
+                        (Gtk.STOCK_OK, Gtk.ResponseType.OK,
+                         Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL))
 
-    hbox = gtk.HBox(False, 8)
+    hbox = Gtk.HBox(False, 8)
     hbox.set_border_width(8)
     dialog.vbox.pack_start(hbox, False, False, 0)  # pylint: disable-msg=E1101
 
-    icon = gtk.image_new_from_file(utils.find_app_icon(uri=False))
+    icon = Gtk.Image.new_from_file(utils.find_app_icon(uri=False))
     hbox.pack_start(icon, False, False, 0)
 
-    table = gtk.Table(2, 1)
+    table = Gtk.Table(2, 1)
     table.set_row_spacings(4)
     table.set_col_spacings(4)
     hbox.pack_start(table, True, True, 0)
 
-    label = gtk.Label("Twitter OAuth pin")
+    label = Gtk.Label("Twitter OAuth pin")
     table.attach(label, 0, 1, 0, 1)
-    oauth_entry = gtk.Entry()
+    oauth_entry = Gtk.Entry()
     table.attach(oauth_entry, 1, 2, 0, 1)
     label.set_mnemonic_widget(oauth_entry)
 
@@ -860,7 +860,7 @@ def get_token(auth, fetch, token_file):
     verifier = oauth_entry.get_text().strip()
     dialog.destroy()
 
-    if response == gtk.RESPONSE_OK:
+    if response == Gtk.ResponseType.OK:
         for _ in range(3):
             try:
                 token = auth.get_access_token(verifier)
@@ -890,12 +890,12 @@ def main(argv=sys.argv[:]):
         utils.setproctitle.setproctitle(sys.argv[0])
 
     # Must be ahead of setup, for non-X environments to run --help|--version
-    config_file = "%s/bleeter/config.ini" % glib.get_user_config_dir()
+    config_file = "%s/bleeter/config.ini" % GLib.get_user_config_dir()
     options = process_command_line(config_file)
 
     # pylint: disable-msg=E1101
-    if not pynotify.init(argv[0]):
-        print(utils.fail("Unable to initialise pynotify!"))
+    if not Notify.init(argv[0]):
+        print(utils.fail("Unable to initialise Notify."))
         return errno.EIO
     # pylint: enable-msg=E1101
 
@@ -905,7 +905,7 @@ def main(argv=sys.argv[:]):
         return errno.EIO
 
     with utils.wrap_proctitle("authenticating"):
-        token_file = "%s/bleeter/oauth_token" % glib.get_user_data_dir()
+        token_file = "%s/bleeter/oauth_token" % GLib.get_user_data_dir()
 
         auth = tweepy.OAuthHandler(OAUTH_KEY, OAUTH_SECRET)
         try:
@@ -916,7 +916,7 @@ def main(argv=sys.argv[:]):
             return errno.EPERM
 
     if options.cache:
-        cachedir = "%s/bleeter/http_cache" % glib.get_user_cache_dir()
+        cachedir = "%s/bleeter/http_cache" % GLib.get_user_cache_dir()
         utils.mkdir(cachedir)
         cache = tweepy.FileCache(cachedir)
     else:
@@ -937,9 +937,9 @@ def main(argv=sys.argv[:]):
 
     tweets = Tweets()
 
-    loop = glib.MainLoop()
+    loop = GLib.MainLoop()
     if options.tray:
-        icon = gtk.status_icon_new_from_file(utils.find_app_icon(uri=False))
+        icon = Gtk.StatusIcon.new_from_file(utils.find_app_icon(uri=False))
         icon.set_tooltip("Initial update in progress")
         icon.connect("activate",
                      lambda x: utils.open_browser("https://twitter.com/"))
@@ -975,32 +975,32 @@ def main(argv=sys.argv[:]):
     with utils.wrap_proctitle("Initial update"):
         update(api, "user", tweets, state, options.count, options.ignore)
 
-    glib.timeout_add_seconds(options.frequency, update, api, "user", tweets,
+    GLib.timeout_add_seconds(options.frequency, update, api, "user", tweets,
                              state, options.count, options.ignore)
-    glib.timeout_add_seconds(options.frequency * 10, update, api, "direct",
+    GLib.timeout_add_seconds(options.frequency * 10, update, api, "direct",
                              tweets, state, options.count, options.ignore)
     if options.stealth:
-        glib.timeout_add_seconds(options.frequency / len(options.stealth) * 10,
+        GLib.timeout_add_seconds(options.frequency / len(options.stealth) * 10,
                                  update, api, "stealth", tweets, state,
                                  options.stealth_count, options.ignore)
 
     if lists:
-        glib.timeout_add_seconds(options.frequency / len(lists) * 10,
+        GLib.timeout_add_seconds(options.frequency / len(lists) * 10,
                                  update, api, "list", tweets, state,
                                  options.list_count, options.ignore)
 
     if searches:
-        glib.timeout_add_seconds(options.frequency / len(searches) * 10,
+        GLib.timeout_add_seconds(options.frequency / len(searches) * 10,
                                  update, api, "search", tweets, state,
                                  options.search_count, options.ignore)
 
-    glib.timeout_add_seconds(options.timeout + 1, display, api, tweets, state,
+    GLib.timeout_add_seconds(options.timeout + 1, display, api, tweets, state,
                              options.timeout, options.expand, options.mobile,
                              options.map_provider)
     if options.tray:
-        glib.timeout_add_seconds(options.timeout // 2, tooltip, icon, tweets)
+        GLib.timeout_add_seconds(options.timeout // 2, tooltip, icon, tweets)
 
-    glib.timeout_add_seconds(options.frequency * 2, state.save_state)
+    GLib.timeout_add_seconds(options.frequency * 2, state.save_state)
     loop.run()
 
 
