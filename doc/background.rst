@@ -28,8 +28,8 @@ definitely a very cool project though, and I suspect it would quickly become my
 client of choice if I started to “use” twitter_ a lot.
 
 The obvious answer to all this was to just make a little script to do exactly
-what I wanted... and :mod:`bleeter` was born.  It isn’t pretty, it isn’t clean,
-it isn’t even that useful but it Works For Me™.
+what I wanted... and |modref| was born.  It isn’t pretty, it isn’t clean, it
+isn’t even that useful but it Works For Me™.
 
 .. _twitter: httsp://twitter.com/
 .. _gwibber: https://launchpad.net/gwibber/

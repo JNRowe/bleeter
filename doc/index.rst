@@ -1,7 +1,7 @@
 .. _bleeter-label:
 
-:mod:`bleeter`
-==============
+|modref|
+========
 
 .. module:: bleeter
    :synopsis: Nasty little twitter viewer
@@ -14,9 +14,9 @@
       directly to *any* released version.  Check the release tarballs for
       documentation for a particular version of ``bleeter``.
 
-:mod:`bleeter`  is a nasty little viewer for twitter_, currently very much in
-a *Works For Me* state.  It isn't intended to be used by others, but perhaps
-others will find it useful.
+|modref| is a nasty little viewer for twitter_, currently very much in a *Works
+For Me* state.  It isn't intended to be used by others, but perhaps others will
+find it useful.
 
 All it does is fetch your friends timeline and display notification popups for
 new tweets.  If your system's notification daemon supports adding actions [#]_
@@ -26,8 +26,8 @@ buttons on the popup.
 .. [#] Most common notification daemons support actions, including
        xfce4-notifyd_ and Galago's notification-daemon_.
 
-It is written in Python_, and requires v3.5 or later.  :mod:`bleeter` is
-released under the `GPL v3`_
+It is written in Python_, and requires v3.5 or later.  |modref| is released
+under the `GPL v3`_
 
 Contents:
 

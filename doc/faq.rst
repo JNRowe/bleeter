@@ -115,8 +115,8 @@ link to the image and an explanation of the problem.
 
 .. _pypi listing:
 
-Why isn’t this listed on PyPI?
-------------------------------
+Why isn’t this listed on |PyPI|?
+--------------------------------
 
 For the Python projects I’ve posted on PyPI_, or contributed to significantly,
 I’d say at least 90% of the bug reports have been from ``easy_install`` users
