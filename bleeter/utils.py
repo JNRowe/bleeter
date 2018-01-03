@@ -86,14 +86,7 @@ def mkdir(directory):
     Raises:
         OSError: Unable to create directory
     """
-
-    try:
-        os.makedirs(os.path.expanduser(directory))
-    except OSError as exc:
-        if exc.errno == errno.EEXIST:
-            pass
-        else:
-            raise
+    os.makedirs(os.path.expanduser(directory), exist_ok=True)
 
 
 def create_lockfile():

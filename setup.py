@@ -1,4 +1,4 @@
-#! /usr/bin/python -tt
+#! /usr/bin/env python3
 """setup - distutils info for bleeter"""
 # Copyright (C) 2010-2012  James Rowe <jnrowe@gmail.com>
 #
@@ -16,15 +16,25 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-import imp
+from importlib.util import module_from_spec, spec_from_file_location
 
 from setuptools import setup
 
+
+def import_file(package, fname):
+    mod_name = fname.rstrip('.py')
+    spec = spec_from_file_location(mod_name, '{}/{}'.format(package, fname))
+    module = module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
 # Hack to import _version file without importing bleeter/__init__.py, its
 # purpose is to allow import without requiring dependencies at this point.
-ver_file = open('bleeter/_version.py')
-_version = imp.load_module('_version', ver_file, ver_file.name,
-                           ('.py', ver_file.mode, imp.PY_SOURCE))
+_version = import_file('bleeter', '_version.py')
+
+
+with open('README.rst') as f:
+    long_description = f.read()
 
 setup(
     name='bleeter',
@@ -34,7 +44,7 @@ setup(
     url='http://github.com/JNRowe/bleeter',
     license='GPL-3',
     description='Nasty little twitter client',
-    long_description=open('README.rst').read(),
+    long_description=long_description,
     data_files=[
         ('share/pixmaps', ['bleeter.png', ]),
         ('share/applications', ['bleeter.desktop']),

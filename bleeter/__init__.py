@@ -20,8 +20,6 @@ nothing more.
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from __future__ import print_function
-
 from . import _version
 
 __version__ = _version.dotted
@@ -397,12 +395,12 @@ def process_command_line(config_file):
                       help='Output only matches and errors')
 
     options = parser.parse_args()[0]
-    if isinstance(options.stealth, basestring):
+    if isinstance(options.stealth, str):
         options.stealth = options.stealth.split(',')
     elif options.stealth is False:
         options.stealth = []
     options.stealth = sorted(map(str.lower, options.stealth))
-    if isinstance(options.ignore, basestring):
+    if isinstance(options.ignore, str):
         options.ignore = options.ignore.split(',')
     if options.ignore is False:
         options.ignore = []

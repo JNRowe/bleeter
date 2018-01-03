@@ -26,7 +26,7 @@ buttons on the popup.
 .. [#] Most common notification daemons support actions, including
        xfce4-notifyd_ and Galago's notification-daemon_.
 
-It is written in Python_, and requires v2.6 or later.  :mod:`bleeter` is
+It is written in Python_, and requires v3.5 or later.  :mod:`bleeter` is
 released under the `GPL v3`_
 
 Contents:
