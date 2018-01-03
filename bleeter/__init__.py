@@ -53,9 +53,9 @@ import validate
 gi.require_version('GdkPixbuf', '2.0')
 gi.require_version('Gtk', '3.0')
 gi.require_version('Notify', '0.7')
-from gi.repository import GdkPixbuf, GLib, Gtk, Notify
+from gi.repository import GdkPixbuf, GLib, Gtk, Notify  # NOQA: E402
 
-from . import utils
+from . import utils  # NOQA: E402
 
 
 # OAuth design FTL!
@@ -64,7 +64,8 @@ OAUTH_KEY = 'WJ3RGn3aMN98b41b3pJQ'
 #: OAuth application secret
 OAUTH_SECRET = 'PU0b7yrBOcdpbSrD1pcQq1kfA9ZVmPQoD0fqtg1bQBQ'
 #: User agent for interacting with server.
-USER_AGENT = 'bleeter/{} (https://github.com/JNRowe/bleeter/)'.format(__version__)
+USER_AGENT = \
+    'bleeter/{} (https://github.com/JNRowe/bleeter/)'.format(__version__)
 
 # Pull the first paragraph from the docstring
 USAGE = __doc__[:__doc__.find('\n\n', 100)].splitlines()[2:]
@@ -85,7 +86,8 @@ class State:
             lists (list): Authenticated user’s lists
             searches (list): Authenticated user’s saved searches
         """
-        self.state_file = '{}/bleeter/state.db'.format(GLib.get_user_data_dir())
+        self.state_file = \
+            '{}/bleeter/state.db'.format(GLib.get_user_data_dir())
 
         self.users = users if users else []
         self.lists = lists if lists else []
@@ -280,7 +282,7 @@ def process_command_line(config_file):
     results = config.validate(validate.Validator())
     if results is not True:
         for key in filter(lambda k: not results[k], results):
-            print(utils.fail("Config value for `{}' is invalid".format(key)))
+            print(utils.fail("Config value for {!r} is invalid".format(key)))
         raise SyntaxError('Invalid configuration file')
 
     parser = optparse.OptionParser(usage='%prog [options...]',
@@ -597,7 +599,7 @@ def update(api, ftype, tweets, state, count, ignore):
         kwargs['rpp'] = count
         methods = [('search', [search.query, ])]
     else:
-        raise ValueError("Unknown fetch type `{}'".format(ftype))
+        raise ValueError('Unknown fetch type {!r}'.format(ftype))
     kwargs['since_id'] = state.fetched[fetch_ref]
 
     try:
@@ -612,13 +614,13 @@ def update(api, ftype, tweets, state, count, ignore):
             msg = 'Fetching direct messages failed'
             title = None
         elif ftype == 'stealth':
-            msg = "Data for `{}' not available".format(user)
+            msg = 'Data for {!r} not available'.format(user)
             title = 'Fetching user data failed'
         elif ftype == 'list':
-            msg = "Data for `{}' list not available".format(list_.name)
+            msg = 'Data for {!r} list not available'.format(list_.name)
             title = 'Fetching list data failed'
         elif ftype == 'search':
-            msg = "Data for `{}' search not available".format(search.name)
+            msg = 'Data for {!r} search not available'.format(search.name)
             title = 'Fetching search data failed'
         utils.usage_note(msg, title, utils.fail)
         # Still return True, so we re-enter the loop
@@ -719,8 +721,9 @@ def display(api, tweets, state, timeout, expand, mobile, map_provider):
         note.set_urgency(Notify.Urgency.LOW)
     if api.me().screen_name.lower() in tweet.text.lower():
         note.set_urgency(Notify.Urgency.CRITICAL)
-    if tweet.text.lower().startswith(('@{}'.format(api.me().screen_name.lower()),
-                                      '.@{}'.format(api.me().screen_name.lower()))):
+    if tweet.text.lower().startswith((
+            '@{}'.format(api.me().screen_name.lower()),
+            '.@{}'.format(api.me().screen_name.lower()))):
         note.set_timeout(Notify.EXPIRES_NEVER)
     if tweet.from_type == 'direct':
         note.set_urgency(Notify.Urgency.CRITICAL)
