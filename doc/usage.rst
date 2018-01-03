@@ -1,8 +1,9 @@
 Usage
 =====
 
-:program:`bleeter` will seek authorisation when initially run.  As twitter_
-uses OAuth_ this process is a little more cumbersome than it should be.
+:program:`bleeter` will seek authorisation from twitter_ when initially run.  As
+twitter_ uses OAuth_ this process is a little more cumbersome than it could
+ideally be.
 
 * An authentication link will be opened in your default browser, allowing you to
   sign in to twitter_ and declare that you want :program:`bleeter` to have
@@ -13,7 +14,7 @@ uses OAuth_ this process is a little more cumbersome than it should be.
 If you wish to create a new authentication token, or need to regenerate it, you
 can be doing one of the following:
 
-.. code-block:: sh
+.. code-block:: console
 
     $ bleeter --get-token
     $ rm ${XDG_DATA_HOME:-~/.local}/bleeter/oauth_token
@@ -29,111 +30,111 @@ Options
 
 .. option:: -h, --help
 
-   show this help message and exit
+   Show this help message and exit
 
 .. option:: -t <n>, --timeout=<n>
 
-   timeout for notification popups in seconds
+   Timeout for notification popups in seconds
 
 .. option:: -f <n>, --frequency=<n>
 
-   update frequency in in seconds
+   Update frequency in in seconds
 
 .. option:: -g, --get-token
 
-   generate a new OAuth token for twitter
+   Generate a new OAuth token for twitter
 
 .. option:: --secure
 
-   use SSL to connect to twitter
+   Use SSL to connect to twitter
 
 .. option:: --no-secure
 
-   don't use SSL to connect to twitter
+   Don’t use SSL to connect to twitter
 
 .. option:: -s ewornj, --stealth=ewornj
 
-   users to watch without following(comma separated)
+   Users to watch without following(comma separated)
 
 .. option:: --no-stealth
 
-   don't check stealth users for updates
+   Don’t check stealth users for updates
 
 .. option:: -i "#nowplaying", --ignore "#nowplaying"
 
-   keywords to ignore in tweets(comma separated)
+   Keywords to ignore in tweets(comma separated)
 
 .. option:: --no-ignore
 
-   don't test for ignore keywords
+   Don’t test for ignore keywords
 
 .. option:: --no-tray
 
-   disable the system tray icon
+   Disable the system tray icon
 
 .. option:: -e, --expand
 
-   expand links in tweets
+   Expand links in tweets
 
 .. option:: --no-expand
 
-   don't expand links in tweets
+   Don’t expand links in tweets
 
 .. option:: -m, --mobile
 
-   open links in lighter mobile versions
+   Open links in lighter mobile versions
 
 .. option:: --no-mobile
 
-   don't open links in lighter mobile versions
+   Don’t open links in lighter mobile versions
 
 .. option:: --map-provider "google"
 
-   open geo links using specified site
+   Open geo links using specified site
 
 .. option:: --count
 
-   maximum number of timeline tweets to fetch(max 200)
+   Maximum number of timeline tweets to fetch(max 200)
 
 .. option:: --stealth-count
 
-   maximum number of stealth tweets to fetch
+   Maximum number of stealth tweets to fetch
 
 .. option:: --search-count
 
-   maximum number of tweets to fetch for searches
+   Maximum number of tweets to fetch for searches
 
 .. option:: --list-count
 
-   maximum number of tweets to fetch for lists
+   Maximum number of tweets to fetch for lists
 
 .. option:: --lists
 
-   fetch user's lists
+   Fetch user’s lists
 
 .. option:: --no-lists
 
-   don't fetch user's lists
+   Don’t fetch user’s lists
 
 .. option:: --searches
 
-   fetch user's saved searches
+   Fetch user’s saved searches
 
 .. option:: --no-searches
 
-   don't fetch user's saved searches
+   Don’t fetch user’s saved searches
 
 .. option:: --no-cache
 
-   don't cache twitter communications
+   Don’t cache twitter communications
 
 .. option:: -v, --verbose
 
-   produce verbose output
+   Produce verbose output
 
 .. option:: -q, --quiet
 
-   output only results and errors
+   Output only results and errors
 
 .. _oauth: http://oauth.net/
 .. _twitter: https://twitter.com/

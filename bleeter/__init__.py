@@ -59,8 +59,11 @@ from . import utils
 
 
 # OAuth design FTL!
+#: OAuth application key
 OAUTH_KEY = 'WJ3RGn3aMN98b41b3pJQ'
+#: OAuth application secret
 OAUTH_SECRET = 'PU0b7yrBOcdpbSrD1pcQq1kfA9ZVmPQoD0fqtg1bQBQ'
+#: User agent for interacting with server.
 USER_AGENT = 'bleeter/{} (https://github.com/JNRowe/bleeter/)'.format(__version__)
 
 # Pull the first paragraph from the docstring

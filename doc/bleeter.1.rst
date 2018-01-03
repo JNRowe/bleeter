@@ -18,7 +18,7 @@ SYNOPSIS
 DESCRIPTION
 -----------
 
-Fetches your twitter friends timeline and displays notification popups for new
+Fetches your twitter_ friends timeline and displays notification popups for new
 tweets.  If your system’s notification daemon supports adding actions to the
 popups then you’ll be able to make a number of choices by clicking the buttons
 on the popup.
@@ -26,106 +26,131 @@ on the popup.
 OPTIONS
 -------
 
---version
-    show program's version number and exit
+.. program:: bleeter
 
--h, --help
-    show this help message and exit
+.. option:: --version
 
--t, --timeout **n**
-    timeout for notification popups in seconds
+    Show program’s version number and exit
 
--f, --frequency **n**
-    update frequency in in seconds
+.. option:: -h, --help
 
--g, --get-token
-    generate a new OAuth token for twitter
+    Show this help message and exit
 
---secure
-    use SSL to connect to twitter
+.. option:: -t, --timeout <n>
 
---no-secure
-    don't use SSL to connect to twitter
+    Timeout for notification popups in seconds
 
--s, --stealth **user**
-    users to watch without following(comma separated)
+.. option:: -f, --frequency <n>
 
---no-stealth
-    don't check stealth users for updates
+    Update frequency in in seconds
 
--i, --ignore **word**
-    keywords to ignore in tweets(comma separated)
+.. option:: -g, --get-token
 
---no-ignore
-    don't test for ignore keywords
+    Generate a new OAuth token for twitter
 
---no-tray
-    disable the system tray icon
+.. option:: --secure
 
--e, --expand
-    expand links in tweets
+    Use SSL to connect to twitter
 
---no-expand
-    don't expand links in tweets
+.. option:: --no-secure
 
--m, --mobile
-    open links in lighter mobile versions
+    Don’t use SSL to connect to twitter
 
---no-mobile
-    don't open links in lighter mobile versions
+.. option:: -s, --stealth <user>
 
---map-provider **site**
-    open geo links using specified site
+    Users to watch without following(comma separated)
 
---count **n**
-    maximum number of timeline tweets to fetch(max 200)
+.. option:: --no-stealth
 
---stealth-count **n**
+    Don’t check stealth users for updates
 
-   maximum number of stealth tweets to fetch
+.. option:: -i, --ignore <word>
 
---search-count **n**
+    Keywords to ignore in tweets(comma separated)
 
-   maximum number of tweets to fetch for searches
+.. option:: --no-ignore
 
---list-count **n**
+    Don’t test for ignore keywords
 
-   maximum number of tweets to fetch for lists
+.. option:: --no-tray
 
---lists
-    fetch user's lists
+    Disable the system tray icon
 
---no-lists
-    don't fetch user's lists
+.. option:: -e, --expand
 
---searches
-    fetch user's saved searches
+    Expand links in tweets
 
---no-searches
-   don't fetch user's saved searches
+.. option:: --no-expand
 
---no-cache
-    don't cache twitter communications
+    Don’t expand links in tweets
 
--v, --verbose
-    produce verbose output
+.. option:: -m, --mobile
 
--q, --quiet
-    output only results and errors
+    Open links in lighter mobile versions
+
+.. option:: --no-mobile
+
+    Don’t open links in lighter mobile versions
+
+.. option:: --map-provider <site>
+
+    Open geo links using specified site
+
+.. option:: --count <n>
+
+    Maximum number of timeline tweets to fetch(max 200)
+
+.. option:: --stealth-count <n>
+
+    Maximum number of stealth tweets to fetch
+
+.. option:: --search-count <n>
+
+    Maximum number of tweets to fetch for searches
+
+.. option:: --list-count <n>
+
+    Maximum number of tweets to fetch for lists
+
+.. option:: --lists
+
+    Fetch user’s lists
+
+.. option:: --no-lists
+
+    Don’t fetch user’s lists
+
+.. option:: --searches / --no-searches
+
+    Fetch user’s saved searches
+
+.. option:: --cache / --no-cache
+
+    Don’t cache twitter communications
+
+.. option:: -v, --verbose
+
+    Produce verbose output
+
+.. option:: -q, --quiet
+
+    Output only results and errors
 
 CONFIGURATION FILE
 ------------------
 
-The configuration file, **${XDG_CONFIG_HOME:-~/.config}/bleeter/config.ini**, is
+The configuration file, ``${XDG_CONFIG_HOME:-~/.config}/bleeter/config.ini``, is
 a simple **INI** format file for storing the command line options.  For
-example::
+example:
+
+.. code-block:: ini
 
     frequency = 600
     timeout = 10
     stealth = unfolloweduser
 
-With the above configuration file twitter will be checked every ten minutes for
-updates, new tweets will be shown for 10 seconds and **unfolloweduser** will be
+With the above configuration file twitter_ will be checked every ten minutes for
+updates, new tweets will be shown for 10 minutes and **unfolloweduser** will be
 watched for updates.
 
 BUGS
@@ -143,6 +168,10 @@ RESOURCES
 
 Home page: https://github.com/JNRowe/bleeter/
 
+Full documentation: http://bleeter.readthedocs.io/
+
+Issue tracker: https://github.com/JNRowe/rdial/issues/
+
 COPYING
 -------
 
@@ -152,3 +181,5 @@ This program is free software: you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the
 Free Software Foundation, either version 3 of the License, or (at your
 option) any later version.
+
+.. _twitter: https://twitter.com/

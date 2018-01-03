@@ -1,6 +1,10 @@
 bleeter - Nasty little twitter client
 =====================================
 
+.. warning::
+   This project is dead and unsupported.  While it may work for you, you’re on
+   your own if it doesn’t.
+
 Introduction
 ------------
 
