@@ -8,6 +8,7 @@ You can download releases from the `downloads page`_.
 * `libnotify Python bindings`_
 * blessings_
 * configobj_
+* PyGObject_
 * pygtk_
 * sh_
 * tweepy_
@@ -27,6 +28,7 @@ script.
 .. _libnotify Python bindings: http://www.galago-project.org/downloads.php
 .. _blessings: https://pypi.python.org/pypi/blessings/
 .. _configobj: https://pypi.python.org/pypi/configobj/
+.. _PyGObject: https://wiki.gnome.org/Projects/PyGObject
 .. _pygtk: http://www.pygtk.org/
 .. _sh: https://pypi.python.org/pypi/sh
 .. _tweepy: https://pypi.python.org/pypi/tweepy/

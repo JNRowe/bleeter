@@ -47,7 +47,7 @@ from xml.sax import saxutils
 import json
 
 import configobj
-import glib
+import gi
 import pynotify
 import tweepy
 import validate
@@ -55,6 +55,8 @@ import validate
 import pygtk
 pygtk.require('2.0')
 import gtk
+
+from gi.repository import GLib
 
 from . import utils
 
@@ -81,14 +83,14 @@ class State(object):
         # Test mocks
         >>> from mock import Mock
         >>> atexit.register = Mock()
-        >>> glib.get_user_data_dir = Mock(return_value="test/xdg_data_home")
+        >>> GLib.get_user_data_dir = Mock(return_value="test/xdg_data_home")
 
         >>> state = State()
         >>> state.fetched["self-status"]
         16460438496
 
         # Test no config
-        >>> glib.get_user_data_dir = Mock(return_value="None")
+        >>> GLib.get_user_data_dir = Mock(return_value="None")
         >>> state = State()
         >>> state.fetched["self-status"]
         1
@@ -98,7 +100,7 @@ class State(object):
             lists (list): Authenticated user’s lists
             searches (list): Authenticated user’s saved searches
         """
-        self.state_file = "%s/bleeter/state.db" % glib.get_user_data_dir()
+        self.state_file = "%s/bleeter/state.db" % GLib.get_user_data_dir()
 
         self.users = users if users else []
         self.lists = lists if lists else []
@@ -451,7 +453,7 @@ def format_tweet(text, expand=False, mobile=False):
         str: Tweet content with pretty formatting
     """
     # Sanitize entity escaping for input
-    text = glib.markup_escape_text(saxutils.unescape(text))
+    text = GLib.markup_escape_text(saxutils.unescape(text))
 
     # re is smart enough to use pre-cached versions
     url_match = re.compile(r'(https?://[\w\.?=\+/_-]+)')
@@ -495,7 +497,7 @@ def get_user_icon(user):
     if "icon-static" not in pynotify.get_server_caps():
         return None
 
-    cache_dir = "%s/bleeter" % glib.get_user_cache_dir()
+    cache_dir = "%s/bleeter" % GLib.get_user_cache_dir()
     utils.mkdir(cache_dir)
     md5 = hashlib.md5(user.profile_image_url)  # pylint: disable-msg=E1101
     filename = "%s/%s" % (cache_dir, md5.hexdigest())
@@ -890,7 +892,7 @@ def main(argv=sys.argv[:]):
         utils.setproctitle.setproctitle(sys.argv[0])
 
     # Must be ahead of setup, for non-X environments to run --help|--version
-    config_file = "%s/bleeter/config.ini" % glib.get_user_config_dir()
+    config_file = "%s/bleeter/config.ini" % GLib.get_user_config_dir()
     options = process_command_line(config_file)
 
     # pylint: disable-msg=E1101
@@ -905,7 +907,7 @@ def main(argv=sys.argv[:]):
         return errno.EIO
 
     with utils.wrap_proctitle("authenticating"):
-        token_file = "%s/bleeter/oauth_token" % glib.get_user_data_dir()
+        token_file = "%s/bleeter/oauth_token" % GLib.get_user_data_dir()
 
         auth = tweepy.OAuthHandler(OAUTH_KEY, OAUTH_SECRET)
         try:
@@ -916,7 +918,7 @@ def main(argv=sys.argv[:]):
             return errno.EPERM
 
     if options.cache:
-        cachedir = "%s/bleeter/http_cache" % glib.get_user_cache_dir()
+        cachedir = "%s/bleeter/http_cache" % GLib.get_user_cache_dir()
         utils.mkdir(cachedir)
         cache = tweepy.FileCache(cachedir)
     else:
@@ -937,7 +939,7 @@ def main(argv=sys.argv[:]):
 
     tweets = Tweets()
 
-    loop = glib.MainLoop()
+    loop = GLib.MainLoop()
     if options.tray:
         icon = gtk.status_icon_new_from_file(utils.find_app_icon(uri=False))
         icon.set_tooltip("Initial update in progress")
@@ -975,32 +977,32 @@ def main(argv=sys.argv[:]):
     with utils.wrap_proctitle("Initial update"):
         update(api, "user", tweets, state, options.count, options.ignore)
 
-    glib.timeout_add_seconds(options.frequency, update, api, "user", tweets,
+    GLib.timeout_add_seconds(options.frequency, update, api, "user", tweets,
                              state, options.count, options.ignore)
-    glib.timeout_add_seconds(options.frequency * 10, update, api, "direct",
+    GLib.timeout_add_seconds(options.frequency * 10, update, api, "direct",
                              tweets, state, options.count, options.ignore)
     if options.stealth:
-        glib.timeout_add_seconds(options.frequency / len(options.stealth) * 10,
+        GLib.timeout_add_seconds(options.frequency / len(options.stealth) * 10,
                                  update, api, "stealth", tweets, state,
                                  options.stealth_count, options.ignore)
 
     if lists:
-        glib.timeout_add_seconds(options.frequency / len(lists) * 10,
+        GLib.timeout_add_seconds(options.frequency / len(lists) * 10,
                                  update, api, "list", tweets, state,
                                  options.list_count, options.ignore)
 
     if searches:
-        glib.timeout_add_seconds(options.frequency / len(searches) * 10,
+        GLib.timeout_add_seconds(options.frequency / len(searches) * 10,
                                  update, api, "search", tweets, state,
                                  options.search_count, options.ignore)
 
-    glib.timeout_add_seconds(options.timeout + 1, display, api, tweets, state,
+    GLib.timeout_add_seconds(options.timeout + 1, display, api, tweets, state,
                              options.timeout, options.expand, options.mobile,
                              options.map_provider)
     if options.tray:
-        glib.timeout_add_seconds(options.timeout // 2, tooltip, icon, tweets)
+        GLib.timeout_add_seconds(options.timeout // 2, tooltip, icon, tweets)
 
-    glib.timeout_add_seconds(options.frequency * 2, state.save_state)
+    GLib.timeout_add_seconds(options.frequency * 2, state.save_state)
     loop.run()
 
 
