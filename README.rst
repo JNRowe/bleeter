@@ -20,8 +20,8 @@ Requirements
 ------------
 
 ``bleeter`` requires Python_ v2.6 or above. ``bleeter``’s mandatory dependencies
-outside of the standard library are the blessings_, configobj_, PyGObject_,
-pygtk_ and tweepy_ packages.
+outside of the standard library are the blessings_, configobj_, PyGObject_ and
+tweepy_ packages.
 
 If you wish to have the process title reflect the current state of ``bleeter``,
 then you will need setproctitle_.
@@ -128,6 +128,5 @@ reproduce the problem, or even better a patch!
 .. _gnome: http://www.gnome.org/
 .. _xfce4-notifyd: http://spuriousinterrupt.org/projects/xfce4-notifyd
 .. _notification-daemon: http://www.galago-project.org/
-.. _pygtk: http://www.pygtk.org/
 .. _setproctitle: https://pypi.python.org/pypi/setproctitle
 .. _email: jnrowe@gmail.com

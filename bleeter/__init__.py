@@ -51,12 +51,10 @@ import gi
 import tweepy
 import validate
 
-import pygtk
-pygtk.require('2.0')
-import gtk
-
+gi.require_version('GdkPixbuf', '2.0')
+gi.require_version('Gtk', '3.0')
 gi.require_version('Notify', '0.7')
-from gi.repository import GLib, Notify
+from gi.repository import GdkPixbuf, GLib, Gtk, Notify
 
 from . import utils
 
@@ -512,9 +510,9 @@ def get_user_icon(user):
             if not os.path.exists("%s/bleeter.png" % cache_dir):
                 shutil.copy(utils.find_app_icon(uri=False), cache_dir)
             filename = "%s/bleeter.png" % cache_dir
-        icon = gtk.gdk.pixbuf_new_from_file(filename)
+        icon = GdkPixbuf.Pixbuf.new_from_file(filename)
         if not (icon.get_width(), icon.get_height()) == (48, 48):
-            icon = icon.scale_simple(48, 48, gtk.gdk.INTERP_BILINEAR)
+            icon = icon.scale_simple(48, 48, GdkPixbuf.InterpType.BILINEAR)
             icon.save(filename, "png")
 
     return "file://%s" % filename
@@ -802,7 +800,7 @@ def tooltip(icon, tweets):
     """Update statusicon tooltip.
 
     Args:
-        icon (gtk.StatusIcon): Status icon to update
+        icon (Gtk.StatusIcon): Status icon to update
         tweets (Tweets): Tweets pending display
     """
     count = len(tweets)
@@ -835,25 +833,25 @@ def get_token(auth, fetch, token_file):
                      level=utils.success)
     time.sleep(3)
 
-    dialog = gtk.Dialog("bleeter authorisation", None, 0,
-                        (gtk.STOCK_OK, gtk.RESPONSE_OK,
-                         gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL))
+    dialog = Gtk.Dialog("bleeter authorisation", None, 0,
+                        (Gtk.STOCK_OK, Gtk.ResponseType.OK,
+                         Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL))
 
-    hbox = gtk.HBox(False, 8)
+    hbox = Gtk.HBox(False, 8)
     hbox.set_border_width(8)
     dialog.vbox.pack_start(hbox, False, False, 0)  # pylint: disable-msg=E1101
 
-    icon = gtk.image_new_from_file(utils.find_app_icon(uri=False))
+    icon = Gtk.Image.new_from_file(utils.find_app_icon(uri=False))
     hbox.pack_start(icon, False, False, 0)
 
-    table = gtk.Table(2, 1)
+    table = Gtk.Table(2, 1)
     table.set_row_spacings(4)
     table.set_col_spacings(4)
     hbox.pack_start(table, True, True, 0)
 
-    label = gtk.Label("Twitter OAuth pin")
+    label = Gtk.Label("Twitter OAuth pin")
     table.attach(label, 0, 1, 0, 1)
-    oauth_entry = gtk.Entry()
+    oauth_entry = Gtk.Entry()
     table.attach(oauth_entry, 1, 2, 0, 1)
     label.set_mnemonic_widget(oauth_entry)
 
@@ -862,7 +860,7 @@ def get_token(auth, fetch, token_file):
     verifier = oauth_entry.get_text().strip()
     dialog.destroy()
 
-    if response == gtk.RESPONSE_OK:
+    if response == Gtk.ResponseType.OK:
         for _ in range(3):
             try:
                 token = auth.get_access_token(verifier)
@@ -941,7 +939,7 @@ def main(argv=sys.argv[:]):
 
     loop = GLib.MainLoop()
     if options.tray:
-        icon = gtk.status_icon_new_from_file(utils.find_app_icon(uri=False))
+        icon = Gtk.StatusIcon.new_from_file(utils.find_app_icon(uri=False))
         icon.set_tooltip("Initial update in progress")
         icon.connect("activate",
                      lambda x: utils.open_browser("https://twitter.com/"))
