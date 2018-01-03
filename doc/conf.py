@@ -27,8 +27,8 @@ import cloud_sptheme as csp
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ["sphinx.ext.%s" % ext for ext in ["ifconfig", ]] + \
-    ["sphinxcontrib.%s" % ext for ext in []]
+extensions = ['sphinx.ext.%s' % ext for ext in ['ifconfig', ]] + \
+    ['sphinxcontrib.%s' % ext for ext in []]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['.templates']
@@ -53,7 +53,7 @@ root_dir = os.path.sep.join(os.path.realpath(__file__).split(os.path.sep)[:-2])
 sys.path.insert(0, root_dir)
 from bleeter import __version__
 # The short X.Y version.
-version = ".".join(__version__.split(".")[:2])
+version = '.'.join(__version__.split('.')[:2])
 # The full version, including alpha/beta/rc tags.
 release = __version__
 
@@ -102,7 +102,7 @@ html_theme = 'cloud'
 # further.  For a list of options available for each theme, see the
 # documentation.
 html_theme_options = {
-    "externalrefs": True,
+    'externalrefs': True,
 }
 
 # Add any paths that contain custom themes here, relative to this directory.

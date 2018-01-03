@@ -23,7 +23,7 @@ import os
 import sys
 import webbrowser
 
-from contextlib import contextmanager
+from contextlib import contextmanager, suppress
 from functools import wraps
 
 try:
@@ -86,14 +86,7 @@ def mkdir(directory):
     Raises:
         OSError: Unable to create directory
     """
-
-    try:
-        os.makedirs(os.path.expanduser(directory))
-    except OSError as exc:
-        if exc.errno == errno.EEXIST:
-            pass
-        else:
-            raise
+    os.makedirs(os.path.expanduser(directory), exist_ok=True)
 
 
 def create_lockfile():
@@ -102,32 +95,29 @@ def create_lockfile():
     # Test mocks
     >>> from mock import Mock
     >>> atexit.register = Mock()
-    >>> GLib.get_user_data_dir = Mock(return_value="test/xdg_data_home")
+    >>> GLib.get_user_data_dir = Mock(return_value='test/xdg_data_home')
 
     # Make sure there isn’t a stale lock from a previous run
-    >>> if os.path.exists("%s/bleeter/lock" % GLib.get_user_data_dir()):
-    ...     os.unlink("%s/bleeter/lock" % GLib.get_user_data_dir())
+    >>> if os.path.exists('{}/bleeter/lock'.format(GLib.get_user_data_dir())):
+    ...     os.unlink('{}/bleeter/lock'.format(GLib.get_user_data_dir()))
 
     >>> create_lockfile()
-    >>> os.path.exists("%s/bleeter/lock" % GLib.get_user_data_dir())
+    >>> os.path.exists('{}/bleeter/lock'.format(GLib.get_user_data_dir()))
     True
-    >>> try:
+    >>> with suppress(IOError):
     ...     create_lockfile()
-    ... except IOError:
-    ...     pass
     Another instance is running or `test/xdg_data_home/bleeter/lock' is stale
-    >>> os.unlink("%s/bleeter/lock" % GLib.get_user_data_dir())
+    >>> os.unlink('{}/bleeter/lock'.format(GLib.get_user_data_dir()))
     """
-    lock_file = "%s/bleeter/lock" % GLib.get_user_data_dir()
+    lock_file = '{}/bleeter/lock'.format(GLib.get_user_data_dir())
 
     # Create directory for state storage
     mkdir(os.path.dirname(lock_file))
     if os.path.exists(lock_file):
-        message = "Another instance is running or `%s' is stale" \
-            % lock_file
+        message = "Another instance is running or `{}' is stale".format(lock_file)
         usage_note(message)
         raise IOError(message)
-    open(lock_file, "w").write(str(os.getpid()))
+    open(lock_file, 'w').write(str(os.getpid()))
     atexit.register(os.unlink, lock_file)
 
 
@@ -141,19 +131,19 @@ def usage_note(message, title=None, level=warn, icon=None):
         icon (str): Icon to use for notification popup
     """
 
-    message = message.replace("%prog", sys.argv[0])
+    message = message.replace('%prog', sys.argv[0])
     if not title:
-        title = "%%prog %s" % _version.dotted
-    title = title.replace("%prog", os.path.basename(sys.argv[0]))
+        title = '%prog {}'.format(_version.dotted)
+    title = title.replace('%prog', os.path.basename(sys.argv[0]))
     print(level(message))
-    if "icon-static" in Notify.get_server_caps():
+    if 'icon-static' in Notify.get_server_caps():
         if not icon:
             if level == success:
                 icon = find_app_icon()
             elif level == warn:
-                icon = "stock_dialog-warning"
+                icon = 'stock_dialog-warning'
             elif level == fail:
-                icon = "error"
+                icon = 'error'
     else:
         icon = None
     # pylint: disable-msg=E1101
@@ -165,7 +155,7 @@ def usage_note(message, title=None, level=warn, icon=None):
         note.set_timeout(Notify.EXPIRES_NEVER)
     # pylint: enable-msg=E1101
     if not note.show():
-        raise OSError("Notification failed to display!")
+        raise OSError('Notification failed to display!')
     return errno.EPERM
 
 
@@ -182,7 +172,7 @@ def open_browser(url):
         try:
             webbrowser.open(url, new=2)
         except webbrowser.Error:
-            usage_note("Failed to open link", level=fail)
+            usage_note('Failed to open link', level=fail)
 
 
 def find_app_icon(uri=True):
@@ -190,10 +180,10 @@ def find_app_icon(uri=True):
 
     # Test mocks
     >>> from mock import Mock
-    >>> GLib.get_user_cache_dir = Mock(return_value="test/xdg_cache_home")
+    >>> GLib.get_user_cache_dir = Mock(return_value='test/xdg_cache_home')
 
-    >>> sys.prefix = ""
-    >>> sys.path.insert(0, "non-existent-path")
+    >>> sys.prefix = ''
+    >>> sys.path.insert(0, 'non-existent-path')
 
     >>> find_app_icon()
     'file://test/xdg_cache_home/bleeter/bleeter.png'
@@ -201,14 +191,14 @@ def find_app_icon(uri=True):
     'test/xdg_cache_home/bleeter/bleeter.png'
 
     # Test with no personal icon
-    >>> GLib.get_user_cache_dir = Mock(return_value="None")
+    >>> GLib.get_user_cache_dir = Mock(return_value='None')
     >>> find_app_icon()
     Traceback (most recent call last):
         ...
     EnvironmentError: Can’t find application icon!
 
     # Test with local icon
-    >>> sys.path.insert(0, "")
+    >>> sys.path.insert(0, '')
     >>> find_app_icon()  #doctest: +ELLIPSIS
     'file://.../bleeter/bleeter.png'
 
@@ -219,14 +209,14 @@ def find_app_icon(uri=True):
         str: Path to the application icon
     """
     icon_locations = [
-        "%s/bleeter.png" % os.path.abspath(sys.path[0]),
-        "%s/bleeter/bleeter.png" % GLib.get_user_cache_dir(),
-        "%s/share/pixmaps/bleeter.png" % sys.prefix,
+        '{}/bleeter.png'.format(os.path.abspath(sys.path[0])),
+        '{}/bleeter/bleeter.png'.format(GLib.get_user_cache_dir()),
+        '{}/share/pixmaps/bleeter.png'.format(sys.prefix),
     ]
     for icon in icon_locations:
         if os.path.exists(icon):
-            return "%s%s" % ("file://" if uri else "", icon)
-    raise EnvironmentError("Can’t find application icon!")
+            return '{}{}'.format('file://' if uri else '', icon)
+    raise EnvironmentError('Can’t find application icon!')
 
 
 def relative_time(timestamp):
@@ -262,7 +252,7 @@ def relative_time(timestamp):
         str: Human readable date and time offset
     """
 
-    numstr = ". a two three four five six seven eight nine ten".split()
+    numstr = '. a two three four five six seven eight nine ten'.split()
 
     matches = [
         60 * 60 * 24 * 365,
@@ -273,7 +263,7 @@ def relative_time(timestamp):
         60,
         1,
     ]
-    match_names = ["year", "month", "week", "day", "hour", "minute", "second"]
+    match_names = ['year', 'month', 'week', 'day', 'hour', 'minute', 'second']
 
     delta = datetime.datetime.utcnow() - timestamp
     seconds = delta.days * 86400 + delta.seconds
@@ -283,15 +273,15 @@ def relative_time(timestamp):
             name = match_names[matches.index(scale)]
             break
 
-    if i == 1 and name in ("year", "month", "week"):
-        result = "last %s" % name
-    elif i == 1 and name == "day":
-        result = "yesterday"
-    elif i == 1 and name == "hour":
-        result = "about an hour ago"
+    if i == 1 and name in ('year', 'month', 'week'):
+        result = 'last {}'.format(name)
+    elif i == 1 and name == 'day':
+        result = 'yesterday'
+    elif i == 1 and name == 'hour':
+        result = 'about an hour ago'
     else:
-        result = "about %s %s%s ago" % (i if i > 10 else numstr[i], name,
-                                        "s" if i > 1 else "")
+        result = 'about {} {}{} ago'.format(i if i > 10 else numstr[i], name,
+                                            's' if i > 1 else '')
     return result
 
 
@@ -303,7 +293,7 @@ def url_expand(match):
     """Generate links with expanded URLs.
 
     # Test mocks
-    >>> URLS["http://bit.ly/dunMgV"] = "terminal.png"
+    >>> URLS['http://bit.ly/dunMgV'] = 'terminal.png'
     >>> from mock import Mock
     >>> match = Mock()
     >>> match.group = Mock(return_value=URLS.keys()[0])
@@ -323,7 +313,7 @@ def url_expand(match):
             URLS[url] = GLib.markup_escape_text(urlunshort.resolve(url))
         else:
             URLS[url] = GLib.markup_escape_text(url)
-    return '<a href="%s">%s</a>' % (URLS[url], URLS[url])
+    return '<a href="{}">{}</a>'.format(URLS[url], URLS[url])
 
 
 @contextmanager
@@ -335,7 +325,7 @@ def wrap_proctitle(string):
     """
     if setproctitle:
         oldtitle = setproctitle.getproctitle()
-        setproctitle.setproctitle("%s [%s]" % (sys.argv[0], string))
+        setproctitle.setproctitle('{} [{}]'.format(sys.argv[0], string))
     yield
     if setproctitle:
         setproctitle.setproctitle(oldtitle)

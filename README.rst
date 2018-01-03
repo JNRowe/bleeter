@@ -19,7 +19,7 @@ buttons on the popup.
 Requirements
 ------------
 
-``bleeter`` requires Python_ v2.6 or above. ``bleeter``’s mandatory dependencies
+``bleeter`` requires Python_ v3.5 or above. ``bleeter``’s mandatory dependencies
 outside of the standard library are the blessings_, configobj_, PyGObject_ and
 tweepy_ packages.
 
