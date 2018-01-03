@@ -42,6 +42,7 @@ Contents
    usage
    bleeter manpage <bleeter.1>
    thaw
+   release
    NEWS
    faq
 
