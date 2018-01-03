@@ -62,7 +62,7 @@ from . import utils
 # OAuth design FTL!
 OAUTH_KEY = 'WJ3RGn3aMN98b41b3pJQ'
 OAUTH_SECRET = 'PU0b7yrBOcdpbSrD1pcQq1kfA9ZVmPQoD0fqtg1bQBQ'
-USER_AGENT = 'bleeter/%s (https://github.com/JNRowe/bleeter/)' % __version__
+USER_AGENT = 'bleeter/{} (https://github.com/JNRowe/bleeter/)'.format(__version__)
 
 # Pull the first paragraph from the docstring
 USAGE = __doc__[:__doc__.find('\n\n', 100)].splitlines()[2:]
@@ -98,7 +98,7 @@ class State(object):
             lists (list): Authenticated user’s lists
             searches (list): Authenticated user’s saved searches
         """
-        self.state_file = '%s/bleeter/state.db' % GLib.get_user_data_dir()
+        self.state_file = '{}/bleeter/state.db'.format(GLib.get_user_data_dir())
 
         self.users = users if users else []
         self.lists = lists if lists else []
@@ -252,22 +252,22 @@ def process_command_line(config_file):
 
         if option.dest == 'frequency':
             if value < 60:
-                raise optparse.OptionValueError('%s must be at least 60'
-                                                % opt_str)
+                raise optparse.OptionValueError(
+                    '{} must be at least 60'.format(opt_str))
         elif option.dest in 'timeout':
             if value < 1:
-                raise optparse.OptionValueError('%s must be at least 1'
-                                                % opt_str)
+                raise optparse.OptionValueError(
+                    '{} must be at least 1'.format(opt_str))
         elif option.dest == 'count':
             if value < 1:
-                raise optparse.OptionValueError('%s must be at least 1'
-                                                % opt_str)
+                raise optparse.OptionValueError(
+                    '{} must be at least 1'.format(opt_str))
             if value > 200:
-                raise optparse.OptionValueError('%s must be less than 200'
-                                                % opt_str)
+                raise optparse.OptionValueError(
+                    '{} must be less than 200'.format(opt_str))
         else:
-            raise optparse.BadOptionError('%s unknown option to check'
-                                          % opt_str)
+            raise optparse.BadOptionError(
+                '{} unknown option to check'.format(opt_str))
 
     config_spec = [
         'timeout = integer(min=1, default=10)',
@@ -291,7 +291,7 @@ def process_command_line(config_file):
     results = config.validate(validate.Validator())
     if results is not True:
         for key in filter(lambda k: not results[k], results):
-            print(utils.fail("Config value for `%s' is invalid" % key))
+            print(utils.fail("Config value for `{}' is invalid".format(key)))
         raise SyntaxError('Invalid configuration file')
 
     parser = optparse.OptionParser(usage='%prog [options...]',
@@ -469,10 +469,11 @@ def format_tweet(text, expand=False, mobile=False):
                 text = url_match.sub(utils.url_expand, text)
             else:
                 text = url_match.sub(r'<a href="\1">\1</a>', text)
-            text = user_match.sub(r'@<a href="%s/\1">\1</a>' % base,
+            text = user_match.sub(r'@<a href="{}/\1">\1</a>'.format(base),
                                   text)
-            text = hashtag_match.sub(r'<a href="%s/search?q=\1">\1</a>' % base,
-                                     text)
+            text = hashtag_match.sub(
+                r'<a href="{}/search?q=\1">\1</a>'.format(base),
+                text)
         else:
             text = url_match.sub(r'<u>\1</u>', text)
             text = user_match.sub(r'@<u>\1</u>', text)
@@ -495,10 +496,10 @@ def get_user_icon(user):
     if 'icon-static' not in Notify.get_server_caps():
         return None
 
-    cache_dir = '%s/bleeter' % GLib.get_user_cache_dir()
+    cache_dir = '{}/bleeter'.format(GLib.get_user_cache_dir())
     utils.mkdir(cache_dir)
     md5 = hashlib.md5(user.profile_image_url)  # pylint: disable-msg=E1101
-    filename = '%s/%s' % (cache_dir, md5.hexdigest())
+    filename = '{}/{}'.format(cache_dir, md5.hexdigest())
     if not os.path.exists(filename):
         try:
             # twitter results can be Unicode strings, urlretrieve won’t work
@@ -507,15 +508,15 @@ def get_user_icon(user):
                                filename)
         except IOError:
             # Fallback to application icon
-            if not os.path.exists('%s/bleeter.png' % cache_dir):
+            if not os.path.exists('{}/bleeter.png'.format(cache_dir)):
                 shutil.copy(utils.find_app_icon(uri=False), cache_dir)
-            filename = '%s/bleeter.png' % cache_dir
+            filename = '{}/bleeter.png'.format(cache_dir)
         icon = GdkPixbuf.Pixbuf.new_from_file(filename)
         if not (icon.get_width(), icon.get_height()) == (48, 48):
             icon = icon.scale_simple(48, 48, GdkPixbuf.InterpType.BILINEAR)
             icon.save(filename, 'png')
 
-    return 'file://%s' % filename
+    return 'file://{}'.format(filename)
 
 
 def open_tweet(tweet, mobile=False, map_provider='google'):
@@ -533,16 +534,16 @@ def open_tweet(tweet, mobile=False, map_provider='google'):
     if mobile:
         twitter_base = 'https://mobile.twitter.com'
         map_url = 'http://maps.google.com/maps/api/staticmap?zoom=14' \
-            '&markers=%(latlon)s&size=500x300&sensor=false'
+            '&markers={0[latlon]}&size=500x300&sensor=false'
     else:
         twitter_base = 'https://twitter.com'
         if map_provider == 'bing':
-            map_url = 'http://bing.com/maps/default.aspx?where1=%(latlon)s'
+            map_url = 'http://bing.com/maps/default.aspx?where1={0[latlon]}'
         elif map_provider == 'google':
-            map_url = 'http://maps.google.com/maps?q=%(name)s@%(latlon)s' \
-                '&sll=%(latlon)s&z=16'
+            map_url = 'http://maps.google.com/maps?q={0[name]}@{0[latlon]}' \
+                '&sll={0[latlon]}&z=16'
         elif map_provider == 'google-nojs':
-            map_url = 'http://maps.google.com/m?q=@(latlon)s&oi=nojs'
+            map_url = 'http://maps.google.com/m?q={0[latlon]}s&oi=nojs'
 
     def show(notification, action):  # pylint: disable-msg=W0613
         """Open tweet in browser.
@@ -554,13 +555,14 @@ def open_tweet(tweet, mobile=False, map_provider='google'):
         if action == 'find':
             latlon = ','.join(map(str, tweet.geo['coordinates']))
 
-            url = map_url % {'name': tweet.user.screen_name, 'latlon': latlon}
+            url = map_url.format({'name': tweet.user.screen_name,
+                                  'latlon': latlon})
         else:
             if tweet.from_type == 'search':
                 name = tweet.from_user
             else:
                 name = tweet.user.screen_name
-            url = '%s/%s/status/%s' % (twitter_base, name, tweet.id)
+            url = '{}/{}/status/{}'.format(twitter_base, name, tweet.id)
         utils.open_browser(url)
     return show
 
@@ -642,16 +644,16 @@ def update(api, ftype, tweets, state, count, ignore):
         methods = [('user_timeline', [user, ])]
     elif ftype == 'list':
         list_ = state.get_list()
-        fetch_ref = 'list-%s' % list_.name
+        fetch_ref = 'list-{}'.format(list_.name)
         methods = [('list_timeline', [api.me().screen_name, list_.slug])]
     elif ftype == 'search':
         search = state.get_search()
-        fetch_ref = 'search-%s' % search.name
+        fetch_ref = 'search-{}'.format(search.name)
         # API is stupidly incompatible for searches
         kwargs['rpp'] = count
         methods = [('search', [search.query, ])]
     else:
-        raise ValueError("Unknown fetch type `%s'" % ftype)
+        raise ValueError("Unknown fetch type `{}'".format(ftype))
     kwargs['since_id'] = state.fetched[fetch_ref]
 
     try:
@@ -666,13 +668,13 @@ def update(api, ftype, tweets, state, count, ignore):
             msg = 'Fetching direct messages failed'
             title = None
         elif ftype == 'stealth':
-            msg = "Data for `%s' not available" % user
+            msg = "Data for `{}' not available".format(user)
             title = 'Fetching user data failed'
         elif ftype == 'list':
-            msg = "Data for `%s' list not available" % list_.name
+            msg = "Data for `{}' list not available".format(list_.name)
             title = 'Fetching list data failed'
         elif ftype == 'search':
-            msg = "Data for `%s' search not available" % search.name
+            msg = "Data for `{}' search not available".format(search.name)
             title = 'Fetching search data failed'
         utils.usage_note(msg, title, utils.fail)
         # Still return True, so we re-enter the loop
@@ -721,27 +723,27 @@ def display(api, tweets, state, timeout, expand, mobile, map_provider):
         return True
 
     if tweet.from_type == 'direct':
-        title = 'From %s %s' % (tweet.sender.name,
-                                utils.relative_time(tweet.created_at))
+        title = 'From {} {}'.format(tweet.sender.name,
+                                    utils.relative_time(tweet.created_at))
         icon = get_user_icon(tweet.sender)
     elif tweet.from_type == 'search':
-        title = 'From %s %s' % (tweet.from_user,
-                                utils.relative_time(tweet.created_at))
+        title = 'From {} {}'.format(tweet.from_user,
+                                    utils.relative_time(tweet.created_at))
         icon = get_user_icon(tweet)
     else:
         # Don’t re-display already seen tweets
         if tweet.id <= state.displayed[tweet.user.screen_name.lower()]:
             return True
-        title = 'From %s %s' % (tweet.user.name,
-                                utils.relative_time(tweet.created_at))
+        title = 'From {} {}'.format(tweet.user.name,
+                                    utils.relative_time(tweet.created_at))
         icon = get_user_icon(tweet.user)
 
     if tweet.from_type == 'list':
-        title += ' on %s list' % tweet.from_arg
+        title += ' on {} list'.format(tweet.from_arg)
     elif tweet.from_type == 'direct':
         title += ' in direct message'
     elif tweet.from_type == 'search':
-        title += ' in %s search' % tweet.from_arg
+        title += ' in {} search'.format(tweet.from_arg)
 
     # pylint: disable-msg=E1101
     note = Notify.Notification.new(title,
@@ -773,8 +775,8 @@ def display(api, tweets, state, timeout, expand, mobile, map_provider):
         note.set_urgency(Notify.Urgency.LOW)
     if api.me().screen_name.lower() in tweet.text.lower():
         note.set_urgency(Notify.Urgency.CRITICAL)
-    if tweet.text.lower().startswith(('@%s' % api.me().screen_name.lower(),
-                                      '.@%s' % api.me().screen_name.lower())):
+    if tweet.text.lower().startswith(('@{}'.format(api.me().screen_name.lower()),
+                                      '.@{}'.format(api.me().screen_name.lower()))):
         note.set_timeout(Notify.EXPIRES_NEVER)
     if tweet.from_type == 'direct':
         note.set_urgency(Notify.Urgency.CRITICAL)
@@ -790,9 +792,9 @@ def display(api, tweets, state, timeout, expand, mobile, map_provider):
     elif tweet.from_type == 'direct':
         state.displayed['self-direct'] = tweet.id
     elif tweet.from_type == 'list':
-        state.displayed['list-%s' % tweet.from_arg] = tweet.id
+        state.displayed['list-{}'.format(tweet.from_arg)] = tweet.id
     elif tweet.from_type == 'search':
-        state.displayed['search-%s' % tweet.from_arg] = tweet.id
+        state.displayed['search-{}'.format(tweet.from_arg)] = tweet.id
     return True
 
 
@@ -806,7 +808,7 @@ def tooltip(icon, tweets):
     count = len(tweets)
 
     icon.set_visible(count)
-    icon.set_tooltip('%i tweets awaiting display' % count)
+    icon.set_tooltip('{} tweets awaiting display'.format(count))
     return True
 
 
@@ -890,7 +892,7 @@ def main(argv=sys.argv[:]):
         utils.setproctitle.setproctitle(sys.argv[0])
 
     # Must be ahead of setup, for non-X environments to run --help|--version
-    config_file = '%s/bleeter/config.ini' % GLib.get_user_config_dir()
+    config_file = '{}/bleeter/config.ini'.format(GLib.get_user_config_dir())
     options = process_command_line(config_file)
 
     # pylint: disable-msg=E1101
@@ -905,7 +907,7 @@ def main(argv=sys.argv[:]):
         return errno.EIO
 
     with utils.wrap_proctitle('authenticating'):
-        token_file = '%s/bleeter/oauth_token' % GLib.get_user_data_dir()
+        token_file = '{}/bleeter/oauth_token'.format(GLib.get_user_data_dir())
 
         auth = tweepy.OAuthHandler(OAUTH_KEY, OAUTH_SECRET)
         try:
@@ -916,7 +918,7 @@ def main(argv=sys.argv[:]):
             return errno.EPERM
 
     if options.cache:
-        cachedir = '%s/bleeter/http_cache' % GLib.get_user_cache_dir()
+        cachedir = '{}/bleeter/http_cache'.format(GLib.get_user_cache_dir())
         utils.mkdir(cachedir)
         cache = tweepy.FileCache(cachedir)
     else:

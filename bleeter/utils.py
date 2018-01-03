@@ -105,26 +105,25 @@ def create_lockfile():
     >>> GLib.get_user_data_dir = Mock(return_value='test/xdg_data_home')
 
     # Make sure there isn’t a stale lock from a previous run
-    >>> if os.path.exists('%s/bleeter/lock' % GLib.get_user_data_dir()):
-    ...     os.unlink('%s/bleeter/lock' % GLib.get_user_data_dir())
+    >>> if os.path.exists('{}/bleeter/lock'.format(GLib.get_user_data_dir())):
+    ...     os.unlink('{}/bleeter/lock'.format(GLib.get_user_data_dir()))
 
     >>> create_lockfile()
-    >>> os.path.exists('%s/bleeter/lock' % GLib.get_user_data_dir())
+    >>> os.path.exists('{}/bleeter/lock'.format(GLib.get_user_data_dir()))
     True
     >>> try:
     ...     create_lockfile()
     ... except IOError:
     ...     pass
     Another instance is running or `test/xdg_data_home/bleeter/lock' is stale
-    >>> os.unlink('%s/bleeter/lock' % GLib.get_user_data_dir())
+    >>> os.unlink('{}/bleeter/lock'.format(GLib.get_user_data_dir()))
     """
-    lock_file = '%s/bleeter/lock' % GLib.get_user_data_dir()
+    lock_file = '{}/bleeter/lock'.format(GLib.get_user_data_dir())
 
     # Create directory for state storage
     mkdir(os.path.dirname(lock_file))
     if os.path.exists(lock_file):
-        message = "Another instance is running or `%s' is stale" \
-            % lock_file
+        message = "Another instance is running or `{}' is stale".format(lock_file)
         usage_note(message)
         raise IOError(message)
     open(lock_file, 'w').write(str(os.getpid()))
@@ -143,7 +142,7 @@ def usage_note(message, title=None, level=warn, icon=None):
 
     message = message.replace('%prog', sys.argv[0])
     if not title:
-        title = '%%prog %s' % _version.dotted
+        title = '%prog {}'.format(_version.dotted)
     title = title.replace('%prog', os.path.basename(sys.argv[0]))
     print(level(message))
     if 'icon-static' in Notify.get_server_caps():
@@ -219,13 +218,13 @@ def find_app_icon(uri=True):
         str: Path to the application icon
     """
     icon_locations = [
-        '%s/bleeter.png' % os.path.abspath(sys.path[0]),
-        '%s/bleeter/bleeter.png' % GLib.get_user_cache_dir(),
-        '%s/share/pixmaps/bleeter.png' % sys.prefix,
+        '{}/bleeter.png'.format(os.path.abspath(sys.path[0])),
+        '{}/bleeter/bleeter.png'.format(GLib.get_user_cache_dir()),
+        '{}/share/pixmaps/bleeter.png'.format(sys.prefix),
     ]
     for icon in icon_locations:
         if os.path.exists(icon):
-            return '%s%s' % ('file://' if uri else '', icon)
+            return '{}{}'.format('file://' if uri else '', icon)
     raise EnvironmentError('Can’t find application icon!')
 
 
@@ -284,14 +283,14 @@ def relative_time(timestamp):
             break
 
     if i == 1 and name in ('year', 'month', 'week'):
-        result = 'last %s' % name
+        result = 'last {}'.format(name)
     elif i == 1 and name == 'day':
         result = 'yesterday'
     elif i == 1 and name == 'hour':
         result = 'about an hour ago'
     else:
-        result = 'about %s %s%s ago' % (i if i > 10 else numstr[i], name,
-                                        's' if i > 1 else '')
+        result = 'about {} {}{} ago'.format(i if i > 10 else numstr[i], name,
+                                            's' if i > 1 else '')
     return result
 
 
@@ -323,7 +322,7 @@ def url_expand(match):
             URLS[url] = GLib.markup_escape_text(urlunshort.resolve(url))
         else:
             URLS[url] = GLib.markup_escape_text(url)
-    return '<a href="%s">%s</a>' % (URLS[url], URLS[url])
+    return '<a href="{}">{}</a>'.format(URLS[url], URLS[url])
 
 
 @contextmanager
@@ -335,7 +334,7 @@ def wrap_proctitle(string):
     """
     if setproctitle:
         oldtitle = setproctitle.getproctitle()
-        setproctitle.setproctitle('%s [%s]' % (sys.argv[0], string))
+        setproctitle.setproctitle('{} [{}]'.format(sys.argv[0], string))
     yield
     if setproctitle:
         setproctitle.setproctitle(oldtitle)
