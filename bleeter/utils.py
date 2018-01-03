@@ -90,25 +90,7 @@ def mkdir(directory):
 
 
 def create_lockfile():
-    """Create lockfile handler.
-
-    # Test mocks
-    >>> from mock import Mock
-    >>> atexit.register = Mock()
-    >>> GLib.get_user_data_dir = Mock(return_value='test/xdg_data_home')
-
-    # Make sure there isn’t a stale lock from a previous run
-    >>> if os.path.exists('{}/bleeter/lock'.format(GLib.get_user_data_dir())):
-    ...     os.unlink('{}/bleeter/lock'.format(GLib.get_user_data_dir()))
-
-    >>> create_lockfile()
-    >>> os.path.exists('{}/bleeter/lock'.format(GLib.get_user_data_dir()))
-    True
-    >>> with suppress(IOError):
-    ...     create_lockfile()
-    Another instance is running or `test/xdg_data_home/bleeter/lock' is stale
-    >>> os.unlink('{}/bleeter/lock'.format(GLib.get_user_data_dir()))
-    """
+    """Create lockfile handler."""
     lock_file = '{}/bleeter/lock'.format(GLib.get_user_data_dir())
 
     # Create directory for state storage
@@ -178,30 +160,6 @@ def open_browser(url):
 def find_app_icon(uri=True):
     """Find suitable bleeter application icon.
 
-    # Test mocks
-    >>> from mock import Mock
-    >>> GLib.get_user_cache_dir = Mock(return_value='test/xdg_cache_home')
-
-    >>> sys.prefix = ''
-    >>> sys.path.insert(0, 'non-existent-path')
-
-    >>> find_app_icon()
-    'file://test/xdg_cache_home/bleeter/bleeter.png'
-    >>> find_app_icon(False)
-    'test/xdg_cache_home/bleeter/bleeter.png'
-
-    # Test with no personal icon
-    >>> GLib.get_user_cache_dir = Mock(return_value='None')
-    >>> find_app_icon()
-    Traceback (most recent call last):
-        ...
-    EnvironmentError: Can’t find application icon!
-
-    # Test with local icon
-    >>> sys.path.insert(0, '')
-    >>> find_app_icon()  #doctest: +ELLIPSIS
-    'file://.../bleeter/bleeter.png'
-
     Args:
         uri (bool): Return a URI for the path
 
@@ -221,28 +179,6 @@ def find_app_icon(uri=True):
 
 def relative_time(timestamp):
     """Format a relative time.
-
-    >>> now = datetime.datetime.utcnow()
-    >>> relative_time(now - datetime.timedelta(days=365))
-    'last year'
-    >>> relative_time(now - datetime.timedelta(days=70))
-    'about two months ago'
-    >>> relative_time(now - datetime.timedelta(days=30))
-    'last month'
-    >>> relative_time(now - datetime.timedelta(days=21))
-    'about three weeks ago'
-    >>> relative_time(now - datetime.timedelta(days=4))
-    'about four days ago'
-    >>> relative_time(now - datetime.timedelta(days=1))
-    'yesterday'
-    >>> relative_time(now - datetime.timedelta(hours=5))
-    'about five hours ago'
-    >>> relative_time(now - datetime.timedelta(hours=1))
-    'about an hour ago'
-    >>> relative_time(now - datetime.timedelta(minutes=6))
-    'about six minutes ago'
-    >>> relative_time(now - datetime.timedelta(seconds=12))
-    'about 12 seconds ago'
 
     Args:
         timestamp (datetime.datetime): Event to generate relative timestamp
@@ -291,15 +227,6 @@ URLS = {}
 
 def url_expand(match):
     """Generate links with expanded URLs.
-
-    # Test mocks
-    >>> URLS['http://bit.ly/dunMgV'] = 'terminal.png'
-    >>> from mock import Mock
-    >>> match = Mock()
-    >>> match.group = Mock(return_value=URLS.keys()[0])
-
-    >>> url_expand(match)
-    '<a href="terminal.png">terminal.png</a>'
 
     Args:
         match (SRE_Match): Regular expression match object

@@ -77,21 +77,6 @@ class State:
     def __init__(self, users=None, lists=None, searches=None):
         """Initialise a new ``State`` object.
 
-        # Test mocks
-        >>> from mock import Mock
-        >>> atexit.register = Mock()
-        >>> GLib.get_user_data_dir = Mock(return_value='test/xdg_data_home')
-
-        >>> state = State()
-        >>> state.fetched['self-status']
-        16460438496
-
-        # Test no config
-        >>> GLib.get_user_data_dir = Mock(return_value='None')
-        >>> state = State()
-        >>> state.fetched['self-status']
-        1
-
         Args:
             users (list): Stealth users to watch
             lists (list): Authenticated user’s lists
@@ -412,35 +397,6 @@ def process_command_line(config_file):
 def format_tweet(text, expand=False, mobile=False):
     """Format tweet for display.
 
-    >>> from mock import Mock
-    >>> Notify.get_server_caps = Mock(return_value=[])
-    >>> format_tweet('Populate #sup contacts from #abook')
-    'Populate #sup contacts from #abook'
-    >>> Notify.get_server_caps = Mock(return_value=['body-markup', ])
-    >>> format_tweet('Populate #sup contacts from #abook')
-    'Populate <i>#sup</i> contacts from <i>#abook</i>'
-    >>> format_tweet('RT @ewornj Populate #sup contacts from #abook')
-    '<b>RT</b> @<u>ewornj</u> Populate <i>#sup</i> contacts from <i>#abook</i>'
-    >>> format_tweet('@rachcholmes London marathon signup closed yet? ;)')
-    '@<u>rachcholmes</u> London marathon signup closed yet? ;)'
-    >>> format_tweet('Updated my vim colour scheme see http://bit.ly/dunMgV')
-    'Updated my vim colour scheme see <u>http://bit.ly/dunMgV</u>'
-    >>> Notify.get_server_caps = Mock(return_value=['body-markup',
-    ...                                             'body-hyperlinks'])
-    >>> format_tweet('See http://bit.ly/dunMgV')
-    'See <a href="http://bit.ly/dunMgV">http://bit.ly/dunMgV</a>'
-    >>> format_tweet('b123 https://example.com/dunMgV')
-    'b123 <a href="https://example.com/dunMgV">https://example.com/dunMgV</a>'
-    >>> format_tweet('A list @someone/list')
-    'A list @<a href="http://twitter.com/someone/list">someone/list</a>'
-    >>> format_tweet('See http://url-hyphen/?and=parm')
-    'See <a href="http://url-hyphen/?and=parm">http://url-hyphen/?and=parm</a>'
-    >>> format_tweet('Handle ampersands & win')
-    'Handle ampersands &amp; win'
-    >>> format_tweet("entity test, & \\" ' < >")
-    'entity test, &amp; &quot; &apos; &lt; &gt;'
-    >>> Notify.get_server_caps = Mock(return_value=[])
-
     Args:
         api (str): Tweet content
         expand (bool): Expand links in tweet text
@@ -568,22 +524,6 @@ def open_tweet(tweet, mobile=False, map_provider='google'):
 
 def skip_check(ignore):
     """Create tweet skip testing wrapper function.
-
-    >>> filt = skip_check(['#nowplaying', '@boring'])
-    >>> tweet = tweepy.models.Status()
-    >>> tweet.text = 'This is a test'
-    >>> filt(tweet)
-    True
-    >>> tweet.text = 'This is a test #nowplaying'
-    >>> filt(tweet)
-    False
-    >>> tweet.text = 'Reply to @boring'
-    >>> filt(tweet)
-    False
-    >>> filt = skip_check([])
-    >>> tweet.text = 'This is a test #nowplaying'
-    >>> filt(tweet)
-    True
 
     Args:
         ignore (List[str]): List of words to trigger tweet skipping
