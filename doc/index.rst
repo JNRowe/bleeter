@@ -30,7 +30,8 @@ buttons on the popup.
 It is written in Python_, and requires v3.5 or later.  |modref| is released
 under the `GPL v3`_ license.
 
-Contents:
+Contents
+--------
 
 .. toctree::
    :maxdepth: 1
@@ -45,7 +46,7 @@ Contents:
    faq
 
 Indices and tables
-==================
+------------------
 
 * :ref:`genindex`
 * :ref:`modindex`
