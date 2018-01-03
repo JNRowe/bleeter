@@ -23,7 +23,7 @@ import os
 import sys
 import webbrowser
 
-from contextlib import contextmanager, suppress
+from contextlib import contextmanager
 from functools import wraps
 
 try:
@@ -96,10 +96,12 @@ def create_lockfile():
     # Create directory for state storage
     mkdir(os.path.dirname(lock_file))
     if os.path.exists(lock_file):
-        message = "Another instance is running or `{}' is stale".format(lock_file)
+        message = \
+            'Another instance is running or {!r} is stale'.format(lock_file)
         usage_note(message)
         raise IOError(message)
-    open(lock_file, 'w').write(str(os.getpid()))
+    with open(lock_file, 'w') as f:
+        f.write(str(os.getpid()))
     atexit.register(os.unlink, lock_file)
 
 
