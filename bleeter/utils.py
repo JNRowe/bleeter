@@ -32,9 +32,8 @@ except ImportError:
     xdg_open = None
 
 import blessings
-import pynotify
 
-from gi.repository import GLib
+from gi.repository import GLib, Notify
 
 try:
     import setproctitle  # pylint: disable-msg=F0401
@@ -147,7 +146,7 @@ def usage_note(message, title=None, level=warn, icon=None):
         title = "%%prog %s" % _version.dotted
     title = title.replace("%prog", os.path.basename(sys.argv[0]))
     print(level(message))
-    if "icon-static" in pynotify.get_server_caps():
+    if "icon-static" in Notify.get_server_caps():
         if not icon:
             if level == success:
                 icon = find_app_icon()
@@ -158,12 +157,12 @@ def usage_note(message, title=None, level=warn, icon=None):
     else:
         icon = None
     # pylint: disable-msg=E1101
-    note = pynotify.Notification(title, message, icon)
+    note = Notify.Notification.new(title, message, icon)
     if level == warn:
-        note.set_urgency(pynotify.URGENCY_LOW)
+        note.set_urgency(Notify.Urgency.LOW)
     elif level == fail:
-        note.set_urgency(pynotify.URGENCY_CRITICAL)
-        note.set_timeout(pynotify.EXPIRES_NEVER)
+        note.set_urgency(Notify.Urgency.CRITICAL)
+        note.set_timeout(Notify.EXPIRES_NEVER)
     # pylint: enable-msg=E1101
     if not note.show():
         raise OSError("Notification failed to display!")

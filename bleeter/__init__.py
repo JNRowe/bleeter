@@ -48,7 +48,6 @@ import json
 
 import configobj
 import gi
-import pynotify
 import tweepy
 import validate
 
@@ -56,7 +55,8 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 
-from gi.repository import GLib
+gi.require_version('Notify', '0.7')
+from gi.repository import GLib, Notify
 
 from . import utils
 
@@ -416,10 +416,10 @@ def format_tweet(text, expand=False, mobile=False):
     """Format tweet for display.
 
     >>> from mock import Mock
-    >>> pynotify.get_server_caps = Mock(return_value=[])
+    >>> Notify.get_server_caps = Mock(return_value=[])
     >>> format_tweet("Populate #sup contacts from #abook")
     'Populate #sup contacts from #abook'
-    >>> pynotify.get_server_caps = Mock(return_value=["body-markup", ])
+    >>> Notify.get_server_caps = Mock(return_value=["body-markup", ])
     >>> format_tweet("Populate #sup contacts from #abook")
     'Populate <i>#sup</i> contacts from <i>#abook</i>'
     >>> format_tweet("RT @ewornj Populate #sup contacts from #abook")
@@ -428,8 +428,8 @@ def format_tweet(text, expand=False, mobile=False):
     '@<u>rachcholmes</u> London marathon signup closed yet? ;)'
     >>> format_tweet("Updated my vim colour scheme see http://bit.ly/dunMgV")
     'Updated my vim colour scheme see <u>http://bit.ly/dunMgV</u>'
-    >>> pynotify.get_server_caps = Mock(return_value=["body-markup",
-    ...                                               "body-hyperlinks"])
+    >>> Notify.get_server_caps = Mock(return_value=["body-markup",
+    ...                                             "body-hyperlinks"])
     >>> format_tweet("See http://bit.ly/dunMgV")
     'See <a href="http://bit.ly/dunMgV">http://bit.ly/dunMgV</a>'
     >>> format_tweet("b123 https://example.com/dunMgV")
@@ -442,7 +442,7 @@ def format_tweet(text, expand=False, mobile=False):
     'Handle ampersands &amp; win'
     >>> format_tweet("entity test, & \\" ' < >")
     'entity test, &amp; &quot; &apos; &lt; &gt;'
-    >>> pynotify.get_server_caps = Mock(return_value=[])
+    >>> Notify.get_server_caps = Mock(return_value=[])
 
     Args:
         api (str): Tweet content
@@ -465,8 +465,8 @@ def format_tweet(text, expand=False, mobile=False):
     else:
         base = "https://twitter.com"
 
-    if "body-markup" in pynotify.get_server_caps():
-        if "body-hyperlinks" in pynotify.get_server_caps():
+    if "body-markup" in Notify.get_server_caps():
+        if "body-hyperlinks" in Notify.get_server_caps():
             if expand:
                 text = url_match.sub(utils.url_expand, text)
             else:
@@ -494,7 +494,7 @@ def get_user_icon(user):
     Returns:
         str: Location of the icon file
     """
-    if "icon-static" not in pynotify.get_server_caps():
+    if "icon-static" not in Notify.get_server_caps():
         return None
 
     cache_dir = "%s/bleeter" % GLib.get_user_cache_dir()
@@ -550,7 +550,7 @@ def open_tweet(tweet, mobile=False, map_provider="google"):
         """Open tweet in browser.
 
         Args:
-            notification (pynotify.Notification): Calling notification instance
+            notification (Notify.Notification): Calling notification instance
             action (str): Calling action name
         """
         if action == "find":
@@ -746,12 +746,12 @@ def display(api, tweets, state, timeout, expand, mobile, map_provider):
         title += " in %s search" % tweet.from_arg
 
     # pylint: disable-msg=E1101
-    note = pynotify.Notification(title,
-                                 format_tweet(tweet.text, expand, mobile),
-                                 icon)
+    note = Notify.Notification.new(title,
+                                   format_tweet(tweet.text, expand, mobile),
+                                   icon)
     # pylint: enable-msg=E1101
     if not tweet.from_type == "direct":
-        if "actions" in pynotify.get_server_caps():
+        if "actions" in Notify.get_server_caps():
             note.add_action("default", " ", open_tweet(tweet, mobile))
             if tweet.from_type == "search" or not tweet.user.protected:
                 note.add_action("mail-forward", "retweet",
@@ -772,15 +772,15 @@ def display(api, tweets, state, timeout, expand, mobile, map_provider):
     # For lists: If we cared about these users they’d be followed, not listed
     # For searches: These are always low priority
     if tweet.from_type in ("list", "search"):
-        note.set_urgency(pynotify.URGENCY_LOW)
+        note.set_urgency(Notify.Urgency.LOW)
     if api.me().screen_name.lower() in tweet.text.lower():
-        note.set_urgency(pynotify.URGENCY_CRITICAL)
+        note.set_urgency(Notify.Urgency.CRITICAL)
     if tweet.text.lower().startswith(("@%s" % api.me().screen_name.lower(),
                                       ".@%s" % api.me().screen_name.lower())):
-        note.set_timeout(pynotify.EXPIRES_NEVER)
+        note.set_timeout(Notify.EXPIRES_NEVER)
     if tweet.from_type == "direct":
-        note.set_urgency(pynotify.URGENCY_CRITICAL)
-        note.set_timeout(pynotify.EXPIRES_NEVER)
+        note.set_urgency(Notify.Urgency.CRITICAL)
+        note.set_timeout(Notify.EXPIRES_NEVER)
     # pylint: enable-msg=E1101
     if not note.show():
         # Fail hard at this point, recovery has little value.
@@ -896,8 +896,8 @@ def main(argv=sys.argv[:]):
     options = process_command_line(config_file)
 
     # pylint: disable-msg=E1101
-    if not pynotify.init(argv[0]):
-        print(utils.fail("Unable to initialise pynotify!"))
+    if not Notify.init(argv[0]):
+        print(utils.fail("Unable to initialise Notify."))
         return errno.EIO
     # pylint: enable-msg=E1101
 
