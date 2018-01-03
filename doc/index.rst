@@ -40,6 +40,7 @@ Contents:
    configuration
    usage
    bleeter manpage <bleeter.1>
+   thaw
    NEWS
    faq
 
