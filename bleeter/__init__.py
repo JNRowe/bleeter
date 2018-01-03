@@ -97,7 +97,8 @@ class State:
         self.displayed = collections.defaultdict(lambda: 1)
         self.fetched = collections.defaultdict(lambda: 1)
         if os.path.exists(self.state_file):
-            data = json.load(open(self.state_file))
+            with open(self.state_file) as f:
+                data = json.load(f)
             # Keep loaded data, this keeps state data we’re not using on this
             # run
             self._data = data
@@ -186,7 +187,8 @@ class State:
         data['version'] = self._version
         if force or not data == self._data:
             state_dump = json.dumps(data, indent=4)
-            open(self.state_file, 'w').write(state_dump)
+            with open(self.state_file, 'w') as f:
+                f.write(state_dump)
 
         self._data = data
 
@@ -764,7 +766,8 @@ def get_token(auth, fetch, token_file):
         token_file (str): Filename to store token data in
     """
     if os.path.exists(token_file) and not fetch:
-        return json.load(open(token_file))
+        with open(token_file) as f:
+            return json.load(f)
 
     try:
         utils.open_browser(auth.get_authorization_url())
@@ -814,7 +817,8 @@ def get_token(auth, fetch, token_file):
             raise tweepy.TweepError('Fetching token failed')
 
     utils.mkdir(os.path.dirname(token_file))
-    json.dump([token.key, token.secret], open(token_file, 'w'), indent=4)
+    with open(token_file, 'w') as f:
+        json.dump([token.key, token.secret], f, indent=4)
 
     return token.key, token.secret
 

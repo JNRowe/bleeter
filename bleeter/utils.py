@@ -99,7 +99,8 @@ def create_lockfile():
         message = "Another instance is running or `{}' is stale".format(lock_file)
         usage_note(message)
         raise IOError(message)
-    open(lock_file, 'w').write(str(os.getpid()))
+    with open(lock_file, 'w') as f:
+        f.write(str(os.getpid()))
     atexit.register(os.unlink, lock_file)
 
 
