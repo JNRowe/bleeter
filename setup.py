@@ -22,22 +22,22 @@ from setuptools import setup
 
 # Hack to import _version file without importing bleeter/__init__.py, its
 # purpose is to allow import without requiring dependencies at this point.
-ver_file = open("bleeter/_version.py")
-_version = imp.load_module("_version", ver_file, ver_file.name,
-                           (".py", ver_file.mode, imp.PY_SOURCE))
+ver_file = open('bleeter/_version.py')
+_version = imp.load_module('_version', ver_file, ver_file.name,
+                           ('.py', ver_file.mode, imp.PY_SOURCE))
 
 setup(
     name='bleeter',
     version=_version.dotted,
-    author="James Rowe",
-    author_email="jnrowe@gmail.com",
+    author='James Rowe',
+    author_email='jnrowe@gmail.com',
     url='http://github.com/JNRowe/bleeter',
     license='GPL-3',
-    description="Nasty little twitter client",
+    description='Nasty little twitter client',
     long_description=open('README.rst').read(),
     data_files=[
-        ("share/pixmaps", ["bleeter.png", ]),
-        ("share/applications", ["bleeter.desktop"]),
+        ('share/pixmaps', ['bleeter.png', ]),
+        ('share/applications', ['bleeter.desktop']),
     ],
     packages=['bleeter', ],
     entry_points={'console_scripts': ['bleeter = bleeter:main', ]},
