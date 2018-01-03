@@ -1,8 +1,9 @@
 Usage
 =====
 
-:program:`bleeter` will seek authorisation when initially run.  As twitter_
-uses OAuth_ this process is a little more cumbersome than it should be.
+:program:`bleeter` will seek authorisation from twitter_ when initially run.  As
+twitter_ uses OAuth_ this process is a little more cumbersome than it could
+ideally be.
 
 * An authentication link will be opened in your default browser, allowing you to
   sign in to twitter_ and declare that you want :program:`bleeter` to have
@@ -13,7 +14,7 @@ uses OAuth_ this process is a little more cumbersome than it should be.
 If you wish to create a new authentication token, or need to regenerate it, you
 can be doing one of the following:
 
-.. code-block:: sh
+.. code-block:: console
 
     $ bleeter --get-token
     $ rm ${XDG_DATA_HOME:-~/.local}/bleeter/oauth_token

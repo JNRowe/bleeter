@@ -18,7 +18,7 @@ SYNOPSIS
 DESCRIPTION
 -----------
 
-Fetches your twitter friends timeline and displays notification popups for new
+Fetches your twitter_ friends timeline and displays notification popups for new
 tweets.  If your system’s notification daemon supports adding actions to the
 popups then you’ll be able to make a number of choices by clicking the buttons
 on the popup.
@@ -41,6 +41,7 @@ OPTIONS
     Timeout for notification popups in seconds
 
 .. option:: -f, --frequency <n>
+
     Update frequency in in seconds
 
 .. option:: -g, --get-token
@@ -140,14 +141,16 @@ CONFIGURATION FILE
 
 The configuration file, ``${XDG_CONFIG_HOME:-~/.config}/bleeter/config.ini``, is
 a simple **INI** format file for storing the command line options.  For
-example::
+example:
+
+.. code-block:: ini
 
     frequency = 600
     timeout = 10
     stealth = unfolloweduser
 
-With the above configuration file twitter will be checked every ten minutes for
-updates, new tweets will be shown for 10 seconds and **unfolloweduser** will be
+With the above configuration file twitter_ will be checked every ten minutes for
+updates, new tweets will be shown for 10 minutes and **unfolloweduser** will be
 watched for updates.
 
 BUGS
@@ -164,7 +167,9 @@ RESOURCES
 ---------
 
 Home page: https://github.com/JNRowe/bleeter/
+
 Full documentation: http://bleeter.readthedocs.io/
+
 Issue tracker: https://github.com/JNRowe/rdial/issues/
 
 COPYING
@@ -176,3 +181,5 @@ This program is free software: you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the
 Free Software Foundation, either version 3 of the License, or (at your
 option) any later version.
+
+.. _twitter: https://twitter.com/

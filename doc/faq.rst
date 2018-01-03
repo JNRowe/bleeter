@@ -13,16 +13,17 @@ Why another twitter client?
 Because other clients didn’t do quite what I wanted, or work on the systems
 I wanted to use them on.
 
-So, in the end writing ``bleeter`` seemed like the obvious answer.  It didn’t
-take long, does exactly what I want and works where I want it to work.
+So, in the end writing :program:`bleeter` seemed like the obvious answer.  It
+didn’t take long, does exactly what I want and works where I want it to work.
 
 Why is the logo so crap?
 ------------------------
 
 .. image:: .static/bleeter.png
 
-Because *I* made it with my complete lack of design skills, if you can do better
-please do so.  Send me a mail_ if you come up with something better.
+Because *I* made it using my complete lack of design skills, if you can do
+better please do so.  Send me a mail_, or open a pull request, if you come up
+with something better.
 
 .. _mail: jnrowe@gmail.com
 
@@ -45,7 +46,9 @@ changes are currently too invasive for their value.
 .. _capabilities testing:
 
 You can check what features your notification daemon has by running the
-following in a Python interpreter::
+following in a Python REPL:
+
+.. code-block:: pycon
 
     >>> impory pynotify
     >>> pynotify.init("test")
@@ -60,7 +63,7 @@ The icons are cut in half in tweets!
 
 .. figure:: .static/e17-notify.png
 
-   e17’s notification module with cropped icon
+    e17’s notification module with cropped icon
 
 If you’re using e17_ with its `notification module`_ then there isn’t a great
 deal I can do about this, it is just a bug in that module.
@@ -85,7 +88,8 @@ to interact.
 
 See `capabilities testing`_ for a method to check your notification systems
 support for ``actions``.  If you’re not seeing buttons and your notification
-daemon supports ``actions`` please `file an issue`_ or send me a mail_!!
+daemon claims to support ``actions`` please `file an issue`_ or send me
+a mail_!!
 
 The tweets don’t have the same formatting as the screenshots!
 -------------------------------------------------------------
@@ -98,11 +102,12 @@ If you’re using Ubuntu, Xfce_ or e17_ this is expected behaviour.
 
 It is likely the feature you’re missing is either ``body-markup`` or
 ``body-hyperlinks``, see `capabilities testing`_ for a method you can use to
-check your notification systems supported capabilities.
+check your notification system’s supported capabilities.
 
 The Xfce_ notification system, xfce4-notifyd_, supports ``actions`` and
-``body-markup`` which means it is still quite usable with ``bleeter``.  The only
-functionality you’ll be missing is the direct opening of links within tweet
+``body-markup`` which means it is still quite usable with :program:`bleeter`.
+The only functionality you’ll be missing is the direct opening of links within
+tweet
 text.
 
 If you’re not using either Ubuntu, Xfce_ or e17_ but you’re having display
@@ -118,19 +123,15 @@ link to the image and an explanation of the problem.
 Why isn’t this listed on |PyPI|?
 --------------------------------
 
-For the Python projects I’ve posted on PyPI_, or contributed to significantly,
-I’d say at least 90% of the bug reports have been from ``easy_install`` users
-with problems caused by ``easy_install``.  Frankly dealing with those has sucked
-the life out of my hobby projects for far too long already.
+This package isn’t really meant for general use, and as such wouldn’t be all
+that useful distribute on PyPI_.  Its current state, and its development
+trajectory, mean that the support costs would be greater than the value it
+provides.
 
-Handling such bug reports killed public releases of upoints_, and the plone_
-users finally killed public releases of pyisbn_.  Having given this some
-considerable thought I decided that my hobby projects shouldn’t be exposed to
-that, so that they can remain fun.  I apologise if this causes you
-inconvenience.
+I apologise if this causes you inconvenience.
 
-Why can’t I ``easy_install`` this?
-----------------------------------
+Why can’t I ``pip`` this?
+-------------------------
 
 See `PyPI listing`_.
 

@@ -1,12 +1,17 @@
 Background
 ----------
 
+.. note::
+
+    This was written in 2010, and no longer really applies.  While the problems
+    with twitter are now even more obvious, so are the options for ignoring it.
+
 I have had no real urge to use twitter_, and to this day I still don’t.
 Unfortunately, I know a few people who use only twitter_ to push updates.
-Originally, I had included the RSS feed of their timelines in my feed reader,
-but I had been finding it to be a touch too annoying to process the entries that
-way.  I decided to bite the bullet and use a twitter client, that way I could
-also watch the build bots for a couple of projects I care about too.
+Originally, I had included the |RSS| feed [#s1]_ of their timelines in my feed
+reader, but I had been finding it far too annoying to read that way.  I decided
+to bite the bullet and use a twitter client, that way I could also watch the
+build bots for a couple of projects I care about too.
 
 And that is where the problems began.  It turns out there are no clients that
 suit my needs.  All I want is something fast, light, usable on my mobile
@@ -30,6 +35,13 @@ client of choice if I started to “use” twitter_ a lot.
 The obvious answer to all this was to just make a little script to do exactly
 what I wanted... and |modref| was born.  It isn’t pretty, it isn’t clean, it
 isn’t even that useful but it Works For Me™.
+
+.. rubric:: Footnotes
+
+.. [#s1] Twitter has long since killed their |RSS| feeds, so that option is
+         gone.
+
+.. |RSS| replace:: :abbr:`RSS (Rich Site Summary)`
 
 .. _twitter: httsp://twitter.com/
 .. _gwibber: https://launchpad.net/gwibber/
